@@ -5,26 +5,24 @@
 // the global `L`, the same way the CDN-loaded Google Fonts stylesheet is
 // just referenced by font-family rather than imported.
 //
-// Tiles are free CartoDB basemaps (no API key): Dark Matter for the dark
-// theme, Positron for light. Tiles are raster images, so — unlike the rest
-// of the site's theming — a theme change can't be handled by CSS alone;
-// a MutationObserver on <html data-theme> (the same attribute every other
-// theme-aware bit of the site already keys off) swaps the layer. The
-// marker, by contrast, is a plain L.divIcon styled entirely through the
-// .map-marker rule in style.css via var(--accent) — no raster pin image,
-// so it just follows the palette like everything else. See the README's
-// "Known gaps" note on why the tiles themselves can't do the same.
+// Tiles are plain OpenStreetMap raster tiles. CartoDB's free Dark Matter/
+// Positron tiles (used previously) now require a registered API key on a
+// live domain, which showed up as a watermarked "API key required" tile
+// instead of a map. OSM only ships one (light) tile style, so the dark
+// theme is simulated with a CSS filter on .leaflet-tile-pane in
+// style.css, scoped to that pane specifically so it doesn't also invert
+// the marker or popup — see the README's "Known gaps" note. Since that's
+// pure CSS keyed off the existing :root[data-theme] selector, there's no
+// JS-side theme switching needed here at all (unlike the old per-theme
+// tile URL, which did need a MutationObserver to swap it).
+//
+// The marker is a plain L.divIcon styled entirely through the .map-marker
+// rule in style.css via var(--accent) — no raster pin image, so it just
+// follows the palette like everything else, unaffected by the tile
+// pane's dark-theme filter.
 
-const TILE_URLS = {
-  dark: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-  light: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-};
-const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
-
-function currentTheme() {
-  return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
-}
+const TILE_URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
 /**
  * @param {HTMLElement} container
@@ -43,18 +41,11 @@ export function renderMap(container, { lat, lng, label }) {
     scrollWheelZoom: false // a page-scroll shouldn't get hijacked by a map sitting mid-section
   });
 
-  let tileLayer = L.tileLayer(TILE_URLS[currentTheme()], { attribution: TILE_ATTRIBUTION, maxZoom: 19 }).addTo(map);
+  L.tileLayer(TILE_URL, { attribution: TILE_ATTRIBUTION, maxZoom: 19 }).addTo(map);
 
   const icon = L.divIcon({ className: "map-marker", iconSize: [26, 34], iconAnchor: [13, 34] });
   const marker = L.marker([lat, lng], { icon }).addTo(map);
   if (label) marker.bindPopup(label);
-
-  new MutationObserver(() => {
-    const nextUrl = TILE_URLS[currentTheme()];
-    if (tileLayer._url === nextUrl) return;
-    map.removeLayer(tileLayer);
-    tileLayer = L.tileLayer(nextUrl, { attribution: TILE_ATTRIBUTION, maxZoom: 19 }).addTo(map);
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
   return map;
 }

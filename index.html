@@ -138,19 +138,18 @@
       <div id="visit-buttons"></div>
     </div>
 
-    <!-- Filled by components/map.js. "Get Directions" overlaps the map
-         card's bottom edge; filled/linked by script.js from site.json's
-         address so it stays in sync with the address printed everywhere
-         else. -->
-    <div class="visit-map reveal">
-      <div id="visit-map-mount"></div>
-      <a id="visit-directions" class="btn btn-ghost" href="#" target="_blank" rel="noopener" data-i18n="visit.getDirections">Get Directions</a>
-    </div>
-
     <p class="visit-fallback reveal">
       <span data-i18n="visit.emailFallbackPrefix">Or email us directly at</span>
       <a id="visit-email-fallback" href="#"></a>
     </p>
+
+    <!-- Filled by components/map.js. "Get Directions" sits directly under
+         the map card; filled/linked by script.js from site.json's address
+         so it stays in sync with the address printed everywhere else. -->
+    <div class="visit-map reveal">
+      <div id="visit-map-mount"></div>
+      <a id="visit-directions" class="btn btn-ghost" href="#" target="_blank" rel="noopener" data-i18n="visit.getDirections">Get Directions</a>
+    </div>
   </section>
 
   <!-- Filled by components/footer.js -->

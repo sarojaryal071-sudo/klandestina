@@ -556,27 +556,39 @@ section { position: relative; padding: 130px 56px; }
 
 /* Same card treatment as .visual (dish/gallery tiles) — border-radius,
    overflow:hidden, --card-shadow — so the map reads as part of the same
-   design system rather than a plain embedded widget. "Get Directions"
-   overlaps its bottom edge (negative margin pulling it up over the map),
-   using the site's own shadow-and-lift button language to look like a
-   card action sitting on top of the map, not a separate element below it. */
-.visit-map { max-width: 900px; margin: 40px auto 0; text-align: center; }
+   design system rather than a plain embedded widget. The larger top
+   margin (vs. the tight gap under the buttons/email line above it) is
+   deliberate: heading+buttons+email fallback read as one cluster, then a
+   clear break before the map starts. "Get Directions" sits close under
+   the map as its direct action, not overlapping it. */
+.visit-map { max-width: 900px; margin: 56px auto 0; text-align: center; }
 .map-card {
   width: 100%; height: 340px;
   border-radius: 22px; overflow: hidden;
   box-shadow: var(--card-shadow);
 }
-#visit-directions { position: relative; z-index: 2; margin-top: -24px; }
+#visit-directions { margin-top: 16px; }
 @media (max-width: 900px) {
   .map-card { height: 260px; }
 }
+
+/* OpenStreetMap only ships one (light) tile style — CartoDB's free dark/
+   light tiles now require a registered API key on a live domain, so
+   plain OSM tiles replace them. Dark theme is simulated with a filter on
+   .leaflet-tile-pane specifically, not .map-card as a whole, so it hits
+   only the raster tiles — the marker (.map-marker, further down) and the
+   popup/attribution panes are separate Leaflet panes and stay untouched,
+   which is what keeps the pin matching var(--accent) exactly instead of
+   also getting inverted. See the README's "Known gaps" note. */
+.map-card .leaflet-tile-pane { filter: invert(90%) hue-rotate(180deg); }
+:root[data-theme="light"] .map-card .leaflet-tile-pane { filter: none; }
 
 /* Leaflet's own chrome (popups, attribution) re-themed to match the site
    instead of Leaflet's default white-card look. */
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); box-shadow: var(--card-shadow); }
 .leaflet-popup-content { font-family: "Space Grotesk", sans-serif; font-size: 13px; color: var(--ink); margin: 10px 14px; }
 .leaflet-popup-close-button { color: color-mix(in srgb, var(--ink) 60%, transparent) !important; }
-.leaflet-control-attribution { background: color-mix(in srgb, var(--surface) 85%, transparent) !important; color: color-mix(in srgb, var(--ink) 60%, transparent) !important; }
+.leaflet-control-attribution { background: color-mix(in srgb, var(--surface) 85%, transparent) !important; color: color-mix(in srgb, var(--ink) 60%, transparent) !important; font-size: 10px; }
 .leaflet-control-attribution a { color: color-mix(in srgb, var(--ink) 75%, transparent) !important; }
 
 /* The marker itself: a plain div (not a raster pin image) so it's fully
