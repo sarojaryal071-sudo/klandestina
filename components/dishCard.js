@@ -17,7 +17,8 @@ export function renderDishCard(dish) {
   frame.className = "tilt-frame reveal";
 
   frame.innerHTML = `
-    <div class="dish-visual visual tilt-card" style="background-image:url('images/dishes/${dish.image}')">
+    <div class="dish-visual visual tilt-card">
+      <img class="visual-img" src="images/dishes/${dish.image}" alt="" loading="lazy" decoding="async">
       <div class="scrim"></div>
       <div class="caption">
         <div class="dish-top">

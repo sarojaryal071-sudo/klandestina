@@ -24,7 +24,7 @@ Per-item fields:
 - `data/menu.json` — dishes and full menu content
 - `data/site.json` — address, hours, reservation link, socials
 - `data/i18n/` — `en.json` / `fi.json`, one matching set of UI-chrome translation keys each
-- `images/` — photos, organized by section (`hero/`, `dishes/`, `gallery/`, `logo/`)
+- `images/` — photos, organized by section (`hero/`, `dishes/`, `logo/`). The gallery has no photos of its own yet, so `galleryTile.js` also points at `images/dishes/` (see "Known gaps") — there's no separate `gallery/` folder to keep in sync.
 
 ## Status
 
@@ -41,6 +41,16 @@ The FAB sits at `bottom: 24px; right: 24px` (`z-index: 90`, below the modal's 10
 ## Menu row layout
 
 `components/menuItem.js` stacks every row the same way regardless of category: name (free to wrap to multiple lines), then description, then price, one under the other — never sharing a line with the name. That's what makes wine's four-column price grid (and any other long name) line up cleanly instead of fighting for horizontal space or ending up vertically off-center against wrapped text. Only items with a real `image` in `data/menu.json` get a thumbnail; everything else renders text-only, full-width, with no placeholder box.
+
+## Image loading & size
+
+Photos on a mobile connection were slow to appear, and several never showed up at all — visible as tiles stuck on the dark `#221512` fallback color from `.visual`'s `background-color`. Two compounding causes, both fixed:
+
+- **Every dish photo was being downloaded twice.** The gallery had its own `images/gallery/` folder that was a byte-identical copy of `images/dishes/` (used as filler until real interior/atmosphere photos exist — see "Known gaps"). Since browsers cache by URL, `images/dishes/tuna-poke.jpg` and `images/gallery/tuna-poke.jpg` were two separate downloads of the same bytes. Deleted `images/gallery/` entirely; `galleryTile.js` now points straight at `images/dishes/`.
+- **The photos themselves were oversized originals** — one was 2576×1449 (757KB) for what only ever displays at a few hundred pixels wide at most. Resized every file in `images/dishes/` to a 1000px long edge and re-encoded at quality 78, which also strips the bulky EXIF data these happened to carry. Combined with removing the duplicate folder, total image weight for a full page visit dropped from roughly 3.3MB to under 500KB.
+- **Dish cards and gallery tiles used a CSS `background-image`** instead of a real `<img>`. Background-images have no equivalent to `loading="lazy"`/`decoding="async"`, and browsers are inconsistent about deferring them for off-screen elements — on a page with a dozen-plus photo tiles, several were still sitting empty well after the ones above the fold had already loaded. Both components now render an actual `<img loading="lazy" decoding="async">` layered under the existing scrim/caption overlay (same visual result, `.visual-img { position: absolute; inset: 0; object-fit: cover; }` in `style.css`), matching what `menuItem.js`'s thumbnails already did correctly.
+
+New dish photos should go in at a similar size (long edge around 1000–1200px is plenty for how large these ever render) rather than an unedited original straight off a phone.
 
 ## Mobile navigation
 
@@ -59,7 +69,7 @@ UI chrome (nav, hero, section headings, story/visit copy, footer, the event moda
 Dark is the default palette. Light theme's CSS variables live in the `:root[data-theme="light"]` block in `style.css`. `script.js` sets the visitor's initial theme from `prefers-color-scheme` (via a small inline script in `index.html`'s `<head>`, so there's no flash of the wrong theme), then remembers a manual toggle in `localStorage`.
 
 Known gaps:
-- The `gallery` array in `data/menu.json` currently reuses the dish photos from `images/dishes/` as filler — real interior/atmosphere photos for `images/gallery/` are still needed.
+- The `gallery` array in `data/menu.json` currently reuses the dish photos from `images/dishes/` as filler (`galleryTile.js` points straight at that folder — there's deliberately no separate `images/gallery/` copy of the same files, see "Image loading & size" below) — real interior/atmosphere photos are still needed.
 - **FI translations are AI-generated** (by Claude) and should be reviewed by a native speaker before real launch — both for accuracy and for tone.
 - **The G/M/L allergen legend needs confirming with the owner** (see "Editing the menu" above) — codes are stored exactly as printed, meaning is not asserted.
 - **Two menu items have an item-level gap from illegible/uncertain source photos, flagged rather than guessed:**
