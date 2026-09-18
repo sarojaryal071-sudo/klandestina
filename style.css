@@ -497,17 +497,38 @@ section { position: relative; padding: 130px 56px; }
   color: var(--ink); margin: 0; line-height: 1.25;
 }
 
-/* The photo itself: soft-edged, not a hard rectangle crop (Part 3) — a
-   radial mask fades all four sides to transparent, letting the section's
-   own background show through at the edges instead of a visible boundary
-   line. An ellipse (not a circle) so the fade matches the image's own 4:5
-   proportions rather than reading as a circle dropped on a rectangle. */
-.story-photo { position: relative; width: 100%; max-width: 420px; aspect-ratio: 4 / 5; }
-.story-photo-img {
-  width: 100%; height: 100%; object-fit: cover;
-  -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, black 55%, transparent 100%);
-  mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, black 55%, transparent 100%);
+/* Soft-edged photo treatment, reused for both the Story photo and the
+   Menu section's rotating image column (Part 2) — a radial mask fades all
+   four sides to transparent, letting the section's own background show
+   through at the edges instead of a visible boundary line.
+   No overflow:hidden/border-radius on this or its wrapper — that's the
+   old card-style clipping (.visual etc. use it deliberately), and it
+   would clip the image to a hard rectangle right at the box edge,
+   overriding the mask fade instead of complementing it.
+   IMPORTANT: the ellipse size MUST use a keyword (closest-side/
+   farthest-side), not an explicit percentage pair like `70% 70%`. That
+   percentage form is what shipped originally and silently produced NO
+   fade at all (a plain hard-edged rectangle, full stop) — confirmed by
+   isolating it in a standalone test page: swapping only the size keyword
+   in was the entire fix, everything else (both mask-image prefixes, the
+   fully-transparent outer stop, mask-repeat/size/mode, no clipping
+   wrapper) was already correct and none of it alone was the problem. */
+.soft-fade-img {
+  object-fit: cover; display: block;
+  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 50%, black 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse closest-side at 50% 50%, black 45%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
 }
+
+.story-photo { position: relative; width: 100%; max-width: 420px; aspect-ratio: 4 / 5; }
+.story-photo-img { width: 100%; height: 100%; }
 
 @media (min-width: 901px) {
   .story-layout { flex-direction: row; align-items: center; gap: 72px; }
@@ -519,6 +540,50 @@ section { position: relative; padding: 130px 56px; }
 }
 
 /* ---------- Menu ---------- */
+/* Image-left/content-right — DOM order is photo, then content, so plain
+   flex-direction: row already puts them in that order on desktop with no
+   reversal trick, same technique Story uses for its (mirrored) text-left/
+   image-right split. Mobile uses column-reverse instead of column so the
+   list — the part visitors actually came for — shows first and the photo
+   stacks below it, per the "list stays easy to scan on small screens"
+   priority; column-reverse is exactly "reverse the same DOM order",
+   consistent with how the desktop row doesn't reverse anything either. */
+.menu-layout { display: flex; flex-direction: column-reverse; gap: 48px; align-items: center; }
+.menu-content { width: 100%; }
+.menu-photo { position: relative; width: 100%; max-width: 420px; aspect-ratio: 4 / 5; }
+/* position:absolute + inset:0 (not width/height:100%) — .menu-photo's
+   height comes from aspect-ratio on a flex item, and a normal-flow
+   child's height:100% doesn't reliably resolve against that (collapsed
+   to 0 in testing); absolute positioning anchors to the containing
+   block's box directly instead, sidestepping that percentage-resolution
+   edge case entirely. Same pattern .visual-img already uses. */
+.menu-photo-frame { position: absolute; inset: 0; }
+.menu-photo-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; transition: opacity 0.9s ease;
+}
+.menu-photo-img--active { opacity: 1; }
+/* Same radial-glow technique as .section-ambient, scoped to just this box
+   — shown only when the active category has no on-theme photo at all
+   (see components/menuPhoto.js), so an empty/mismatched image is never
+   the fallback for "no photo yet." */
+.menu-photo-ambient {
+  position: absolute; inset: 0; opacity: 0; transition: opacity 0.9s ease;
+  background:
+    radial-gradient(60% 55% at 25% 20%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
+    radial-gradient(55% 50% at 80% 85%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%);
+}
+.menu-photo-frame--ambient-only .menu-photo-ambient { opacity: 1; }
+
+@media (min-width: 901px) {
+  /* 40/60 split (photo/content) rather than an even 50/50 — favors the
+     list's own readability over a strictly equal column, per the "don't
+     cramp item descriptions/prices" note. */
+  .menu-layout { flex-direction: row; align-items: flex-start; gap: 56px; }
+  .menu-photo { flex: 0 1 40%; max-width: 440px; position: sticky; top: 140px; }
+  .menu-content { flex: 1 1 60%; min-width: 0; }
+}
+
 .tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 56px; }
 .tab {
   padding: 12px 24px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
@@ -559,6 +624,21 @@ section { position: relative; padding: 130px 56px; }
 .price-col { display: flex; flex-direction: column; align-items: center; }
 .price-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: color-mix(in srgb, var(--ink) 45%, transparent); margin-bottom: 3px; }
 .price-value { font-family: "Bebas Neue", sans-serif; font-size: 16px; color: var(--accent); }
+
+/* On desktop there's ample horizontal room, so a wine row's name and its
+   price grid sit on one line instead of stacking (mobile keeps the
+   stacked layout/sizing above untouched — wine rows have no description,
+   so .menu-item-body's only two children are .menu-item-top and the
+   price grid, and switching that column to a row is all it takes). Sized
+   up slightly for legibility now that they're not competing for width
+   the way the stacked mobile layout does. */
+@media (min-width: 901px) {
+  .menu-item--wine .menu-item-body { flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .menu-item--wine .menu-item-name { font-size: 28px; }
+  .menu-item--wine .menu-item-price--wine { margin-top: 0; grid-template-columns: repeat(4, 64px); }
+  .menu-item--wine .price-label { font-size: 10px; }
+  .menu-item--wine .price-value { font-size: 19px; }
+}
 
 /* A standing note above a group's items (Lunch's fixed price/schedule,
    Cocktails' tequila & mezcal note). */

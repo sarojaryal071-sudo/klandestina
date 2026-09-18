@@ -32,7 +32,8 @@ const WINE_SIZES = [
 export function renderMenuItem(item) {
   const row = document.createElement("div");
   const hasPhoto = Boolean(item.image);
-  row.className = hasPhoto ? "menu-item" : "menu-item menu-item--no-photo";
+  const isWine = typeof item.price === "object" && item.price !== null;
+  row.className = ["menu-item", !hasPhoto && "menu-item--no-photo", isWine && "menu-item--wine"].filter(Boolean).join(" ");
 
   const thumb = hasPhoto ? `<img class="menu-item-thumb" src="images/dishes/${item.image}" alt="" loading="lazy">` : "";
   const allergenLabel = item.allergens && item.allergens.length ? item.allergens.join(" · ") : "";

@@ -20,6 +20,7 @@ import { renderEventModal, openEventModal } from "./components/eventModal.js";
 import { renderFab } from "./components/fab.js";
 import { renderMobileNav } from "./components/mobileNav.js";
 import { renderMap } from "./components/map.js";
+import { renderMenuPhoto } from "./components/menuPhoto.js";
 
 const LANG_STORAGE_KEY = "klandestina-lang";
 const THEME_STORAGE_KEY = "klandestina-theme";
@@ -30,6 +31,7 @@ let menu = null;
 let site = null;
 let currentLanguage = "en";
 let activeCategoryId = null;
+let menuPhoto = null;
 
 async function init() {
   const [menuData, siteData, en, fi] = await Promise.all([
@@ -120,6 +122,12 @@ async function init() {
 
   // Footer
   renderFooter(document.getElementById("footer-mount"), site);
+
+  // Menu section's image column — a rotating ambient image set per
+  // category, swapped by renderMenuCategory() below on every tab click
+  // (and, harmlessly, on every language switch too, since that also
+  // re-renders the active category).
+  menuPhoto = renderMenuPhoto(document.getElementById("menu-photo-mount"));
 
   // Signature dishes + full menu, both language-dependent
   renderSignatureDishes();
@@ -290,6 +298,7 @@ function initMenuTabs() {
 function renderMenuCategory(categoryId) {
   const menuList = document.getElementById("menu-list");
   menuList.innerHTML = "";
+  menuPhoto.setCategory(categoryId);
 
   const category = menu.categories.find((c) => c.id === categoryId);
   const groups = (category && category.groups) || [categoryId];

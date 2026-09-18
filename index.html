@@ -102,7 +102,7 @@
            — no dedicated interior/portrait photography for Story yet, see
            README's "Known gaps". Soft-edged via a CSS mask (style.css). -->
       <div class="story-photo reveal">
-        <img class="story-photo-img" src="images/dishes/tommys-margarita.jpg" alt="" loading="lazy" decoding="async">
+        <img class="story-photo-img soft-fade-img" src="images/dishes/tommys-margarita.jpg" alt="" loading="lazy" decoding="async">
       </div>
     </div>
   </section>
@@ -123,14 +123,30 @@
     </div>
   </section>
 
-  <section id="menu" class="section-ambient">
-    <div class="section-head reveal">
-      <span class="eyebrow" data-i18n="menu.eyebrow">Full Menu</span>
-      <h2 data-i18n="menu.heading">Kitchen &amp; Bar</h2>
+  <section id="menu">
+    <!-- Mirrored from Story's split (which is text-left/image-right) —
+         image-left/content-right here, so the two asymmetric sections
+         alternate rather than reading as the same template twice. -->
+    <div class="menu-layout container">
+      <div class="menu-photo reveal">
+        <!-- Filled by components/menuPhoto.js: a small rotating,
+             crossfading ambient image set per active category tab (see
+             script.js's renderMenuCategory). Purely decorative, not tied
+             to specific menu items — categories with no on-theme photo
+             yet fall back to an ambient glow instead of showing
+             something misleading (e.g. a savory dish under Desserts). -->
+        <div id="menu-photo-mount"></div>
+      </div>
+      <div class="menu-content">
+        <div class="section-head reveal">
+          <span class="eyebrow" data-i18n="menu.eyebrow">Full Menu</span>
+          <h2 data-i18n="menu.heading">Kitchen &amp; Bar</h2>
+        </div>
+        <!-- Filled by components/menuItem.js -->
+        <div id="menu-tabs" class="tabs"></div>
+        <div id="menu-list" class="menu-list"></div>
+      </div>
     </div>
-    <!-- Filled by components/menuItem.js -->
-    <div id="menu-tabs" class="tabs"></div>
-    <div id="menu-list" class="menu-list"></div>
   </section>
 
   <section id="gallery">
