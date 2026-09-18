@@ -76,6 +76,15 @@
     "tagline": "Cantina ilman kylttiä. Aleksis Kiven katu 17, Helsinki.",
     "visitLabel": "Käynti",
     "hoursLabel": "Aukioloajat",
-    "rights": "Kaikki oikeudet pidätetään."
+    "rights": "Kaikki oikeudet pidätetään.",
+    "social": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "tiktok": "TikTok"
+    }
+  },
+  "dishCarousel": {
+    "prev": "Edellinen annos",
+    "next": "Seuraava annos"
   }
 }

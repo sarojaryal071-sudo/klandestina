@@ -76,6 +76,15 @@
     "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",
     "visitLabel": "Visit",
     "hoursLabel": "Hours",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "social": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "tiktok": "TikTok"
+    }
+  },
+  "dishCarousel": {
+    "prev": "Previous dish",
+    "next": "Next dish"
   }
 }

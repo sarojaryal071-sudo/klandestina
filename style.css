@@ -70,6 +70,20 @@ section { position: relative; padding: 130px 56px; }
 .section-head { max-width: 620px; margin: 0 auto 60px; text-align: center; }
 .section-head h2 { font-size: clamp(38px, 5vw, 60px); margin-top: 10px; }
 
+/* Ambient background for sections with no real photography of their own
+   yet (Menu, Visit) — the same radial-glow-over-var(--bg) technique
+   .hero already uses, reused rather than invented fresh so it reads as
+   one system. Isolated in its own class, applied directly on the
+   <section> in index.html, so it's a one-line removal once real photos
+   make it unnecessary there — nothing else about those sections depends
+   on it. */
+.section-ambient {
+  background:
+    radial-gradient(55% 45% at 12% 8%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%),
+    radial-gradient(45% 40% at 92% 88%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 60%),
+    var(--bg);
+}
+
 @media (max-width: 900px) {
   /* Desktop's 130px top padding was carrying straight over to mobile, so
      jumping to a section via the hamburger nav (below) landed with a
@@ -416,36 +430,60 @@ section { position: relative; padding: 130px 56px; }
 .visual .caption { position: relative; z-index: 2; padding: 26px 24px; width: 100%; color: #f5ede1; }
 .caption p { color: rgba(245,237,225,0.6); font-size: 14px; margin: 6px 0 0; }
 
-/* ---------- Dishes ---------- */
-.dish-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+/* ---------- Full-bleed wrapper ---------- */
+/* Breaks an element out of its parent's padding to span the full viewport
+   width, regardless of that parent's own padding value at any breakpoint —
+   robust across breakpoints without tracking each one's padding number.
+   body's overflow-x:hidden (set above) absorbs the sub-pixel rounding this
+   can introduce. Used for imagery/content rows, not text — text keeps its
+   own natural max-width (.section-head, .story-body, etc.) per the site's
+   readability rule; only .dish-carousel and .gallery-grid use this. */
+.full-bleed { width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
+
+/* ---------- Dishes: auto-scrolling carousel ---------- */
+/* One component, one behavior, at every screen size — see
+   components/dishCarousel.js for the loop/pause/arrow logic. The card
+   list is rendered twice back-to-back (.dish-carousel-set, display:contents
+   so it groups for aria-hidden without breaking the track's flex layout)
+   and a rAF loop drives .dish-carousel-track's transform; overflow:hidden
+   here is what actually clips it down to one visible row. */
+.dish-carousel { position: relative; overflow: hidden; padding: 4px 56px; }
+.dish-carousel-track { display: flex; gap: 16px; width: max-content; will-change: transform; }
+.dish-carousel-set { display: contents; }
+.dish-carousel .tilt-frame { flex: 0 0 240px; }
 .dish-visual { aspect-ratio: 3 / 4; }
 .dish-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .dish-top h3 { font-size: 26px; }
 .dish-price { font-family: "Bebas Neue", sans-serif; color: var(--accent); font-size: 22px; }
-@media (max-width: 900px) {
-  .dish-grid {
-    display: flex;
-    grid-template-columns: unset;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 16px;
-    scrollbar-width: none;
-    /* Bleed out of the section's own 56px padding and back in with just
-       enough edge padding to match the inter-card gap — otherwise the
-       leading/trailing whitespace reads much wider than the gap between
-       cards, which looks like "no gap except at the edges." */
-    margin: 0 -56px;
-    padding: 0 16px;
-    scroll-padding: 0 16px;
-  }
-  .dish-grid::-webkit-scrollbar { display: none; }
-  .dish-grid .tilt-frame {
-    flex: 0 0 240px;
-    scroll-snap-align: center;
-  }
+
+/* Optional manual controls layered on top of the row — supplementary to
+   the auto-scroll/loop, never required to see every dish. */
+.carousel-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  font-size: 22px; line-height: 1; cursor: pointer; opacity: 0.7;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 0 0 var(--surface-edge), 0 10px 20px -8px rgba(0,0,0,0.5);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+}
+.carousel-arrow:hover, .carousel-arrow:focus-visible { opacity: 1; color: var(--accent); transform: translateY(-50%) translateY(-2px); }
+.carousel-arrow:active { transform: translateY(-50%) translateY(2px); box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 1px 0 0 var(--surface-edge); }
+.carousel-arrow--prev { left: 12px; }
+.carousel-arrow--next { right: 12px; }
+@media (max-width: 720px) {
+  .carousel-arrow { width: 38px; height: 38px; font-size: 18px; }
+  .dish-carousel { padding: 4px 16px; }
 }
 
-/* ---------- Story ---------- */
+/* ---------- Story: asymmetric two-column on desktop ---------- */
+/* Stacked (text, then photo) below 901px — same DOM order as the desktop
+   row below, just a different flex-direction, so no order-reversal trick
+   is needed to get "text left, image right" on desktop from "text above
+   image" on mobile. */
+.story-layout { display: flex; flex-direction: column; gap: 48px; align-items: center; }
+.story-text { width: 100%; }
 .story-body { max-width: 680px; margin: 0 auto; text-align: center; }
 .story-body p { color: color-mix(in srgb, var(--ink) 70%, transparent); font-size: 17px; margin: 0 0 20px; }
 .story-quote {
@@ -457,6 +495,27 @@ section { position: relative; padding: 130px 56px; }
 .story-quote p {
   font-family: "Bebas Neue", sans-serif; font-size: 24px; letter-spacing: 0.01em;
   color: var(--ink); margin: 0; line-height: 1.25;
+}
+
+/* The photo itself: soft-edged, not a hard rectangle crop (Part 3) — a
+   radial mask fades all four sides to transparent, letting the section's
+   own background show through at the edges instead of a visible boundary
+   line. An ellipse (not a circle) so the fade matches the image's own 4:5
+   proportions rather than reading as a circle dropped on a rectangle. */
+.story-photo { position: relative; width: 100%; max-width: 420px; aspect-ratio: 4 / 5; }
+.story-photo-img {
+  width: 100%; height: 100%; object-fit: cover;
+  -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, black 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, black 55%, transparent 100%);
+}
+
+@media (min-width: 901px) {
+  .story-layout { flex-direction: row; align-items: center; gap: 72px; }
+  .story-text { flex: 1 1 0; }
+  .story-text .section-head { text-align: left; margin: 0 0 32px; max-width: none; }
+  .story-body { text-align: left; margin: 0; max-width: 560px; }
+  .story-quote { margin-left: 0; }
+  .story-photo { flex: 1 1 0; max-width: 480px; }
 }
 
 /* ---------- Menu ---------- */
@@ -675,6 +734,15 @@ footer { background: var(--footer-bg); padding: 56px 56px 28px; transition: back
 .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 36px; padding-bottom: 36px; border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
 .footer-logo { font-family: "Bebas Neue", sans-serif; font-size: 26px; letter-spacing: 0.03em; margin-bottom: 10px; }
 .footer-logo span { color: var(--accent); }
+.footer-social { display: flex; gap: 10px; margin-top: 18px; }
+.footer-social-link {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  transition: color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+.footer-social-link:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
 .footer-col h4 { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: color-mix(in srgb, var(--ink) 70%, transparent); margin-bottom: 14px; font-weight: 600; }
 .footer-col span { display: block; font-size: 14px; margin-bottom: 9px; color: color-mix(in srgb, var(--ink) 45%, transparent); }
 .footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 24px; font-size: 12.5px; color: color-mix(in srgb, var(--ink) 35%, transparent); }

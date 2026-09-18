@@ -83,17 +83,27 @@
   </header>
 
   <section id="story">
-    <div class="section-head reveal">
-      <span class="eyebrow" data-i18n="story.eyebrow">The Story</span>
-      <h2 data-i18n="story.heading">No sign. No apologies.</h2>
-    </div>
-    <div class="story-body reveal">
-      <p data-i18n="story.body1">Welcome to Klandestina, your go-to casual Mexican restaurant!</p>
-      <p data-i18n="story.body2">Having been open in Harju Kallio for two and a half years, we faced the challenges of the pandemic roulette and all the issues it brought to everyone.</p>
-      <p data-i18n="story.body3">La Cantina Klandestina is our tribute to that distinctly Mexican feeling of not rigidly adhering to every rule and doing things our own way.</p>
-      <blockquote class="story-quote">
-        <p data-i18n="story.quoteText">“We're lawful rebels who love food and take pride in providing friendly customer service.”</p>
-      </blockquote>
+    <div class="story-layout container">
+      <div class="story-text">
+        <div class="section-head reveal">
+          <span class="eyebrow" data-i18n="story.eyebrow">The Story</span>
+          <h2 data-i18n="story.heading">No sign. No apologies.</h2>
+        </div>
+        <div class="story-body reveal">
+          <p data-i18n="story.body1">Welcome to Klandestina, your go-to casual Mexican restaurant!</p>
+          <p data-i18n="story.body2">Having been open in Harju Kallio for two and a half years, we faced the challenges of the pandemic roulette and all the issues it brought to everyone.</p>
+          <p data-i18n="story.body3">La Cantina Klandestina is our tribute to that distinctly Mexican feeling of not rigidly adhering to every rule and doing things our own way.</p>
+          <blockquote class="story-quote">
+            <p data-i18n="story.quoteText">“We're lawful rebels who love food and take pride in providing friendly customer service.”</p>
+          </blockquote>
+        </div>
+      </div>
+      <!-- Filler: reused from images/dishes/ like the gallery already does
+           — no dedicated interior/portrait photography for Story yet, see
+           README's "Known gaps". Soft-edged via a CSS mask (style.css). -->
+      <div class="story-photo reveal">
+        <img class="story-photo-img" src="images/dishes/tommys-margarita.jpg" alt="" loading="lazy" decoding="async">
+      </div>
     </div>
   </section>
 
@@ -102,11 +112,18 @@
       <span class="eyebrow" data-i18n="dishes.eyebrow">Off the Grill</span>
       <h2 data-i18n="dishes.heading">Regulars order these twice</h2>
     </div>
-    <!-- Filled by components/dishCard.js, one card per dish in data/menu.json -->
-    <div id="dish-grid" class="dish-grid"></div>
+    <!-- Filled by components/dishCarousel.js — one continuously
+         auto-scrolling row at every screen size (see style.css's
+         "Dishes: auto-scrolling carousel" comment for how the loop
+         works). .full-bleed lets it run closer to the viewport edges on
+         wide screens instead of being boxed in by the section's own
+         padding, per the site's full-bleed-imagery/capped-text split. -->
+    <div class="full-bleed">
+      <div id="dish-grid"></div>
+    </div>
   </section>
 
-  <section id="menu">
+  <section id="menu" class="section-ambient">
     <div class="section-head reveal">
       <span class="eyebrow" data-i18n="menu.eyebrow">Full Menu</span>
       <h2 data-i18n="menu.heading">Kitchen &amp; Bar</h2>
@@ -121,11 +138,15 @@
       <span class="eyebrow" data-i18n="gallery.eyebrow">Inside</span>
       <h2 data-i18n="gallery.heading">The room</h2>
     </div>
-    <!-- Filled by components/galleryTile.js -->
-    <div id="gallery-grid" class="gallery-grid"></div>
+    <!-- Filled by components/galleryTile.js. .full-bleed for the same
+         reason as the dish carousel above — this is imagery, not text,
+         so it isn't held to the same readable max-width. -->
+    <div class="full-bleed">
+      <div id="gallery-grid" class="gallery-grid"></div>
+    </div>
   </section>
 
-  <section id="visit">
+  <section id="visit" class="section-ambient">
     <div class="section-head reveal">
       <span class="eyebrow" data-i18n="visit.eyebrow">Find Us</span>
       <h2 data-i18n="visit.heading">Come find the door</h2>

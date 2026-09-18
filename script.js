@@ -10,7 +10,7 @@
 
 import { renderNav } from "./components/nav.js";
 import { renderButton } from "./components/button.js";
-import { renderDishCard } from "./components/dishCard.js";
+import { renderDishCarousel } from "./components/dishCarousel.js";
 import { renderMenuItem } from "./components/menuItem.js";
 import { renderGalleryTile } from "./components/galleryTile.js";
 import { renderFooter } from "./components/footer.js";
@@ -248,11 +248,8 @@ function toggleTheme() {
 // ---------- language-dependent rendering ----------
 
 function renderSignatureDishes() {
-  const dishGrid = document.getElementById("dish-grid");
-  dishGrid.innerHTML = "";
-  menu.signatureDishes.forEach((dish) => {
-    dishGrid.appendChild(renderDishCard({ ...dish, description: pickLang(dish.description) }));
-  });
+  const dishes = menu.signatureDishes.map((dish) => ({ ...dish, description: pickLang(dish.description) }));
+  renderDishCarousel(document.getElementById("dish-grid"), dishes, { prev: t("dishCarousel.prev"), next: t("dishCarousel.next") });
 }
 
 // Wires the category pills above the full menu: renders one tab per entry in
