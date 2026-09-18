@@ -8,6 +8,8 @@
   <link rel="icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Leaflet (components/map.js) — free CartoDB tiles, no API key. -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
   <script>
     // Applied before first paint so there's no flash of the wrong theme:
@@ -135,6 +137,16 @@
            (secondary), filled by script.js -->
       <div id="visit-buttons"></div>
     </div>
+
+    <!-- Filled by components/map.js. "Get Directions" overlaps the map
+         card's bottom edge; filled/linked by script.js from site.json's
+         address so it stays in sync with the address printed everywhere
+         else. -->
+    <div class="visit-map reveal">
+      <div id="visit-map-mount"></div>
+      <a id="visit-directions" class="btn btn-ghost" href="#" target="_blank" rel="noopener" data-i18n="visit.getDirections">Get Directions</a>
+    </div>
+
     <p class="visit-fallback reveal">
       <span data-i18n="visit.emailFallbackPrefix">Or email us directly at</span>
       <a id="visit-email-fallback" href="#"></a>
@@ -148,6 +160,9 @@
        or Inquiry" trigger (Visit section button or the floating FAB) opens it -->
   <div id="event-modal-mount"></div>
 
+  <!-- Classic (non-module) script, so the global L it defines is ready by
+       the time the deferred module below runs. -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="script.js"></script>
 </body>
 </html>

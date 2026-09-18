@@ -19,6 +19,7 @@ import { renderThemeToggle } from "./components/themeToggle.js";
 import { renderEventModal, openEventModal } from "./components/eventModal.js";
 import { renderFab } from "./components/fab.js";
 import { renderMobileNav } from "./components/mobileNav.js";
+import { renderMap } from "./components/map.js";
 
 const LANG_STORAGE_KEY = "klandestina-lang";
 const THEME_STORAGE_KEY = "klandestina-theme";
@@ -93,6 +94,18 @@ async function init() {
   const emailFallback = document.getElementById("visit-email-fallback");
   emailFallback.href = `mailto:${site.email}`;
   emailFallback.textContent = site.email;
+
+  // Leaflet loads from a CDN (index.html) — an ad blocker, privacy
+  // extension, or a transient CDN hiccup could leave the global L
+  // undefined. That should cost the page a map, not everything after
+  // it (footer, menu tabs, gallery, translations all still run below).
+  try {
+    renderMap(document.getElementById("visit-map-mount"), { ...site.coordinates, label: `${site.name} — ${site.address}` });
+  } catch (e) {
+    console.error("Map failed to load:", e);
+  }
+  document.getElementById("visit-directions").href =
+    `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.address)}`;
 
   renderEventModal(document.getElementById("event-modal-mount"), { email: site.email });
 

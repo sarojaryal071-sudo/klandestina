@@ -47,6 +47,7 @@
   "visit": {
     "eyebrow": "Löydä meidät",
     "heading": "Tule löytämään ovi",
+    "getDirections": "Hae reittiohjeet",
     "emailFallbackPrefix": "Tai lähetä sähköpostia suoraan osoitteeseen"
   },
   "eventModal": {

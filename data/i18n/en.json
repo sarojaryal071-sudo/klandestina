@@ -47,6 +47,7 @@
   "visit": {
     "eyebrow": "Find Us",
     "heading": "Come find the door",
+    "getDirections": "Get Directions",
     "emailFallbackPrefix": "Or email us directly at"
   },
   "eventModal": {

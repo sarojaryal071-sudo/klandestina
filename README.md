@@ -20,7 +20,7 @@ Per-item fields:
 - `index.html` — page skeleton and section order
 - `style.css` — all visual styling
 - `script.js` — loads data, calls each component, wires up interactions
-- `components/` — one reusable "template" per repeating piece (dish card, menu row, gallery tile, button) plus one-off pieces (nav, mobile nav overlay, footer, language switcher, theme toggle, the special-event modal, the FAB)
+- `components/` — one reusable "template" per repeating piece (dish card, menu row, gallery tile, button) plus one-off pieces (nav, mobile nav overlay, footer, language switcher, theme toggle, the special-event modal, the FAB, the Visit-section map)
 - `data/menu.json` — dishes and full menu content
 - `data/site.json` — address, hours, reservation link, socials
 - `data/i18n/` — `en.json` / `fi.json`, one matching set of UI-chrome translation keys each
@@ -28,7 +28,7 @@ Per-item fields:
 
 ## Status
 
-Working prototype with the real menu (lunch, à la carte, drinks — see below), a scattered-photo gallery, scroll-spy nav highlighting, horizontal swipeable dish cards on mobile, dish thumbnails in the full menu list (text-only rows for items with no real photo — see below), an EN/FI language switcher, a dark/light theme toggle, floating-tile dish cards (smaller, gapped, rounded, theme-aware shadow via `--card-shadow`), an auto-hiding mobile topbar with a hamburger-triggered full-screen section nav, and a "Special Events or Inquiry" modal (see below), reachable both from the Visit section and a persistent floating action button. Scroll-reveal and tilt-hover are CSS-only and already active.
+Working prototype with the real menu (lunch, à la carte, drinks — see below), a scattered-photo gallery, scroll-spy nav highlighting, horizontal swipeable dish cards on mobile, dish thumbnails in the full menu list (text-only rows for items with no real photo — see below), an EN/FI language switcher, a dark/light theme toggle, floating-tile dish cards (smaller, gapped, rounded, theme-aware shadow via `--card-shadow`), an auto-hiding mobile topbar with a hamburger-triggered full-screen section nav, an interactive map in the Visit section (see below), and a "Special Events or Inquiry" modal (see below), reachable both from the Visit section and a persistent floating action button. Scroll-reveal and tilt-hover are CSS-only and already active.
 
 ## Special events or inquiry
 
@@ -37,6 +37,14 @@ The "Special Events or Inquiry" action opens a modal (`components/eventModal.js`
 Event type is a `<select>` (Birthday / Private Party / Corporate Event / Anniversary / Other) rather than free text, since a dropdown covers the realistic cases with less typing; selecting "Other" reveals a small text input for the visitor to specify, which is only included in the mailto body when Other is actually chosen (`Event type: Other — [their text]`; otherwise just `Event type: <selected>`). On submit the form builds a `mailto:` link from the field values (no backend, no network call) and hands off to the visitor's own email client via `window.location.href`, then closes. A plain-text fallback line under the Visit-section buttons spells out the email address directly, in case the visitor's device has no mail client configured and the mailto link does nothing visible.
 
 The FAB sits at `bottom: 24px; right: 24px` (`z-index: 90`, below the modal's 100 but above ordinary content) — independent of the top-anchored `.shortcut-nav`/`.utility-bar`/`.mobile-topbar`, so the two never compete for space. Below 720px it drops its text label and becomes a plain 52px circular icon button, matching the site's tactile "3D" button shadow language at any size.
+
+## Map
+
+The Visit section's map (`components/map.js`) is [Leaflet](https://leafletjs.com/) loaded from a CDN, with free CartoDB tiles (Dark Matter / Positron — no API key) instead of default OSM tiles, since those two already roughly match the site's dark/light palette. It's centered on `data/site.json`'s `coordinates` field ({ lat: 60.1903, lng: 24.9535 }, geocoded for Aleksis Kiven katu 17), at zoom 16 — close enough to read the street. Scroll-wheel zoom is off by default so the map doesn't hijack an ordinary page scroll when the visitor's cursor happens to pass over it; drag-pan, the +/- controls, and pinch/double-click zoom all still work.
+
+The pin is a plain `L.divIcon` (a styled `<div>`, not a raster pin image) — `.map-marker` in `style.css` builds a classic pin silhouette (circle + triangular tip) purely from `var(--accent)`, so it follows the palette exactly like every button/price/heading elsewhere. Leaflet's own chrome (the popup, the attribution line) is re-themed the same way, off `var(--surface)`/`var(--ink)`, so it doesn't look like an unstyled default widget dropped onto the page. The map card itself reuses `.visual`'s exact treatment (`border-radius: 22px`, `overflow: hidden`, `box-shadow: var(--card-shadow)`) — the same look as the dish/gallery tiles — and the theme swap (including which CartoDB tile set loads) is driven by a `MutationObserver` on `<html data-theme>`, the same attribute every other theme-aware part of the site already keys off; nothing here needed script.js's `toggleTheme()` itself touched.
+
+"Get Directions" (`#visit-directions`, styled `.btn-ghost`) sits overlapping the map card's bottom edge and opens `https://www.google.com/maps/dir/?api=1&destination=<site.address>` in a new tab — the universal Google Maps link format, which works cross-platform (including handing off to Apple Maps on iOS via Google's own redirect) without any separate device-detection logic.
 
 ## Menu row layout
 
@@ -73,6 +81,7 @@ UI chrome (nav, hero, section headings, story/visit copy, footer, the event moda
 Dark is the default palette. Light theme's CSS variables live in the `:root[data-theme="light"]` block in `style.css`. `script.js` sets the visitor's initial theme from `prefers-color-scheme` (via a small inline script in `index.html`'s `<head>`, so there's no flash of the wrong theme), then remembers a manual toggle in `localStorage`.
 
 Known gaps:
+- **Map tiles use a fixed neutral CartoDB style (dark/light per theme)** since map tiles can't follow CSS variables. Only the pin and card chrome are palette-driven. If the final brand palette calls for a tinted map, that would be a separate follow-up (e.g. a CSS filter/hue-rotate on the tile layer, or a different tile provider).
 - The `gallery` array in `data/menu.json` currently reuses the dish photos from `images/dishes/` as filler (`galleryTile.js` points straight at that folder — there's deliberately no separate `images/gallery/` copy of the same files, see "Image loading & size" below) — real interior/atmosphere photos are still needed.
 - **FI translations are AI-generated** (by Claude) and should be reviewed by a native speaker before real launch — both for accuracy and for tone.
 - **The G/M/L allergen legend needs confirming with the owner** (see "Editing the menu" above) — codes are stored exactly as printed, meaning is not asserted.
