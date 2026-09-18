@@ -44,15 +44,26 @@
     "emailFallbackPrefix": "Tai lähetä sähköpostia suoraan osoitteeseen"
   },
   "eventModal": {
-    "triggerLabel": "Varaa erikoistilaisuus",
-    "title": "Varaa erikoistilaisuus",
+    "triggerLabel": "Erikoistilaisuudet ja tiedustelut",
+    "title": "Erikoistilaisuudet ja tiedustelut",
     "subtitle": "Kerro perustiedot, ja avaamme sähköpostisi valmiiksi täytettynä.",
     "eventTypeLabel": "Tilaisuuden tyyppi",
-    "eventTypePlaceholder": "Synttärit, yksityistilaisuus, yritystapahtuma...",
+    "eventTypePlaceholder": "Valitse tilaisuuden tyyppi…",
+    "eventTypeBirthday": "Synttärit",
+    "eventTypePrivateParty": "Yksityistilaisuus",
+    "eventTypeCorporate": "Yritystapahtuma",
+    "eventTypeAnniversary": "Vuosipäivä",
+    "eventTypeOther": "Muu",
+    "eventTypeOtherLabel": "Kerro tarkemmin",
+    "eventTypeOtherPlaceholder": "Kerro lisää...",
     "dateLabel": "Toivottu päivämäärä",
     "guestsLabel": "Vierasmäärä",
     "detailsLabel": "Lisätiedot",
     "submit": "Lähetä tiedustelu"
+  },
+  "fab": {
+    "label": "Erikoistilaisuus",
+    "ariaLabel": "Erikoistilaisuudet ja tiedustelut"
   },
   "footer": {
     "tagline": "Cantina ilman kylttiä. Aleksis Kiven katu 17, Helsinki.",

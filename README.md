@@ -27,11 +27,15 @@ Per-item fields:
 
 ## Status
 
-Working prototype with the real menu (lunch, à la carte, drinks — see below), a scattered-photo gallery, scroll-spy nav highlighting, horizontal swipeable dish cards on mobile, dish thumbnails in the full menu list, an EN/FI language switcher, a dark/light theme toggle, floating-tile dish cards (smaller, gapped, rounded, theme-aware shadow via `--card-shadow`), an auto-hiding mobile topbar, and a "Book for a Special Event" modal (see below) in the Visit section. Scroll-reveal and tilt-hover are CSS-only and already active.
+Working prototype with the real menu (lunch, à la carte, drinks — see below), a scattered-photo gallery, scroll-spy nav highlighting, horizontal swipeable dish cards on mobile, dish thumbnails in the full menu list, an EN/FI language switcher, a dark/light theme toggle, floating-tile dish cards (smaller, gapped, rounded, theme-aware shadow via `--card-shadow`), an auto-hiding mobile topbar, and a "Special Events or Inquiry" modal (see below), reachable both from the Visit section and a persistent floating action button. Scroll-reveal and tilt-hover are CSS-only and already active.
 
-## Booking a special event
+## Special events or inquiry
 
-The Visit section's "Book for a Special Event" button opens a modal (`components/eventModal.js`) with a plain form — event type, preferred date, guest count, details. On submit it builds a `mailto:` link from the field values (no backend, no network call) and hands off to the visitor's own email client via `window.location.href`, then closes. A plain-text fallback line under the buttons spells out the email address directly, in case the visitor's device has no mail client configured and the mailto link does nothing visible.
+The "Special Events or Inquiry" action opens a modal (`components/eventModal.js`) with a plain form — event type, preferred date, guest count, details. It's reachable two ways: the primary (filled) button in the Visit section, listed ahead of the now-secondary (ghost) "Reserve a Table" button, and a persistent floating action button (`components/fab.js`) fixed to the bottom-right corner of every section. Both triggers call the same exported `openEventModal()` — there's only ever one modal instance in the DOM, not two.
+
+Event type is a `<select>` (Birthday / Private Party / Corporate Event / Anniversary / Other) rather than free text, since a dropdown covers the realistic cases with less typing; selecting "Other" reveals a small text input for the visitor to specify, which is only included in the mailto body when Other is actually chosen (`Event type: Other — [their text]`; otherwise just `Event type: <selected>`). On submit the form builds a `mailto:` link from the field values (no backend, no network call) and hands off to the visitor's own email client via `window.location.href`, then closes. A plain-text fallback line under the Visit-section buttons spells out the email address directly, in case the visitor's device has no mail client configured and the mailto link does nothing visible.
+
+The FAB sits at `bottom: 24px; right: 24px` (`z-index: 90`, below the modal's 100 but above ordinary content) — independent of the top-anchored `.shortcut-nav`/`.utility-bar`/`.mobile-topbar`, so the two never compete for space. Below 720px it drops its text label and becomes a plain 52px circular icon button, matching the site's tactile "3D" button shadow language at any size.
 
 ## Editing translations
 

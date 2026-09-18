@@ -17,6 +17,7 @@ import { renderFooter } from "./components/footer.js";
 import { renderLangSwitch, setActiveLang } from "./components/langSwitch.js";
 import { renderThemeToggle } from "./components/themeToggle.js";
 import { renderEventModal, openEventModal } from "./components/eventModal.js";
+import { renderFab } from "./components/fab.js";
 
 const LANG_STORAGE_KEY = "klandestina-lang";
 const THEME_STORAGE_KEY = "klandestina-theme";
@@ -68,27 +69,35 @@ async function init() {
   );
 
   // Visit section is just a CTA — address/hours live in the footer only.
-  // The special-event button sits beside Reserve; the modal it opens builds
-  // a mailto: link (no backend), with a plain-text email fallback under the
-  // buttons in case the visitor's device has no mail client configured.
+  // Special Events or Inquiry is the primary action here (filled accent
+  // button, listed first); Reserve a Table is secondary (ghost button).
+  // The modal it opens builds a mailto: link (no backend), with a
+  // plain-text email fallback under the buttons in case the visitor's
+  // device has no mail client configured.
   const visitButtons = document.getElementById("visit-buttons");
-  visitButtons.appendChild(
-    renderButton({ label: t("hero.reserve"), href: site.reservationUrl, style: "primary", newTab: true, i18nKey: "hero.reserve" })
-  );
 
   const eventButton = document.createElement("button");
   eventButton.type = "button";
-  eventButton.className = "btn btn-ghost";
+  eventButton.className = "btn btn-primary";
   eventButton.textContent = t("eventModal.triggerLabel");
   eventButton.dataset.i18n = "eventModal.triggerLabel";
   eventButton.addEventListener("click", openEventModal);
   visitButtons.appendChild(eventButton);
+
+  visitButtons.appendChild(
+    renderButton({ label: t("hero.reserve"), href: site.reservationUrl, style: "ghost", newTab: true, i18nKey: "hero.reserve" })
+  );
 
   const emailFallback = document.getElementById("visit-email-fallback");
   emailFallback.href = `mailto:${site.email}`;
   emailFallback.textContent = site.email;
 
   renderEventModal(document.getElementById("event-modal-mount"), { email: site.email });
+
+  // Floating action button — same trigger as the button above, just always
+  // on screen (fixed bottom-right) so the inquiry path isn't only reachable
+  // by scrolling all the way to Visit.
+  renderFab(document.getElementById("fab-mount"), openEventModal);
 
   // Gallery (photos and their filenames don't depend on language)
   const galleryGrid = document.getElementById("gallery-grid");
@@ -149,10 +158,12 @@ function pickLang(field) {
   return field;
 }
 
-// Single pass over every element tagged data-i18n="some.path" (textContent)
-// or data-i18n-placeholder="some.path" (the placeholder attribute, for form
-// inputs) — covers static markup in index.html plus the hooks nav.js,
-// footer.js, button.js and eventModal.js leave on the elements they render.
+// Single pass over every element tagged data-i18n="some.path" (textContent),
+// data-i18n-placeholder="some.path" (the placeholder attribute, for form
+// inputs), or data-i18n-aria-label="some.path" (the aria-label attribute,
+// for icon-only controls like the FAB) — covers static markup in
+// index.html plus the hooks nav.js, footer.js, button.js, eventModal.js and
+// fab.js leave on the elements they render.
 function applyTranslations() {
   document.documentElement.lang = currentLanguage;
   document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -160,6 +171,9 @@ function applyTranslations() {
   });
   document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
     el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
+    el.setAttribute("aria-label", t(el.dataset.i18nAriaLabel));
   });
 }
 

@@ -44,15 +44,26 @@
     "emailFallbackPrefix": "Or email us directly at"
   },
   "eventModal": {
-    "triggerLabel": "Book for a Special Event",
-    "title": "Book a Special Event",
+    "triggerLabel": "Special Events or Inquiry",
+    "title": "Special Events or Inquiry",
     "subtitle": "Tell us the basics and we'll open your email with everything ready to send.",
     "eventTypeLabel": "Event type",
-    "eventTypePlaceholder": "Birthday, private party, corporate event...",
+    "eventTypePlaceholder": "Choose an event type…",
+    "eventTypeBirthday": "Birthday",
+    "eventTypePrivateParty": "Private Party",
+    "eventTypeCorporate": "Corporate Event",
+    "eventTypeAnniversary": "Anniversary",
+    "eventTypeOther": "Other",
+    "eventTypeOtherLabel": "Please specify",
+    "eventTypeOtherPlaceholder": "Tell us more...",
     "dateLabel": "Preferred date",
     "guestsLabel": "Number of guests",
     "detailsLabel": "Additional details",
     "submit": "Send Inquiry"
+  },
+  "fab": {
+    "label": "Special Event",
+    "ariaLabel": "Special Events or Inquiry"
   },
   "footer": {
     "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",
