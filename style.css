@@ -163,6 +163,19 @@ section { position: relative; padding: 130px 56px; }
 }
 @media (max-width: 900px) { #brand-mark { display: none; } }
 
+/* Shared wordmark/logo image (components/logo.js), used inside #brand-mark,
+   .mobile-topbar-brand, .mobile-nav-brand, and .footer-logo — one base rule
+   plus a per-placement height so the same image reads as "topbar-sized" in
+   the nav and noticeably larger in the footer, without needing separate
+   image files per spot. If data/site.json has no `logo` set, or the file
+   404s/fails to decode, these containers instead hold the plain text mark
+   they always rendered (components/logo.js's onerror fallback) — sized off
+   each container's own font-size above/below, untouched by this block. */
+.brand-logo-img { display: block; width: auto; height: 26px; }
+#brand-mark .brand-logo-img { height: 26px; }
+.footer-logo .brand-logo-img { height: 42px; }
+.mobile-nav-brand .brand-logo-img { height: 36px; }
+
 /* ---------- Utility bar: language switch + theme toggle ---------- */
 .utility-bar {
   position: fixed; top: 22px; right: 32px; z-index: 50;
@@ -219,6 +232,7 @@ section { position: relative; padding: 130px 56px; }
   .mobile-topbar-brand {
     font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--ink);
   }
+  .mobile-topbar-brand .brand-logo-img { height: 24px; }
   .mobile-topbar-controls { display: flex; align-items: center; gap: 10px; }
 
   /* These reuse .lang-switch/.theme-toggle's text/icon styling but drop the

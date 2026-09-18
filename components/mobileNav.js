@@ -6,11 +6,14 @@
 // straight to a section matters on mobile too.
 //
 // Visually it borrows straight from the rest of the site rather than
-// being its own thing: the wordmark markup is footer.js's "Klande·stina"
-// treatment, and each link's hover/tap state is nav.js's pill-fill
-// pattern (a <span class="pill-fill"> sibling next to the translated
-// label span, not on the label itself, so applyTranslations() re-setting
-// the label's textContent never wipes the pill-fill span out).
+// being its own thing: the wordmark is the same shared brand mark
+// (components/logo.js) footer.js and the topbar use, and each link's
+// hover/tap state is nav.js's pill-fill pattern (a <span class="pill-fill">
+// sibling next to the translated label span, not on the label itself, so
+// applyTranslations() re-setting the label's textContent never wipes the
+// pill-fill span out).
+
+import { brandLogoHTML } from "./logo.js";
 
 const SECTIONS = [
   { id: "hero", i18n: "mobileNav.home", label: "Home" },
@@ -28,8 +31,9 @@ const CLOSE_MS = 200;
 /**
  * @param {HTMLElement} toggleContainer - mounted inside the mobile topbar
  * @param {HTMLElement} overlayContainer - mounted once, anywhere in the body
+ * @param {Object} site - from data/site.json, for the shared brand mark
  */
-export function renderMobileNav(toggleContainer, overlayContainer) {
+export function renderMobileNav(toggleContainer, overlayContainer, site) {
   toggleContainer.innerHTML = `
     <button
       type="button" class="mobile-nav-toggle" aria-expanded="false" aria-controls="mobile-nav-overlay"
@@ -50,7 +54,7 @@ export function renderMobileNav(toggleContainer, overlayContainer) {
       <button
         type="button" class="mobile-nav-close" aria-label="Close menu" data-i18n-aria-label="mobileNav.closeLabel"
       >&times;</button>
-      <div class="mobile-nav-brand">Klande<span>&middot;</span>stina</div>
+      <div class="mobile-nav-brand">${brandLogoHTML(site)}</div>
       <nav class="mobile-nav-links">${linksHtml}</nav>
     </div>
   `;

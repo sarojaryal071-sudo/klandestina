@@ -1,5 +1,6 @@
 {
   "name": "Klandestina",
+  "logo": "images/logo/klandestina-logo.png",
   "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",
   "address": "Aleksis Kiven katu 17, Helsinki",
   "coordinates": { "lat": 60.1903, "lng": 24.9535 },

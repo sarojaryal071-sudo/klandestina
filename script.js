@@ -21,6 +21,7 @@ import { renderFab } from "./components/fab.js";
 import { renderMobileNav } from "./components/mobileNav.js";
 import { renderMap } from "./components/map.js";
 import { renderMenuPhoto } from "./components/menuPhoto.js";
+import { brandLogoHTML } from "./components/logo.js";
 
 const LANG_STORAGE_KEY = "klandestina-lang";
 const THEME_STORAGE_KEY = "klandestina-theme";
@@ -48,8 +49,8 @@ async function init() {
 
   // Nav
   renderNav(document.getElementById("shortcut-nav"));
-  document.getElementById("brand-mark").textContent = site.name;
-  document.getElementById("mobile-topbar-brand").textContent = site.name;
+  document.getElementById("brand-mark").innerHTML = brandLogoHTML(site);
+  document.getElementById("mobile-topbar-brand").innerHTML = brandLogoHTML(site);
 
   // Language switcher + theme toggle — rendered twice (desktop utility-bar,
   // mobile topbar) since they sit in different fixed-position contexts;
@@ -60,7 +61,7 @@ async function init() {
   renderThemeToggle(document.getElementById("theme-toggle"), toggleTheme);
   renderLangSwitch(document.getElementById("mobile-lang-switch"), currentLanguage, setLanguage);
   renderThemeToggle(document.getElementById("mobile-theme-toggle"), toggleTheme);
-  renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"));
+  renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"), site);
 
   initMobileTopbarAutoHide();
 

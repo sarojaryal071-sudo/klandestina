@@ -6,6 +6,8 @@
 // Hand-drawn to match the site's own stroke-icon language (theme toggle's
 // sun/moon, the FAB's calendar) rather than importing official brand SVGs —
 // same reasoning as the custom CSS map pin instead of a raster logo.
+import { brandLogoHTML } from "./logo.js";
+
 const SOCIAL_ICONS = {
   instagram: `
     <rect x="3" y="3" width="18" height="18" rx="5"></rect>
@@ -43,7 +45,7 @@ export function renderFooter(container, site) {
     <footer>
       <div class="container footer-grid">
         <div>
-          <div class="footer-logo">Klande<span>&middot;</span>stina</div>
+          <div class="footer-logo">${brandLogoHTML(site)}</div>
           <span data-i18n="footer.tagline">${site.tagline}</span>
           <div class="footer-social">${socialLinks}</div>
         </div>
