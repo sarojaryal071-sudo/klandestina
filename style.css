@@ -220,28 +220,85 @@ section { position: relative; padding: 130px 56px; }
 /* ---------- Mobile nav overlay (<=900px only) ---------- */
 /* Full-screen, opened by .mobile-nav-toggle in the mobile topbar. z-index
    95 sits above the FAB (90) — no reason for the FAB to float above an
-   open nav — but below the event modal (100), which should always win. */
+   open nav — but below the event modal (100), which should always win.
+   Background is the same radial-glow-over-var(--bg) treatment as .hero,
+   so it reads as part of the site rather than a flat blank screen; being
+   built from --bg/--accent means it re-themes for free under
+   :root[data-theme="light"], no separate override needed. */
 .mobile-nav-overlay {
   position: fixed; inset: 0; z-index: 95;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: var(--bg);
+  background:
+    radial-gradient(90% 55% at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%),
+    radial-gradient(70% 45% at 85% 100%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 60%),
+    var(--bg);
 }
 .mobile-nav-overlay[hidden] { display: none; }
+
+/* Entrance/exit are separate keyframes (not a single transition) so the
+   overlay always renders its "from" state on the very first frame after
+   [hidden] is removed, with no flash of unstyled content. --closing plays
+   while [hidden] is still absent (JS removes it only once this finishes),
+   so the slide-up is actually visible instead of an instant cut. The
+   panel itself only ever slides (no opacity animation on the backdrop) —
+   animating its opacity too briefly let the page behind it show through
+   mid-fade, since the backdrop gradient itself would turn translucent. */
+.mobile-nav-overlay--open { animation: mobileNavIn 0.3s ease both; }
+.mobile-nav-overlay--closing { animation: mobileNavOut 0.2s ease both; }
+@keyframes mobileNavIn { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+@keyframes mobileNavOut { from { transform: translateY(0); } to { transform: translateY(-100%); } }
+
 .mobile-nav-close {
   position: absolute; top: 20px; right: 20px;
-  width: 40px; height: 40px; border-radius: 50%;
+  width: 44px; height: 44px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  background: none; border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
-  color: var(--ink); font-size: 22px; line-height: 1; cursor: pointer;
-  transition: color 0.18s ease, transform 0.18s ease;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  font-size: 20px; line-height: 1; cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 0 0 var(--surface-edge), 0 10px 20px -8px rgba(0,0,0,0.5);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
 }
-.mobile-nav-close:hover { color: var(--accent); transform: rotate(90deg); }
-.mobile-nav-links { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+.mobile-nav-close:hover { color: var(--accent); transform: translateY(-2px); }
+.mobile-nav-close:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 1px 0 0 var(--surface-edge); }
+
+.mobile-nav-brand {
+  font-family: "Bebas Neue", sans-serif; font-size: 30px; letter-spacing: 0.04em;
+  margin-bottom: 44px; color: var(--ink);
+}
+.mobile-nav-brand span { color: var(--accent); }
+
+.mobile-nav-links { display: flex; flex-direction: column; align-items: center; }
+.mobile-nav-divider { width: 36px; height: 1px; margin: 6px 0; background: color-mix(in srgb, var(--accent) 45%, transparent); }
 .mobile-nav-links a {
-  font-family: "Bebas Neue", sans-serif; font-size: 42px; letter-spacing: 0.03em;
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 40px; border-radius: 14px;
+  font-family: "Bebas Neue", sans-serif; font-size: 38px; letter-spacing: 0.03em;
   color: var(--ink); text-transform: uppercase; transition: color 0.18s ease;
 }
-.mobile-nav-links a:hover, .mobile-nav-links a:active { color: var(--accent); }
+/* The label sits in its own span (translated independently by
+   applyTranslations()) so it can be layered above .pill-fill — same split
+   nav.js uses for the desktop pills, reused here for the same hover/tap
+   treatment: a solid accent shape growing in behind the text. */
+.mobile-nav-links a > span:last-child { position: relative; z-index: 1; }
+.mobile-nav-links a .pill-fill {
+  position: absolute; inset: 4px; border-radius: 10px; background: var(--accent);
+  opacity: 0; transform: scale(0.85); transition: opacity 0.2s ease, transform 0.2s ease; z-index: 0;
+}
+.mobile-nav-links a:hover .pill-fill, .mobile-nav-links a:active .pill-fill, .mobile-nav-links a:focus-visible .pill-fill {
+  opacity: 1; transform: scale(1);
+}
+.mobile-nav-links a:hover, .mobile-nav-links a:active, .mobile-nav-links a:focus-visible { color: #1a0f0a; }
+
+/* Staggered entrance — each link's animation-delay is set inline by
+   mobileNav.js (60ms apart), so this only needs to define what plays;
+   .mobile-nav-overlay--closing intentionally doesn't re-trigger it — the
+   links just revert to their resting opacity/position instantly while the
+   overlay itself fades out around them, which reads fine over 200ms. */
+.mobile-nav-overlay--open .mobile-nav-brand,
+.mobile-nav-overlay--open .mobile-nav-links a {
+  animation: mobileNavItemIn 0.3s ease both;
+}
+@keyframes mobileNavItemIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
 @media (min-width: 901px) {
   /* The toggle that opens this is only reachable inside the mobile topbar
