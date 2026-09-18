@@ -1,12 +1,11 @@
 // langSwitch.js
-// Plain-text EN / FI / ES language switcher, rendered once near the
+// Plain-text EN / FI language switcher, rendered once near the
 // shortcut nav. Clicking a language hands its code to onSelect; script.js
 // owns actually applying the change.
 
 const LANGUAGES = [
   { code: "en", label: "EN" },
-  { code: "fi", label: "FI" },
-  { code: "es", label: "ES" }
+  { code: "fi", label: "FI" }
 ];
 
 /**

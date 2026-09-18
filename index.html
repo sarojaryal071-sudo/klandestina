@@ -107,13 +107,21 @@
     <!-- Address/hours/contact live in the footer only, to avoid repeating
          them twice on the page. This section is just the CTA moment. -->
     <div class="visit-actions reveal">
-      <!-- Filled by components/button.js -->
+      <!-- Reserve button + "Book for a Special Event" trigger, filled by script.js -->
       <div id="visit-buttons"></div>
     </div>
+    <p class="visit-fallback reveal">
+      <span data-i18n="visit.emailFallbackPrefix">Or email us directly at</span>
+      <a id="visit-email-fallback" href="#"></a>
+    </p>
   </section>
 
   <!-- Filled by components/footer.js -->
   <div id="footer-mount"></div>
+
+  <!-- Filled by components/eventModal.js; hidden until the "Book for a
+       Special Event" button (in the Visit section) opens it -->
+  <div id="event-modal-mount"></div>
 
   <script type="module" src="script.js"></script>
 </body>

@@ -395,7 +395,59 @@ section { position: relative; padding: 130px 56px; }
 
 /* ---------- Visit ---------- */
 .visit-actions { display: flex; justify-content: center; }
-#visit-buttons { display: flex; justify-content: center; }
+#visit-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.visit-fallback {
+  text-align: center; margin: 18px 0 0; font-size: 14px;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+.visit-fallback a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+
+/* ---------- Special Event modal ---------- */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+}
+.modal-overlay[hidden] { display: none; }
+
+.modal-card {
+  position: relative; width: 100%; max-width: 460px; max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  border-radius: 22px;
+  padding: 36px 32px;
+  box-shadow: var(--card-shadow);
+}
+.modal-card h3 { font-size: 28px; color: var(--ink); margin-bottom: 10px; }
+.modal-sub { font-size: 14px; color: color-mix(in srgb, var(--ink) 60%, transparent); margin: 0 0 24px; }
+
+.modal-close {
+  position: absolute; top: 20px; right: 20px;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  color: var(--ink); font-size: 18px; line-height: 1; cursor: pointer;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+.modal-close:hover { color: var(--accent); transform: rotate(90deg); }
+
+.modal-form { display: flex; flex-direction: column; gap: 16px; }
+.modal-form label {
+  display: flex; flex-direction: column; gap: 6px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+.modal-form input, .modal-form textarea {
+  font: inherit; font-size: 15px; padding: 12px 14px; border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  background: var(--bg); color: var(--ink);
+  resize: vertical;
+}
+.modal-form input:focus, .modal-form textarea:focus { outline: none; border-color: var(--accent); }
+.modal-form button[type="submit"] { margin-top: 8px; }
 
 /* ---------- Footer ---------- */
 footer { background: var(--footer-bg); padding: 56px 56px 28px; transition: background 0.25s ease; }

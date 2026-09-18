@@ -40,7 +40,19 @@
   },
   "visit": {
     "eyebrow": "Find Us",
-    "heading": "Come find the door"
+    "heading": "Come find the door",
+    "emailFallbackPrefix": "Or email us directly at"
+  },
+  "eventModal": {
+    "triggerLabel": "Book for a Special Event",
+    "title": "Book a Special Event",
+    "subtitle": "Tell us the basics and we'll open your email with everything ready to send.",
+    "eventTypeLabel": "Event type",
+    "eventTypePlaceholder": "Birthday, private party, corporate event...",
+    "dateLabel": "Preferred date",
+    "guestsLabel": "Number of guests",
+    "detailsLabel": "Additional details",
+    "submit": "Send Inquiry"
   },
   "footer": {
     "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",

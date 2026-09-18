@@ -11,7 +11,7 @@ The full menu is split into `lunch`, `starters`, `tacos`, `chilaquiles`, `desser
 Per-item fields:
 - `allergens`: raw letter codes as printed on the menu (`["M","G"]`, `["VEGAN"]`, etc.) — plain display text next to the name, not interactive. **The G/M/L legend itself needs confirming with the owner** — the menu photos show the letters but not what they stand for, so I've stored them as-is without guessing (G/M/L conventionally mean gluten/dairy/lactose-adjacent allergens on European menus, but I didn't want to assert that without the owner's key).
 - `price`: usually a string (`"€15"`); `""` for items covered by a category-level price note instead (Lunch's fixed €14.90); or, for wine only, an object `{ glass12, glass16, glass24, bottle }` with `null` for sizes not offered — rendered as a compact 4-column row, still plain text.
-- `description`: `{ en, fi, es }`, same as before. Cocktail modifiers ("With Mezcal: +2€") and the Amazing Bowl's choose-your-sides/filling text are folded into this as plain prose, not separate interactive fields — nothing on the menu beyond the existing category tabs is clickable.
+- `description`: `{ en, fi }`. Cocktail modifiers ("With Mezcal: +2€") and the Amazing Bowl's choose-your-sides/filling text are folded into this as plain prose, not separate interactive fields — nothing on the menu beyond the existing category tabs is clickable.
 - A group can carry a standing note above its items via `data/i18n/*.json`'s `menu.notes.<groupId>` (used for Lunch's price/schedule line and Cocktails' "ask about Tequila & Mezcal" line).
 
 ## File structure
@@ -19,19 +19,23 @@ Per-item fields:
 - `index.html` — page skeleton and section order
 - `style.css` — all visual styling
 - `script.js` — loads data, calls each component, wires up interactions
-- `components/` — one reusable "template" per repeating piece (dish card, menu row, gallery tile, button) plus one-off pieces (nav, footer, language switcher, theme toggle)
+- `components/` — one reusable "template" per repeating piece (dish card, menu row, gallery tile, button) plus one-off pieces (nav, footer, language switcher, theme toggle, the special-event modal)
 - `data/menu.json` — dishes and full menu content
 - `data/site.json` — address, hours, reservation link, socials
-- `data/i18n/` — `en.json` / `fi.json` / `es.json`, one matching set of UI-chrome translation keys each
+- `data/i18n/` — `en.json` / `fi.json`, one matching set of UI-chrome translation keys each
 - `images/` — photos, organized by section (`hero/`, `dishes/`, `gallery/`, `logo/`)
 
 ## Status
 
-Working prototype with the real menu (lunch, à la carte, drinks — see below), a scattered-photo gallery, scroll-spy nav highlighting, horizontal swipeable dish cards on mobile, dish thumbnails in the full menu list, an EN/FI/ES language switcher, a dark/light theme toggle, floating-tile dish cards (smaller, gapped, rounded, theme-aware shadow via `--card-shadow`), and an auto-hiding mobile topbar. Scroll-reveal and tilt-hover are CSS-only and already active.
+Working prototype with the real menu (lunch, à la carte, drinks — see below), a scattered-photo gallery, scroll-spy nav highlighting, horizontal swipeable dish cards on mobile, dish thumbnails in the full menu list, an EN/FI language switcher, a dark/light theme toggle, floating-tile dish cards (smaller, gapped, rounded, theme-aware shadow via `--card-shadow`), an auto-hiding mobile topbar, and a "Book for a Special Event" modal (see below) in the Visit section. Scroll-reveal and tilt-hover are CSS-only and already active.
+
+## Booking a special event
+
+The Visit section's "Book for a Special Event" button opens a modal (`components/eventModal.js`) with a plain form — event type, preferred date, guest count, details. On submit it builds a `mailto:` link from the field values (no backend, no network call) and hands off to the visitor's own email client via `window.location.href`, then closes. A plain-text fallback line under the buttons spells out the email address directly, in case the visitor's device has no mail client configured and the mailto link does nothing visible.
 
 ## Editing translations
 
-UI chrome (nav, hero, section headings, story/visit copy, footer) lives in `data/i18n/en.json`, `fi.json`, `es.json` — same keys in each file. Menu item `description` fields in `data/menu.json` are `{ "en": ..., "fi": ..., "es": ... }` objects; dish/item *names* stay untranslated on purpose (they're already Spanish). `script.js` resolves everything by the active language at render time.
+UI chrome (nav, hero, section headings, story/visit copy, footer, the event modal) lives in `data/i18n/en.json`, `fi.json` — same keys in each file. Menu item `description` fields in `data/menu.json` are `{ "en": ..., "fi": ... }` objects; dish/item *names* stay untranslated on purpose (they're already Spanish). `script.js` resolves everything by the active language at render time. (Spanish was dropped as a site language — the site only needs EN/FI now — though dish/item names being Spanish already is unrelated to that and hasn't changed.)
 
 ## Theme
 
@@ -39,7 +43,7 @@ Dark is the default palette. Light theme's CSS variables live in the `:root[data
 
 Known gaps:
 - The `gallery` array in `data/menu.json` currently reuses the dish photos from `images/dishes/` as filler — real interior/atmosphere photos for `images/gallery/` are still needed.
-- **FI and ES translations are AI-generated** (by Claude) and should be reviewed by a native speaker before real launch — both for accuracy and for tone.
+- **FI translations are AI-generated** (by Claude) and should be reviewed by a native speaker before real launch — both for accuracy and for tone.
 - **The G/M/L allergen legend needs confirming with the owner** (see "Editing the menu" above) — codes are stored exactly as printed, meaning is not asserted.
 - **Two menu items have an item-level gap from illegible/uncertain source photos, flagged rather than guessed:**
   - Lunch's "Sea Bass in Mango Salsa" had an allergen code in parentheses that's obscured by glare in the photo — stored with an empty `allergens` array; worth re-checking against the physical menu.

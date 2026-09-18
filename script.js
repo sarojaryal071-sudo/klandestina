@@ -4,7 +4,7 @@
 // card or button LOOKS like — that's each component's own job.
 //
 // It also owns two small pieces of cross-cutting state that every section
-// depends on: the active language (en/fi/es) and the active theme
+// depends on: the active language (en/fi) and the active theme
 // (dark/light, though the theme's actual styling lives entirely in
 // style.css — this file only flips the <html data-theme> attribute).
 
@@ -16,10 +16,11 @@ import { renderGalleryTile } from "./components/galleryTile.js";
 import { renderFooter } from "./components/footer.js";
 import { renderLangSwitch, setActiveLang } from "./components/langSwitch.js";
 import { renderThemeToggle } from "./components/themeToggle.js";
+import { renderEventModal, openEventModal } from "./components/eventModal.js";
 
 const LANG_STORAGE_KEY = "klandestina-lang";
 const THEME_STORAGE_KEY = "klandestina-theme";
-const SUPPORTED_LANGS = ["en", "fi", "es"];
+const SUPPORTED_LANGS = ["en", "fi"];
 
 let i18n = {};
 let menu = null;
@@ -28,17 +29,16 @@ let currentLanguage = "en";
 let activeCategoryId = null;
 
 async function init() {
-  const [menuData, siteData, en, fi, es] = await Promise.all([
+  const [menuData, siteData, en, fi] = await Promise.all([
     fetch("data/menu.json").then((r) => r.json()),
     fetch("data/site.json").then((r) => r.json()),
     fetch("data/i18n/en.json").then((r) => r.json()),
-    fetch("data/i18n/fi.json").then((r) => r.json()),
-    fetch("data/i18n/es.json").then((r) => r.json())
+    fetch("data/i18n/fi.json").then((r) => r.json())
   ]);
 
   menu = menuData;
   site = siteData;
-  i18n = { en, fi, es };
+  i18n = { en, fi };
   currentLanguage = getStoredLanguage();
 
   // Nav
@@ -67,10 +67,28 @@ async function init() {
     renderButton({ label: t("hero.seeMenu"), href: "#menu", style: "ghost", i18nKey: "hero.seeMenu" })
   );
 
-  // Visit section is just a CTA — address/hours/email live in the footer only.
-  document.getElementById("visit-buttons").appendChild(
+  // Visit section is just a CTA — address/hours live in the footer only.
+  // The special-event button sits beside Reserve; the modal it opens builds
+  // a mailto: link (no backend), with a plain-text email fallback under the
+  // buttons in case the visitor's device has no mail client configured.
+  const visitButtons = document.getElementById("visit-buttons");
+  visitButtons.appendChild(
     renderButton({ label: t("hero.reserve"), href: site.reservationUrl, style: "primary", newTab: true, i18nKey: "hero.reserve" })
   );
+
+  const eventButton = document.createElement("button");
+  eventButton.type = "button";
+  eventButton.className = "btn btn-ghost";
+  eventButton.textContent = t("eventModal.triggerLabel");
+  eventButton.dataset.i18n = "eventModal.triggerLabel";
+  eventButton.addEventListener("click", openEventModal);
+  visitButtons.appendChild(eventButton);
+
+  const emailFallback = document.getElementById("visit-email-fallback");
+  emailFallback.href = `mailto:${site.email}`;
+  emailFallback.textContent = site.email;
+
+  renderEventModal(document.getElementById("event-modal-mount"), { email: site.email });
 
   // Gallery (photos and their filenames don't depend on language)
   const galleryGrid = document.getElementById("gallery-grid");
@@ -125,19 +143,23 @@ function resolveKey(dict, path) {
 }
 
 // Resolves a menu.json field that may be a plain string (price, tag, name)
-// or a { en, fi, es } object (description) into the active language's text.
+// or a { en, fi } object (description) into the active language's text.
 function pickLang(field) {
   if (field && typeof field === "object") return field[currentLanguage] || field.en || "";
   return field;
 }
 
-// Single pass over every element tagged data-i18n="some.path" — covers
-// static markup in index.html plus the data-i18n hooks nav.js, footer.js
-// and button.js leave on the elements they render.
+// Single pass over every element tagged data-i18n="some.path" (textContent)
+// or data-i18n-placeholder="some.path" (the placeholder attribute, for form
+// inputs) — covers static markup in index.html plus the hooks nav.js,
+// footer.js, button.js and eventModal.js leave on the elements they render.
 function applyTranslations() {
   document.documentElement.lang = currentLanguage;
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
   });
 }
 
