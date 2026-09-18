@@ -176,6 +176,16 @@ section { position: relative; padding: 130px 56px; }
 .footer-logo .brand-logo-img { height: 42px; }
 .mobile-nav-brand .brand-logo-img { height: 36px; }
 
+/* The provided logo file is white letter-fill + black drop-shadow, drawn
+   for a dark background — on dark theme it's crisp, but on light theme's
+   cream background the white fill nearly vanishes, leaving only a faint
+   shadow-outline ghost (confirmed by rendering it against both theme
+   backgrounds directly). Rather than asking for a second logo file,
+   inverting it under light theme turns it into black fill + white
+   shadow, which reads cleanly there too — same asset, no new file. If a
+   real two-tone brand file arrives later, this is the rule to remove. */
+:root[data-theme="light"] .brand-logo-img { filter: invert(1); }
+
 /* ---------- Utility bar: language switch + theme toggle ---------- */
 .utility-bar {
   position: fixed; top: 22px; right: 32px; z-index: 50;
