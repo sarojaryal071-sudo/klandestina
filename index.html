@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Klandestina — Cantina</title>
+  <meta name="description" content="Klandestina Cantina, Helsinki — Mexican street food, mezcal, and a room with no sign out front.">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <!-- Filled by components/nav.js -->
+  <div id="brand-mark"></div>
+  <nav id="shortcut-nav" class="shortcut-nav"></nav>
+
+  <header class="hero" id="hero">
+    <div class="hero-inner">
+      <span class="eyebrow">Klandestina Cantina · Helsinki</span>
+      <h1>Find the door.</h1>
+      <p>Tacos off live coals, mezcal poured heavy, and a room that doesn't announce itself.</p>
+      <div class="hero-actions">
+        <!-- Filled by components/button.js -->
+        <div id="hero-buttons"></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="story">
+    <!-- Static one-off section; content lives directly here -->
+  </section>
+
+  <section id="dishes">
+    <div class="section-head reveal">
+      <span class="eyebrow">Off the Grill</span>
+      <h2>Regulars order these twice</h2>
+    </div>
+    <!-- Filled by components/dishCard.js, one card per dish in data/menu.json -->
+    <div id="dish-grid" class="dish-grid"></div>
+  </section>
+
+  <section id="menu">
+    <div class="section-head reveal">
+      <span class="eyebrow">Full Menu</span>
+      <h2>Kitchen &amp; Bar</h2>
+    </div>
+    <!-- Filled by components/menuItem.js -->
+    <div id="menu-tabs" class="tabs"></div>
+    <div id="menu-list" class="menu-list"></div>
+  </section>
+
+  <section id="gallery">
+    <div class="section-head reveal">
+      <span class="eyebrow">Inside</span>
+      <h2>The room</h2>
+    </div>
+    <!-- Filled by components/galleryTile.js -->
+    <div id="gallery-grid" class="gallery-grid"></div>
+  </section>
+
+  <section id="visit">
+    <!-- Static one-off section: address, hours, reservation link -->
+  </section>
+
+  <!-- Filled by components/footer.js -->
+  <div id="footer-mount"></div>
+
+  <script type="module" src="/script.js"></script>
+</body>
+</html>
