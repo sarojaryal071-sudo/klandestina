@@ -1,0 +1,17 @@
+{
+  "name": "Klandestina",
+  "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",
+  "address": "Aleksis Kiven katu 17, Helsinki",
+  "email": "andres@klande.fi",
+  "hours": [
+    "Tue–Thu 17:00–22:00",
+    "Fri–Sat 17:00–24:00",
+    "Closed Sun & Mon"
+  ],
+  "reservationUrl": "https://klandestina-konepaja.menu.sciometa.com/",
+  "social": {
+    "instagram": "https://instagram.com/klandestinacantina",
+    "facebook": "https://facebook.com/klandecantina"
+  },
+  "accent": "#ff5a36"
+}

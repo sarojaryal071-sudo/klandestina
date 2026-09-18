@@ -1,0 +1,106 @@
+{
+  "signatureDishes": [
+    {
+      "name": "Mexican Tuna Poke",
+      "price": "€12.5",
+      "description": "Negra diced tuna, avocado, mango, cucumber, red onions, house salsa",
+      "image": "tuna-poke.jpg"
+    },
+    {
+      "name": "Kuha Ceviche",
+      "price": "€PLACEHOLDER",
+      "description": "Lime-cooked pike-perch, chilis, sesame seeds",
+      "image": "kuha-ceviche.jpg"
+    },
+    {
+      "name": "Tommy's Margarita",
+      "price": "€PLACEHOLDER",
+      "description": "Tequila, lime, smoked salt rim",
+      "image": "tommys-margarita.jpg"
+    },
+    {
+      "name": "Frijoles con Veneno",
+      "price": "€9",
+      "description": "Refried beans with cheese and chorizo, served with homemade chips",
+      "image": "frijoles-con-veneno.jpg"
+    },
+    {
+      "name": "Pork in Chili Ancho",
+      "price": "€PLACEHOLDER",
+      "description": "PLACEHOLDER — need description/ingredients",
+      "image": "pork-chili-ancho-bowl.jpg"
+    },
+    {
+      "name": "Quesabirria",
+      "price": "€PLACEHOLDER",
+      "description": "PLACEHOLDER — need description/ingredients",
+      "images": ["quesabirria-1.jpg", "quesabirria-2.jpg"]
+    }
+  ],
+
+  "categories": [
+    { "id": "starters", "label": "Starters" },
+    { "id": "mains", "label": "Mains" },
+    { "id": "sides", "label": "Sides" },
+    { "id": "bar", "label": "Bar" }
+  ],
+
+  "starters": [
+    {
+      "name": "Guacachips",
+      "tag": "V · VEGAN",
+      "description": "Guacamole + homemade tortilla chips",
+      "price": "€9.5"
+    },
+    {
+      "name": "Mexican Tuna Poke",
+      "tag": "",
+      "description": "Negra diced tuna, avocado, mango, cucumber, red onions, house salsa",
+      "price": "€12.5"
+    },
+    {
+      "name": "Kuha Ceviche",
+      "tag": "",
+      "description": "Lime-cooked pike-perch, chilis, sesame seeds",
+      "price": "€PLACEHOLDER"
+    },
+    {
+      "name": "Prawn Salpicon",
+      "tag": "",
+      "description": "Cooked prawns, pico de gallo, aguachile salsa, cucumber, red onions, mango salsa",
+      "price": "€PLACEHOLDER"
+    },
+    {
+      "name": "Frijoles con Veneno",
+      "tag": "V option",
+      "description": "Refried beans with cheese and chorizo, served with homemade chips (vegan option available)",
+      "price": "€9"
+    }
+  ],
+
+  "mains": [
+    {
+      "name": "Quesabirria",
+      "tag": "",
+      "description": "PLACEHOLDER — need description/ingredients",
+      "price": "€PLACEHOLDER"
+    },
+    {
+      "name": "Pork in Chili Ancho",
+      "tag": "",
+      "description": "PLACEHOLDER — need description/ingredients",
+      "price": "€PLACEHOLDER"
+    }
+  ],
+
+  "sides": [],
+
+  "bar": [
+    {
+      "name": "Tommy's Margarita",
+      "tag": "",
+      "description": "Tequila, lime, smoked salt rim",
+      "price": "€PLACEHOLDER"
+    }
+  ]
+}
