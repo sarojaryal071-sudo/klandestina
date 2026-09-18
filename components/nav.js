@@ -11,12 +11,14 @@ const SECTIONS = [
 
 /**
  * Renders the pill nav into the given container and wires up click-to-scroll
- * plus active-state highlighting.
+ * plus active-state highlighting. Each pill's label carries a data-i18n hook
+ * so script.js's translation pass can relabel it per active language.
  * @param {HTMLElement} container
  */
 export function renderNav(container) {
   container.innerHTML = SECTIONS.map(
-    (s) => `<a href="#${s.id}" data-section="${s.id}"><span class="pill-fill"></span>${s.label}</a>`
+    (s) =>
+      `<a href="#${s.id}" data-section="${s.id}"><span class="pill-fill"></span><span data-i18n="nav.${s.id}">${s.label}</span></a>`
   ).join("");
 
   setActive(container, SECTIONS[0].id);

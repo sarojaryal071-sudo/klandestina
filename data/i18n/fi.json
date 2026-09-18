@@ -1,0 +1,39 @@
+{
+  "nav": { "story": "Tarina", "menu": "Ruokalista", "gallery": "Galleria", "visit": "Käynti" },
+  "hero": {
+    "eyebrow": "Klandestina Cantina · Helsinki",
+    "heading": "Löydä ovi.",
+    "subtext": "Tacoja suoraan hiilloksesta, mezcalia reilulla kädellä ja tila, joka ei mainosta itseään.",
+    "reserve": "Varaa pöytä",
+    "seeMenu": "Katso ruokalista"
+  },
+  "dishes": { "eyebrow": "Suoraan grillistä", "heading": "Nämä kanta-asiakkaat tilaavat aina kahdesti" },
+  "menu": {
+    "eyebrow": "Koko ruokalista",
+    "heading": "Keittiö & baari",
+    "comingSoon": "Tulossa pian.",
+    "categories": { "starters": "Alkuruoat", "mains": "Pääruoat", "sides": "Lisukkeet", "bar": "Baari" }
+  },
+  "gallery": { "eyebrow": "Sisällä", "heading": "Tila" },
+  "story": {
+    "eyebrow": "Tarina",
+    "heading": "Ei kylttiä. Ei anteeksipyyntöjä.",
+    "body1": "Klandestina avattiin ilman kylttiä ovella, koska naapurusto löysi paikan ennen internetiä. Se ei ole muuttunut: ei katukylttiä, ei tulostettua päivän listaa — vain ovi Aleksis Kiven kadulla, jota kanta-asiakkaat osaavat työntää auki.",
+    "body2": "Sisällä keittiö toimii hiilloksella ja perhereseptiillä, suodatettuna sen läpi, mitä Helsingin torit sinä viikolla tarjoavat. Juomat kaadetaan kuin joku juhlisi syntymäpäiviään — joka ilta.",
+    "quoteText": "”Emme rakentaneet ravintolaa. Rakensimme paikan, jossa itse halusimme syödä.”",
+    "quoteAttribution": "— Andrés, keittiömestari ja omistaja"
+  },
+  "visit": {
+    "eyebrow": "Löydä meidät",
+    "heading": "Tule löytämään ovi",
+    "addressLabel": "Osoite",
+    "hoursLabel": "Aukioloajat",
+    "contactLabel": "Yhteystiedot"
+  },
+  "footer": {
+    "tagline": "Cantina ilman kylttiä. Aleksis Kiven katu 17, Helsinki.",
+    "visitLabel": "Käynti",
+    "hoursLabel": "Aukioloajat",
+    "rights": "Kaikki oikeudet pidätetään."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "nav": { "story": "Historia", "menu": "Menú", "gallery": "Galería", "visit": "Visítanos" },
+  "hero": {
+    "eyebrow": "Klandestina Cantina · Helsinki",
+    "heading": "Encuentra la puerta.",
+    "subtext": "Tacos directo de las brasas, mezcal servido sin medida, y un local que no se anuncia.",
+    "reserve": "Reserva una mesa",
+    "seeMenu": "Ver el menú"
+  },
+  "dishes": { "eyebrow": "Directo de la parrilla", "heading": "Los habituales los piden dos veces" },
+  "menu": {
+    "eyebrow": "Menú completo",
+    "heading": "Cocina y barra",
+    "comingSoon": "Próximamente.",
+    "categories": { "starters": "Entrantes", "mains": "Platos fuertes", "sides": "Acompañamientos", "bar": "Barra" }
+  },
+  "gallery": { "eyebrow": "Por dentro", "heading": "El local" },
+  "story": {
+    "eyebrow": "La historia",
+    "heading": "Sin letrero. Sin disculpas.",
+    "body1": "Klandestina abrió sin letrero en la puerta, porque el barrio encontró el lugar antes que internet. Eso no ha cambiado: sin rótulo en la calle, sin pizarra de especiales impresa — solo una puerta en Aleksis Kiven katu que los habituales saben empujar.",
+    "body2": "Dentro, la cocina funciona con brasas vivas y recetas familiares, filtradas por lo que los mercados de Helsinki ofrezcan esa semana. Los tragos se sirven como si alguien cumpliera años, todas las noches.",
+    "quoteText": "“No construimos un restaurante. Construimos el lugar donde nosotros mismos queríamos comer.”",
+    "quoteAttribution": "— Andrés, chef y propietario"
+  },
+  "visit": {
+    "eyebrow": "Encuéntranos",
+    "heading": "Ven a encontrar la puerta",
+    "addressLabel": "Dirección",
+    "hoursLabel": "Horario",
+    "contactLabel": "Contacto"
+  },
+  "footer": {
+    "tagline": "Una cantina sin letrero. Aleksis Kiven katu 17, Helsinki.",
+    "visitLabel": "Visítanos",
+    "hoursLabel": "Horario",
+    "rights": "Todos los derechos reservados."
+  }
+}

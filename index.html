@@ -9,6 +9,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Applied before first paint so there's no flash of the wrong theme:
+    // a saved choice wins, otherwise fall back to the OS-level preference.
+    (function () {
+      try {
+        var saved = localStorage.getItem("klandestina-theme");
+        var theme = saved || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+        if (theme === "light") document.documentElement.setAttribute("data-theme", "light");
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -16,11 +27,17 @@
   <div id="brand-mark"></div>
   <nav id="shortcut-nav" class="shortcut-nav"></nav>
 
+  <!-- Filled by components/langSwitch.js + components/themeToggle.js -->
+  <div class="utility-bar">
+    <div id="lang-switch" class="lang-switch"></div>
+    <div id="theme-toggle"></div>
+  </div>
+
   <header class="hero" id="hero">
     <div class="hero-inner">
-      <span class="eyebrow">Klandestina Cantina · Helsinki</span>
-      <h1>Find the door.</h1>
-      <p>Tacos off live coals, mezcal poured heavy, and a room that doesn't announce itself.</p>
+      <span class="eyebrow" data-i18n="hero.eyebrow">Klandestina Cantina · Helsinki</span>
+      <h1 data-i18n="hero.heading">Find the door.</h1>
+      <p data-i18n="hero.subtext">Tacos off live coals, mezcal poured heavy, and a room that doesn't announce itself.</p>
       <div class="hero-actions">
         <!-- Filled by components/button.js -->
         <div id="hero-buttons"></div>
@@ -29,13 +46,24 @@
   </header>
 
   <section id="story">
-    <!-- Static one-off section; content lives directly here -->
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="story.eyebrow">The Story</span>
+      <h2 data-i18n="story.heading">No sign. No apologies.</h2>
+    </div>
+    <div class="story-body reveal">
+      <p data-i18n="story.body1">Klandestina opened without a sign on the door, because the neighborhood found it before the internet did.</p>
+      <p data-i18n="story.body2">Inside, the kitchen runs on live coals and family recipes, filtered through whatever Helsinki's markets are giving up that week.</p>
+      <blockquote class="story-quote">
+        <p data-i18n="story.quoteText">“We didn't build a restaurant. We built the place we wanted to eat at.”</p>
+        <cite data-i18n="story.quoteAttribution">— Andrés, chef &amp; owner</cite>
+      </blockquote>
+    </div>
   </section>
 
   <section id="dishes">
     <div class="section-head reveal">
-      <span class="eyebrow">Off the Grill</span>
-      <h2>Regulars order these twice</h2>
+      <span class="eyebrow" data-i18n="dishes.eyebrow">Off the Grill</span>
+      <h2 data-i18n="dishes.heading">Regulars order these twice</h2>
     </div>
     <!-- Filled by components/dishCard.js, one card per dish in data/menu.json -->
     <div id="dish-grid" class="dish-grid"></div>
@@ -43,8 +71,8 @@
 
   <section id="menu">
     <div class="section-head reveal">
-      <span class="eyebrow">Full Menu</span>
-      <h2>Kitchen &amp; Bar</h2>
+      <span class="eyebrow" data-i18n="menu.eyebrow">Full Menu</span>
+      <h2 data-i18n="menu.heading">Kitchen &amp; Bar</h2>
     </div>
     <!-- Filled by components/menuItem.js -->
     <div id="menu-tabs" class="tabs"></div>
@@ -53,15 +81,36 @@
 
   <section id="gallery">
     <div class="section-head reveal">
-      <span class="eyebrow">Inside</span>
-      <h2>The room</h2>
+      <span class="eyebrow" data-i18n="gallery.eyebrow">Inside</span>
+      <h2 data-i18n="gallery.heading">The room</h2>
     </div>
     <!-- Filled by components/galleryTile.js -->
     <div id="gallery-grid" class="gallery-grid"></div>
   </section>
 
   <section id="visit">
-    <!-- Static one-off section: address, hours, reservation link -->
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="visit.eyebrow">Find Us</span>
+      <h2 data-i18n="visit.heading">Come find the door</h2>
+    </div>
+    <div class="visit-grid reveal">
+      <div class="visit-col">
+        <h4 data-i18n="visit.addressLabel">Address</h4>
+        <span id="visit-address"></span>
+      </div>
+      <div class="visit-col">
+        <h4 data-i18n="visit.hoursLabel">Hours</h4>
+        <div id="visit-hours"></div>
+      </div>
+      <div class="visit-col">
+        <h4 data-i18n="visit.contactLabel">Contact</h4>
+        <span id="visit-email"></span>
+      </div>
+    </div>
+    <div class="visit-actions">
+      <!-- Filled by components/button.js -->
+      <div id="visit-buttons"></div>
+    </div>
   </section>
 
   <!-- Filled by components/footer.js -->

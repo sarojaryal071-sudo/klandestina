@@ -1,0 +1,39 @@
+{
+  "nav": { "story": "Story", "menu": "Menu", "gallery": "Gallery", "visit": "Visit" },
+  "hero": {
+    "eyebrow": "Klandestina Cantina · Helsinki",
+    "heading": "Find the door.",
+    "subtext": "Tacos off live coals, mezcal poured heavy, and a room that doesn't announce itself.",
+    "reserve": "Reserve a Table",
+    "seeMenu": "See the Menu"
+  },
+  "dishes": { "eyebrow": "Off the Grill", "heading": "Regulars order these twice" },
+  "menu": {
+    "eyebrow": "Full Menu",
+    "heading": "Kitchen & Bar",
+    "comingSoon": "Coming soon.",
+    "categories": { "starters": "Starters", "mains": "Mains", "sides": "Sides", "bar": "Bar" }
+  },
+  "gallery": { "eyebrow": "Inside", "heading": "The room" },
+  "story": {
+    "eyebrow": "The Story",
+    "heading": "No sign. No apologies.",
+    "body1": "Klandestina opened without a sign on the door, because the neighborhood found it before the internet did. That hasn't changed: no street-facing marquee, no printed specials board — just a door on Aleksis Kiven katu that regulars know to push.",
+    "body2": "Inside, the kitchen runs on live coals and family recipes, filtered through whatever Helsinki's markets are giving up that week. The drinks are poured like it's someone's birthday, every night.",
+    "quoteText": "“We didn't build a restaurant. We built the place we wanted to eat at.”",
+    "quoteAttribution": "— Andrés, chef & owner"
+  },
+  "visit": {
+    "eyebrow": "Find Us",
+    "heading": "Come find the door",
+    "addressLabel": "Address",
+    "hoursLabel": "Hours",
+    "contactLabel": "Contact"
+  },
+  "footer": {
+    "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",
+    "visitLabel": "Visit",
+    "hoursLabel": "Hours",
+    "rights": "All rights reserved."
+  }
+}

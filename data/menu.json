@@ -3,37 +3,61 @@
     {
       "name": "Mexican Tuna Poke",
       "price": "€12.5",
-      "description": "Negra diced tuna, avocado, mango, cucumber, red onions, house salsa",
+      "description": {
+        "en": "Negra diced tuna, avocado, mango, cucumber, red onions, house salsa",
+        "fi": "Negra-tonnikalakuutioita, avokadoa, mangoa, kurkkua, punasipulia, talon salsaa",
+        "es": "Atún negra en cubos, aguacate, mango, pepino, cebolla morada, salsa de la casa"
+      },
       "image": "tuna-poke.jpg"
     },
     {
       "name": "Kuha Ceviche",
       "price": "€PLACEHOLDER",
-      "description": "Lime-cooked pike-perch, chilis, sesame seeds",
+      "description": {
+        "en": "Lime-cooked pike-perch, chilis, sesame seeds",
+        "fi": "Limemehussa \"kypsennettyä\" kuhaa, chiliä, seesaminsiemeniä",
+        "es": "Lucioperca \"cocinada\" en lima, chiles, semillas de sésamo"
+      },
       "image": "kuha-ceviche.jpg"
     },
     {
       "name": "Tommy's Margarita",
       "price": "€PLACEHOLDER",
-      "description": "Tequila, lime, smoked salt rim",
+      "description": {
+        "en": "Tequila, lime, smoked salt rim",
+        "fi": "Tequilaa, limeä, savustettu suolareunus",
+        "es": "Tequila, lima, borde de sal ahumada"
+      },
       "image": "tommys-margarita.jpg"
     },
     {
       "name": "Frijoles con Veneno",
       "price": "€9",
-      "description": "Refried beans with cheese and chorizo, served with homemade chips",
+      "description": {
+        "en": "Refried beans with cheese and chorizo, served with homemade chips",
+        "fi": "Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera",
+        "es": "Frijoles refritos con queso y chorizo, servidos con totopos caseros"
+      },
       "image": "frijoles-con-veneno.jpg"
     },
     {
       "name": "Pork in Chili Ancho",
       "price": "€PLACEHOLDER",
-      "description": "PLACEHOLDER — need description/ingredients",
+      "description": {
+        "en": "PLACEHOLDER — need description/ingredients",
+        "fi": "PLACEHOLDER — need description/ingredients",
+        "es": "PLACEHOLDER — need description/ingredients"
+      },
       "image": "pork-chili-ancho-bowl.jpg"
     },
     {
       "name": "Quesabirria",
       "price": "€PLACEHOLDER",
-      "description": "PLACEHOLDER — need description/ingredients",
+      "description": {
+        "en": "PLACEHOLDER — need description/ingredients",
+        "fi": "PLACEHOLDER — need description/ingredients",
+        "es": "PLACEHOLDER — need description/ingredients"
+      },
       "image": "quesabirria-1.jpg"
     }
   ],
@@ -49,32 +73,55 @@
     {
       "name": "Guacachips",
       "tag": "V · VEGAN",
-      "description": "Guacamole + homemade tortilla chips",
+      "description": {
+        "en": "Guacamole + homemade tortilla chips",
+        "fi": "Guacamolea + kotitekoisia tortillalastuja",
+        "es": "Guacamole + totopos caseros"
+      },
       "price": "€9.5"
     },
     {
       "name": "Mexican Tuna Poke",
       "tag": "",
-      "description": "Negra diced tuna, avocado, mango, cucumber, red onions, house salsa",
-      "price": "€12.5"
+      "description": {
+        "en": "Negra diced tuna, avocado, mango, cucumber, red onions, house salsa",
+        "fi": "Negra-tonnikalakuutioita, avokadoa, mangoa, kurkkua, punasipulia, talon salsaa",
+        "es": "Atún negra en cubos, aguacate, mango, pepino, cebolla morada, salsa de la casa"
+      },
+      "price": "€12.5",
+      "image": "tuna-poke.jpg"
     },
     {
       "name": "Kuha Ceviche",
       "tag": "",
-      "description": "Lime-cooked pike-perch, chilis, sesame seeds",
-      "price": "€PLACEHOLDER"
+      "description": {
+        "en": "Lime-cooked pike-perch, chilis, sesame seeds",
+        "fi": "Limemehussa \"kypsennettyä\" kuhaa, chiliä, seesaminsiemeniä",
+        "es": "Lucioperca \"cocinada\" en lima, chiles, semillas de sésamo"
+      },
+      "price": "€PLACEHOLDER",
+      "image": "kuha-ceviche.jpg"
     },
     {
       "name": "Prawn Salpicon",
       "tag": "",
-      "description": "Cooked prawns, pico de gallo, aguachile salsa, cucumber, red onions, mango salsa",
+      "description": {
+        "en": "Cooked prawns, pico de gallo, aguachile salsa, cucumber, red onions, mango salsa",
+        "fi": "Kypsennettyjä katkarapuja, pico de galloa, aguachile-salsaa, kurkkua, punasipulia, mangosalsaa",
+        "es": "Camarones cocidos, pico de gallo, salsa aguachile, pepino, cebolla morada, salsa de mango"
+      },
       "price": "€PLACEHOLDER"
     },
     {
       "name": "Frijoles con Veneno",
       "tag": "V option",
-      "description": "Refried beans with cheese and chorizo, served with homemade chips (vegan option available)",
-      "price": "€9"
+      "description": {
+        "en": "Refried beans with cheese and chorizo, served with homemade chips (vegan option available)",
+        "fi": "Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera (vegaaninen vaihtoehto saatavilla)",
+        "es": "Frijoles refritos con queso y chorizo, servidos con totopos caseros (opción vegana disponible)"
+      },
+      "price": "€9",
+      "image": "frijoles-con-veneno.jpg"
     }
   ],
 
@@ -82,14 +129,24 @@
     {
       "name": "Quesabirria",
       "tag": "",
-      "description": "PLACEHOLDER — need description/ingredients",
-      "price": "€PLACEHOLDER"
+      "description": {
+        "en": "PLACEHOLDER — need description/ingredients",
+        "fi": "PLACEHOLDER — need description/ingredients",
+        "es": "PLACEHOLDER — need description/ingredients"
+      },
+      "price": "€PLACEHOLDER",
+      "image": "quesabirria-1.jpg"
     },
     {
       "name": "Pork in Chili Ancho",
       "tag": "",
-      "description": "PLACEHOLDER — need description/ingredients",
-      "price": "€PLACEHOLDER"
+      "description": {
+        "en": "PLACEHOLDER — need description/ingredients",
+        "fi": "PLACEHOLDER — need description/ingredients",
+        "es": "PLACEHOLDER — need description/ingredients"
+      },
+      "price": "€PLACEHOLDER",
+      "image": "pork-chili-ancho-bowl.jpg"
     }
   ],
 
@@ -99,8 +156,13 @@
     {
       "name": "Tommy's Margarita",
       "tag": "",
-      "description": "Tequila, lime, smoked salt rim",
-      "price": "€PLACEHOLDER"
+      "description": {
+        "en": "Tequila, lime, smoked salt rim",
+        "fi": "Tequilaa, limeä, savustettu suolareunus",
+        "es": "Tequila, lima, borde de sal ahumada"
+      },
+      "price": "€PLACEHOLDER",
+      "image": "tommys-margarita.jpg"
     }
   ],
 
