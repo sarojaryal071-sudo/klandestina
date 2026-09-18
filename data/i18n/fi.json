@@ -25,10 +25,7 @@
   },
   "visit": {
     "eyebrow": "Löydä meidät",
-    "heading": "Tule löytämään ovi",
-    "addressLabel": "Osoite",
-    "hoursLabel": "Aukioloajat",
-    "contactLabel": "Yhteystiedot"
+    "heading": "Tule löytämään ovi"
   },
   "footer": {
     "tagline": "Cantina ilman kylttiä. Aleksis Kiven katu 17, Helsinki.",

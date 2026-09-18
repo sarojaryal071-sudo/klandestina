@@ -33,6 +33,17 @@
     <div id="theme-toggle"></div>
   </div>
 
+  <!-- Mobile-only topbar (<=900px): wordmark + lang switch + theme toggle in
+       one bar, replacing the desktop's separate brand-mark/utility-bar.
+       Auto-hides on scroll down / reappears on scroll up (see script.js). -->
+  <div id="mobile-topbar" class="mobile-topbar">
+    <span id="mobile-topbar-brand" class="mobile-topbar-brand"></span>
+    <div class="mobile-topbar-controls">
+      <div id="mobile-lang-switch" class="lang-switch"></div>
+      <div id="mobile-theme-toggle"></div>
+    </div>
+  </div>
+
   <header class="hero" id="hero">
     <div class="hero-inner">
       <span class="eyebrow" data-i18n="hero.eyebrow">Klandestina Cantina · Helsinki</span>
@@ -93,21 +104,9 @@
       <span class="eyebrow" data-i18n="visit.eyebrow">Find Us</span>
       <h2 data-i18n="visit.heading">Come find the door</h2>
     </div>
-    <div class="visit-grid reveal">
-      <div class="visit-col">
-        <h4 data-i18n="visit.addressLabel">Address</h4>
-        <span id="visit-address"></span>
-      </div>
-      <div class="visit-col">
-        <h4 data-i18n="visit.hoursLabel">Hours</h4>
-        <div id="visit-hours"></div>
-      </div>
-      <div class="visit-col">
-        <h4 data-i18n="visit.contactLabel">Contact</h4>
-        <span id="visit-email"></span>
-      </div>
-    </div>
-    <div class="visit-actions">
+    <!-- Address/hours/contact live in the footer only, to avoid repeating
+         them twice on the page. This section is just the CTA moment. -->
+    <div class="visit-actions reveal">
       <!-- Filled by components/button.js -->
       <div id="visit-buttons"></div>
     </div>

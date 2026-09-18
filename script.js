@@ -44,10 +44,19 @@ async function init() {
   // Nav
   renderNav(document.getElementById("shortcut-nav"));
   document.getElementById("brand-mark").textContent = site.name;
+  document.getElementById("mobile-topbar-brand").textContent = site.name;
 
-  // Language switcher + theme toggle
+  // Language switcher + theme toggle — rendered twice (desktop utility-bar,
+  // mobile topbar) since they sit in different fixed-position contexts;
+  // setLanguage() below keeps both lang-switch instances' active state in
+  // sync, and the theme toggle's icon swap is pure CSS (data-theme
+  // attribute-driven), so any number of instances stay in sync for free.
   renderLangSwitch(document.getElementById("lang-switch"), currentLanguage, setLanguage);
   renderThemeToggle(document.getElementById("theme-toggle"), toggleTheme);
+  renderLangSwitch(document.getElementById("mobile-lang-switch"), currentLanguage, setLanguage);
+  renderThemeToggle(document.getElementById("mobile-theme-toggle"), toggleTheme);
+
+  initMobileTopbarAutoHide();
 
   // Hero buttons
   const heroButtons = document.getElementById("hero-buttons");
@@ -58,11 +67,7 @@ async function init() {
     renderButton({ label: t("hero.seeMenu"), href: "#menu", style: "ghost", i18nKey: "hero.seeMenu" })
   );
 
-  // Visit section: address/hours/email come straight from site.json and
-  // aren't translated, only the labels around them are.
-  document.getElementById("visit-address").textContent = site.address;
-  document.getElementById("visit-email").textContent = site.email;
-  document.getElementById("visit-hours").innerHTML = site.hours.map((h) => `<span>${h}</span>`).join("");
+  // Visit section is just a CTA — address/hours/email live in the footer only.
   document.getElementById("visit-buttons").appendChild(
     renderButton({ label: t("hero.reserve"), href: site.reservationUrl, style: "primary", newTab: true, i18nKey: "hero.reserve" })
   );
@@ -103,6 +108,7 @@ function setLanguage(lang) {
   }
 
   setActiveLang(document.getElementById("lang-switch"), lang);
+  setActiveLang(document.getElementById("mobile-lang-switch"), lang);
   renderSignatureDishes();
   renderMenuCategory(activeCategoryId);
   applyTranslations();
@@ -133,6 +139,33 @@ function applyTranslations() {
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     el.textContent = t(el.dataset.i18n);
   });
+}
+
+// ---------- mobile topbar ----------
+
+// Hides the mobile topbar when the visitor scrolls down past it, and brings
+// it back as soon as they scroll up — a small threshold avoids it flickering
+// on the sub-pixel scroll jitter some trackpads/phones report.
+function initMobileTopbarAutoHide() {
+  const topbar = document.getElementById("mobile-topbar");
+  if (!topbar) return;
+
+  const SCROLL_THRESHOLD = 8;
+  let lastScrollY = window.scrollY;
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      const currentScrollY = window.scrollY;
+      const delta = currentScrollY - lastScrollY;
+      if (Math.abs(delta) < SCROLL_THRESHOLD) return;
+
+      const scrollingDown = delta > 0;
+      topbar.classList.toggle("topbar--hidden", scrollingDown && currentScrollY > topbar.offsetHeight);
+      lastScrollY = currentScrollY;
+    },
+    { passive: true }
+  );
 }
 
 // ---------- theme ----------
