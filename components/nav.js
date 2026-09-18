@@ -24,10 +24,31 @@ export function renderNav(container) {
   container.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => setActive(container, link.dataset.section));
   });
+
+  observeSections(container);
 }
 
 function setActive(container, id) {
   container.querySelectorAll("a").forEach((link) => {
     link.classList.toggle("active", link.dataset.section === id);
   });
+}
+
+// Scroll-spy: whichever section sits in the center band of the viewport
+// becomes the active pill, independent of clicks.
+function observeSections(container) {
+  const sections = SECTIONS.map((s) => document.getElementById(s.id)).filter(Boolean);
+  if (!sections.length || !("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const topMost = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (topMost) setActive(container, topMost.target.id);
+    },
+    { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+  );
+
+  sections.forEach((section) => observer.observe(section));
 }

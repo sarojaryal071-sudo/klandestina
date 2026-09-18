@@ -34,7 +34,7 @@
       "name": "Quesabirria",
       "price": "€PLACEHOLDER",
       "description": "PLACEHOLDER — need description/ingredients",
-      "images": ["quesabirria-1.jpg", "quesabirria-2.jpg"]
+      "image": "quesabirria-1.jpg"
     }
   ],
 

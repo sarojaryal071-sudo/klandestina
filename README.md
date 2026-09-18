@@ -18,4 +18,9 @@ Everything a dish needs — name, price, description, photo — lives in `data/m
 
 ## Status
 
-First pass at the file structure and real content is in place. Full interactive behavior (menu tab switching, scroll-reveal wiring, tilt-hover) is being built next.
+First working prototype: menu category tabs, gallery rendering, and scroll-spy nav highlighting are wired up in `script.js`. Scroll-reveal and tilt-hover are CSS-only and already active.
+
+Known gaps:
+- Several prices/descriptions in `data/menu.json` are still `€PLACEHOLDER` (pulled from a menu photo that wasn't fully legible).
+- `data/gallery.json` currently reuses the dish photos from `images/dishes/` as filler — real interior/atmosphere photos for `images/gallery/` are still needed.
+- The `#story` and `#visit` sections in `index.html` are empty placeholders awaiting real copy.
