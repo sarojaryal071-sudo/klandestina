@@ -89,7 +89,22 @@ export function renderMobileNav(toggleContainer, overlayContainer) {
     link.addEventListener("click", (event) => {
       event.preventDefault();
       const target = document.getElementById(link.dataset.section);
-      close(() => target?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      close(() => {
+        if (!target) return;
+        // Force the topbar visible and tell script.js's auto-hide watcher
+        // to stand down for the duration of this jump — otherwise it reads
+        // the jump's own downward scroll as "the visitor scrolled down"
+        // and hides the topbar mid-jump, right as the visitor lands next
+        // to it (see initMobileTopbarAutoHide's comment for the full why).
+        const topbar = document.getElementById("mobile-topbar");
+        if (topbar) topbar.classList.remove("topbar--hidden");
+        document.body.dataset.navJump = "true";
+        const clearFlag = () => delete document.body.dataset.navJump;
+        window.addEventListener("scrollend", clearFlag, { once: true });
+        window.setTimeout(clearFlag, 1000); // fallback for browsers without 'scrollend'
+
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     });
   });
 }

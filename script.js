@@ -184,6 +184,13 @@ function applyTranslations() {
 // Hides the mobile topbar when the visitor scrolls down past it, and brings
 // it back as soon as they scroll up — a small threshold avoids it flickering
 // on the sub-pixel scroll jitter some trackpads/phones report.
+//
+// mobileNav.js's link clicks set document.body.dataset.navJump = "true"
+// for the duration of their own scrollIntoView() jump — without that, this
+// handler sees the jump's own downward motion as "the visitor scrolled
+// down" and hides the topbar mid-jump, right when the visitor just tapped
+// a link specifically to land next to it (leaving the scroll-margin-top
+// clearance reserved for it looking like unexplained empty space instead).
 function initMobileTopbarAutoHide() {
   const topbar = document.getElementById("mobile-topbar");
   if (!topbar) return;
@@ -195,6 +202,11 @@ function initMobileTopbarAutoHide() {
     "scroll",
     () => {
       const currentScrollY = window.scrollY;
+      if (document.body.dataset.navJump === "true") {
+        lastScrollY = currentScrollY;
+        return;
+      }
+
       const delta = currentScrollY - lastScrollY;
       if (Math.abs(delta) < SCROLL_THRESHOLD) return;
 

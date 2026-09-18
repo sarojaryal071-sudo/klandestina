@@ -19,6 +19,14 @@
         if (theme === "light") document.documentElement.setAttribute("data-theme", "light");
       } catch (e) {}
     })();
+
+    // Some mobile browsers (notably iOS Safari) restore the tab's LAST
+    // scroll offset on a fresh visit to the same URL, rather than starting
+    // at the top — landing a visitor mid-page with no indication why. This
+    // opts out of that restoration; it doesn't affect an intentional
+    // #section link, which is a separate browser mechanism this leaves
+    // untouched.
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   </script>
 </head>
 <body>
