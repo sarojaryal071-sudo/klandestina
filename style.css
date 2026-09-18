@@ -498,33 +498,49 @@ section { position: relative; padding: 130px 56px; }
 }
 
 /* Soft-edged photo treatment, reused for both the Story photo and the
-   Menu section's rotating image column (Part 2) — a radial mask fades all
-   four sides to transparent, letting the section's own background show
-   through at the edges instead of a visible boundary line.
+   Menu section's rotating image column (Part 2) — the photo stays its
+   full rectangular shape at full size; only a band near each of the 4
+   edges fades to transparent, letting the section's own background show
+   through right at the edges. NOT a radial vignette: an earlier version
+   used a single radial-gradient mask, which fades outward from the
+   center in an oval, shrinking the visible photo into a blob rather than
+   keeping it rectangular — wrong effect entirely, not a bug in that
+   gradient's syntax.
+   Built from two linear-gradient mask layers, one fading the left/right
+   edges (to right) and one fading the top/bottom edges (to bottom), each
+   opaque through the middle 60% and transparent in the outer ~20% band.
+   The two layers must INTERSECT (multiply), not stack the default way:
+   with the default "add" compositing, a pixel near the left edge but
+   vertically in the untouched middle band would get (low alpha from the
+   horizontal layer) + (alpha 1 from the vertical layer) = still ~1, so
+   the left edge wouldn't visibly fade at all except right at the
+   corners. `mask-composite: intersect` (standard) / `-webkit-mask-
+   composite: source-in` (legacy WebKit/Safari, comma-separated per
+   layer-pair) make each layer actually cut into the one below it instead
+   of adding — confirmed empirically in a standalone test page: a
+   rectangular photo, sharp center, feathered on all 4 sides including
+   the corners, no circular blob.
    No overflow:hidden/border-radius on this or its wrapper — that's the
    old card-style clipping (.visual etc. use it deliberately), and it
    would clip the image to a hard rectangle right at the box edge,
-   overriding the mask fade instead of complementing it.
-   IMPORTANT: the ellipse size MUST use a keyword (closest-side/
-   farthest-side), not an explicit percentage pair like `70% 70%`. That
-   percentage form is what shipped originally and silently produced NO
-   fade at all (a plain hard-edged rectangle, full stop) — confirmed by
-   isolating it in a standalone test page: swapping only the size keyword
-   in was the entire fix, everything else (both mask-image prefixes, the
-   fully-transparent outer stop, mask-repeat/size/mode, no clipping
-   wrapper) was already correct and none of it alone was the problem. */
+   overriding the mask fade instead of complementing it. */
 .soft-fade-img {
+  --fade-edge: 20%;
   object-fit: cover; display: block;
-  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 50%, black 45%, transparent 100%);
-  mask-image: radial-gradient(ellipse closest-side at 50% 50%, black 45%, transparent 100%);
-  -webkit-mask-repeat: no-repeat;
+  mask-image:
+    linear-gradient(to right, transparent 0%, black var(--fade-edge), black calc(100% - var(--fade-edge)), transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black var(--fade-edge), black calc(100% - var(--fade-edge)), transparent 100%);
+  mask-composite: intersect;
   mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
-  -webkit-mask-position: center;
   mask-position: center;
-  -webkit-mask-mode: alpha;
-  mask-mode: alpha;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black var(--fade-edge), black calc(100% - var(--fade-edge)), transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black var(--fade-edge), black calc(100% - var(--fade-edge)), transparent 100%);
+  -webkit-mask-composite: source-in;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-position: center;
 }
 
 .story-photo { position: relative; width: 100%; max-width: 420px; aspect-ratio: 4 / 5; }
