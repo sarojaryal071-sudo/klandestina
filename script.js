@@ -11,10 +11,9 @@ import { renderGalleryTile } from "./components/galleryTile.js";
 import { renderFooter } from "./components/footer.js";
 
 async function init() {
-  const [menu, site, gallery] = await Promise.all([
+  const [menu, site] = await Promise.all([
     fetch("data/menu.json").then((r) => r.json()),
-    fetch("data/site.json").then((r) => r.json()),
-    fetch("data/gallery.json").then((r) => r.json())
+    fetch("data/site.json").then((r) => r.json())
   ]);
 
   // Nav
@@ -39,7 +38,7 @@ async function init() {
 
   // Gallery
   const galleryGrid = document.getElementById("gallery-grid");
-  gallery.forEach((photo) => galleryGrid.appendChild(renderGalleryTile(photo)));
+  menu.gallery.forEach((photo) => galleryGrid.appendChild(renderGalleryTile(photo)));
 
   // Footer
   renderFooter(document.getElementById("footer-mount"), site);

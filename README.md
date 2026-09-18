@@ -22,5 +22,5 @@ First working prototype: menu category tabs, gallery rendering, and scroll-spy n
 
 Known gaps:
 - Several prices/descriptions in `data/menu.json` are still `€PLACEHOLDER` (pulled from a menu photo that wasn't fully legible).
-- `data/gallery.json` currently reuses the dish photos from `images/dishes/` as filler — real interior/atmosphere photos for `images/gallery/` are still needed.
+- The `gallery` array in `data/menu.json` currently reuses the dish photos from `images/dishes/` as filler — real interior/atmosphere photos for `images/gallery/` are still needed.
 - The `#story` and `#visit` sections in `index.html` are empty placeholders awaiting real copy.
