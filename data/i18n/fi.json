@@ -1,5 +1,11 @@
 {
   "nav": { "story": "Tarina", "menu": "Ruokalista", "gallery": "Galleria", "visit": "Käynti" },
+  "mobileNav": {
+    "home": "Etusivu",
+    "visit": "Löydä meidät",
+    "openLabel": "Avaa valikko",
+    "closeLabel": "Sulje valikko"
+  },
   "hero": {
     "eyebrow": "Klandestina Cantina · Helsinki",
     "heading": "Löydä ovi.",

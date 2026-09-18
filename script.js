@@ -18,6 +18,7 @@ import { renderLangSwitch, setActiveLang } from "./components/langSwitch.js";
 import { renderThemeToggle } from "./components/themeToggle.js";
 import { renderEventModal, openEventModal } from "./components/eventModal.js";
 import { renderFab } from "./components/fab.js";
+import { renderMobileNav } from "./components/mobileNav.js";
 
 const LANG_STORAGE_KEY = "klandestina-lang";
 const THEME_STORAGE_KEY = "klandestina-theme";
@@ -56,6 +57,7 @@ async function init() {
   renderThemeToggle(document.getElementById("theme-toggle"), toggleTheme);
   renderLangSwitch(document.getElementById("mobile-lang-switch"), currentLanguage, setLanguage);
   renderThemeToggle(document.getElementById("mobile-theme-toggle"), toggleTheme);
+  renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"));
 
   initMobileTopbarAutoHide();
 

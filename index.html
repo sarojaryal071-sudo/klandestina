@@ -41,8 +41,18 @@
     <div class="mobile-topbar-controls">
       <div id="mobile-lang-switch" class="lang-switch"></div>
       <div id="mobile-theme-toggle"></div>
+      <!-- Filled by components/mobileNav.js: the hamburger button that opens
+           the full-screen section-nav overlay below (desktop's pill nav has
+           no mobile equivalent otherwise). -->
+      <div id="mobile-nav-toggle"></div>
     </div>
   </div>
+
+  <!-- Filled by components/mobileNav.js. Full-screen, mobile-only (<=900px)
+       nav overlay opened by the hamburger button above — the desktop pill
+       nav (#shortcut-nav) is hidden at this width with nothing replacing it
+       otherwise. -->
+  <div id="mobile-nav-overlay-mount"></div>
 
   <!-- Filled by components/fab.js. Fixed bottom-right on every section,
        independent of the top-anchored topbar/utility-bar. Opens the exact

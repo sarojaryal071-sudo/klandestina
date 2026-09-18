@@ -1,6 +1,15 @@
 // menuItem.js
 // One universal row design for the full menu list. Given one menu entry,
 // returns its row. Used in a loop for every item in the active category.
+//
+// Layout is name-on-its-own-line, then description, then price — always
+// stacked in that order rather than name/price sharing a row — so a long
+// name (or wine's four-column price grid) never fights anything else for
+// horizontal space or ends up vertically misaligned against wrapped text.
+// A thumbnail only renders when the item actually has a real photo
+// (item.image set); items without one skip the image area entirely rather
+// than showing a placeholder square, since a blank tinted box reads as a
+// broken image rather than an intentional choice.
 
 const WINE_SIZES = [
   { key: "glass12", label: "12cl" },
@@ -17,17 +26,15 @@ const WINE_SIZES = [
  * @param {string|Object} item.price   - a plain string ("€15"), "" (no individual price — see a category note
  *                                        instead, e.g. lunch), or a wine-style object
  *                                        { glass12, glass16, glass24, bottle } with null for sizes not offered
- * @param {string} [item.image]        - filename inside images/dishes/; omitted items get a placeholder thumb
+ * @param {string} [item.image]        - filename inside images/dishes/; items without one render text-only
  * @returns {HTMLElement}
  */
 export function renderMenuItem(item) {
   const row = document.createElement("div");
-  row.className = "menu-item";
+  const hasPhoto = Boolean(item.image);
+  row.className = hasPhoto ? "menu-item" : "menu-item menu-item--no-photo";
 
-  const thumb = item.image
-    ? `<img class="menu-item-thumb" src="images/dishes/${item.image}" alt="" loading="lazy">`
-    : `<span class="menu-item-thumb menu-item-thumb--placeholder" aria-hidden="true"></span>`;
-
+  const thumb = hasPhoto ? `<img class="menu-item-thumb" src="images/dishes/${item.image}" alt="" loading="lazy">` : "";
   const allergenLabel = item.allergens && item.allergens.length ? item.allergens.join(" · ") : "";
 
   row.innerHTML = `
@@ -38,8 +45,8 @@ export function renderMenuItem(item) {
         ${allergenLabel ? `<span class="menu-item-tag">${allergenLabel}</span>` : ""}
       </div>
       ${item.description ? `<div class="menu-item-desc">${item.description}</div>` : ""}
+      ${renderPrice(item.price)}
     </div>
-    ${renderPrice(item.price)}
   `;
 
   return row;

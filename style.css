@@ -198,6 +198,15 @@ section { position: relative; padding: 130px 56px; }
   .mobile-topbar .theme-toggle {
     background: none; border: none; backdrop-filter: none;
   }
+
+  .mobile-nav-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: none; border: none;
+    font-size: 20px; line-height: 1; color: var(--ink); cursor: pointer;
+    transition: color 0.18s ease;
+  }
+  .mobile-nav-toggle:hover { color: var(--accent); }
 }
 
 @media (max-width: 480px) {
@@ -206,6 +215,39 @@ section { position: relative; padding: 130px 56px; }
      nested lang-switch/theme-toggle instances. */
   .lang-switch { padding: 6px 9px; }
   .theme-toggle { width: 32px; height: 32px; }
+}
+
+/* ---------- Mobile nav overlay (<=900px only) ---------- */
+/* Full-screen, opened by .mobile-nav-toggle in the mobile topbar. z-index
+   95 sits above the FAB (90) — no reason for the FAB to float above an
+   open nav — but below the event modal (100), which should always win. */
+.mobile-nav-overlay {
+  position: fixed; inset: 0; z-index: 95;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--bg);
+}
+.mobile-nav-overlay[hidden] { display: none; }
+.mobile-nav-close {
+  position: absolute; top: 20px; right: 20px;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  color: var(--ink); font-size: 22px; line-height: 1; cursor: pointer;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+.mobile-nav-close:hover { color: var(--accent); transform: rotate(90deg); }
+.mobile-nav-links { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+.mobile-nav-links a {
+  font-family: "Bebas Neue", sans-serif; font-size: 42px; letter-spacing: 0.03em;
+  color: var(--ink); text-transform: uppercase; transition: color 0.18s ease;
+}
+.mobile-nav-links a:hover, .mobile-nav-links a:active { color: var(--accent); }
+
+@media (min-width: 901px) {
+  /* The toggle that opens this is only reachable inside the mobile topbar
+     (itself hidden above 900px), but guard the overlay directly too in
+     case a resize leaves it open across the breakpoint. */
+  .mobile-nav-overlay { display: none !important; }
 }
 
 /* ---------- Floating action button ---------- */
@@ -348,7 +390,13 @@ section { position: relative; padding: 130px 56px; }
 .tab:hover { color: var(--ink); transform: translateY(-2px); }
 .tab.active { background: var(--accent); border-color: var(--accent); color: #1a0f0a; box-shadow: 0 4px 0 0 var(--accent-shadow); transform: translateY(-2px); }
 .menu-list { max-width: 740px; margin: 0 auto; }
-.menu-item { display: flex; align-items: center; gap: 18px; padding: 20px 6px; border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
+/* Name, then description, then price — always stacked in that order inside
+   .menu-item-body rather than price sharing a row with the name, so a long
+   name (or wine's price grid) never ends up vertically misaligned against
+   wrapped text. The thumbnail (when present) is the only sibling; items
+   with no photo (.menu-item--no-photo) skip it and the body just takes the
+   full row width. */
+.menu-item { display: flex; align-items: flex-start; gap: 18px; padding: 20px 6px; border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
 .menu-item:last-child { border-bottom: none; }
 .menu-item-thumb {
   flex: 0 0 auto; width: 60px; height: 60px; border-radius: 12px; object-fit: cover;
@@ -356,24 +404,20 @@ section { position: relative; padding: 130px 56px; }
   box-shadow: 0 4px 10px -4px rgba(0,0,0,0.55);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
-.menu-item-thumb--placeholder { display: block; }
-.menu-item-body { flex: 1 1 auto; min-width: 0; }
+.menu-item-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
 .menu-item-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .menu-item-name { font-family: "Bebas Neue", sans-serif; font-size: 24px; }
 .menu-item-tag { font-size: 10px; padding: 2px 7px; border-radius: 4px; border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent); color: color-mix(in srgb, var(--ink) 55%, transparent); text-transform: uppercase; letter-spacing: 0.06em; }
 .menu-item-desc { color: color-mix(in srgb, var(--ink) 50%, transparent); font-size: 14px; max-width: 460px; margin-top: 6px; }
-.menu-item-price { font-family: "Bebas Neue", sans-serif; color: var(--accent); font-size: 22px; white-space: nowrap; align-self: center; flex: 0 0 auto; }
+.menu-item-price { font-family: "Bebas Neue", sans-serif; color: var(--accent); font-size: 22px; white-space: nowrap; margin-top: 10px; }
 .menu-empty { text-align: center; color: color-mix(in srgb, var(--ink) 40%, transparent); padding: 26px 6px; }
 
-/* Wine's four-size price row — plain display text, not interactive. Four
-   columns are too wide to sit inline next to a wrapped wine name on narrow
-   screens, so that row (and only that row) is allowed to wrap the price
-   block onto its own line below the name instead of forcing everything
-   into one cramped row (this is a no-op at desktop widths, where it
-   already fits on one line). */
-.menu-item:has(.menu-item-price--wine) { flex-wrap: wrap; }
-.menu-item-price--wine { display: flex; gap: 10px; margin-left: auto; }
-.price-col { display: flex; flex-direction: column; align-items: center; min-width: 28px; }
+/* Wine's four-size price row: a fixed-width grid (not flex) so 12cl/16cl/
+   24cl/Btl line up in the same columns on every wine row, size labels
+   above the numbers, "–" for sizes not offered (e.g. House Sparkling
+   Wine's still/16cl/24cl glasses). */
+.menu-item-price--wine { display: grid; grid-template-columns: repeat(4, 58px); gap: 8px 10px; margin-top: 10px; }
+.price-col { display: flex; flex-direction: column; align-items: center; }
 .price-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: color-mix(in srgb, var(--ink) 45%, transparent); margin-bottom: 3px; }
 .price-value { font-family: "Bebas Neue", sans-serif; font-size: 16px; color: var(--accent); }
 

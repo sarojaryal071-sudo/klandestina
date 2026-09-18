@@ -1,5 +1,11 @@
 {
   "nav": { "story": "Story", "menu": "Menu", "gallery": "Gallery", "visit": "Visit" },
+  "mobileNav": {
+    "home": "Home",
+    "visit": "Find Us",
+    "openLabel": "Open menu",
+    "closeLabel": "Close menu"
+  },
   "hero": {
     "eyebrow": "Klandestina Cantina · Helsinki",
     "heading": "Find the door.",
