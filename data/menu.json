@@ -3,76 +3,136 @@
     {
       "name": "Mexican Tuna Poke",
       "price": "€12.5",
+      "allergens": ["M", "G"],
       "description": {
-        "en": "Negra diced tuna, avocado, mango, cucumber, red onions, house salsa",
-        "fi": "Negra-tonnikalakuutioita, avokadoa, mangoa, kurkkua, punasipulia, talon salsaa",
-        "es": "Atún negra en cubos, aguacate, mango, pepino, cebolla morada, salsa de la casa"
+        "en": "Raw diced tuna, avocado, mango, cucumber, red onions, salsa negra, chipotle mayo, chives, sesame seeds",
+        "fi": "Raakaa tonnikalakuutiota, avokadoa, mangoa, kurkkua, punasipulia, salsa negraa, chipotle-majoneesia, ruohosipulia, seesaminsiemeniä",
+        "es": "Atún crudo en cubos, aguacate, mango, pepino, cebolla morada, salsa negra, mayonesa de chipotle, cebollino, semillas de sésamo"
       },
       "image": "tuna-poke.jpg"
     },
     {
       "name": "Kuha Ceviche",
-      "price": "€PLACEHOLDER",
+      "price": "€9",
+      "allergens": ["M", "G"],
       "description": {
-        "en": "Lime-cooked pike-perch, chilis, sesame seeds",
-        "fi": "Limemehussa \"kypsennettyä\" kuhaa, chiliä, seesaminsiemeniä",
-        "es": "Lucioperca \"cocinada\" en lima, chiles, semillas de sésamo"
+        "en": "Lime-cooked pike-perch, kiwi, cucumber, red onions, aguachile, salsa, coriander",
+        "fi": "Limemehussa kypsennettyä kuhaa, kiiviä, kurkkua, punasipulia, aguachilea, salsaa, korianteria",
+        "es": "Lucioperca \"cocinada\" en lima, kiwi, pepino, cebolla morada, aguachile, salsa, cilantro"
       },
       "image": "kuha-ceviche.jpg"
     },
     {
       "name": "Tommy's Margarita",
-      "price": "€PLACEHOLDER",
+      "price": "€13",
       "description": {
-        "en": "Tequila, lime, smoked salt rim",
-        "fi": "Tequilaa, limeä, savustettu suolareunus",
-        "es": "Tequila, lima, borde de sal ahumada"
+        "en": "Agave nectar, lime, Briottet Grapefruit Liqueur, Mundo Tequila or Almave Blanco Non-Alcoholic Blue Agave Spirit. With Mezcal: +2€.",
+        "fi": "Agavesiirappia, limeä, Briottet-greippilikööriä, Mundo-tequilaa tai Almave Blanco -alkoholitonta agavetislettä. Mezcalilla: +2€.",
+        "es": "Néctar de agave, lima, licor de pomelo Briottet, tequila Mundo o destilado de agave azul sin alcohol Almave Blanco. Con mezcal: +2€."
       },
       "image": "tommys-margarita.jpg"
     },
     {
       "name": "Frijoles con Veneno",
-      "price": "€9",
+      "price": "€7",
+      "allergens": ["L", "G"],
       "description": {
-        "en": "Refried beans with cheese and chorizo, served with homemade chips",
-        "fi": "Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera",
-        "es": "Frijoles refritos con queso y chorizo, servidos con totopos caseros"
+        "en": "Refried beans with cheese and chorizo, served with homemade tortilla chips (vegan option available)",
+        "fi": "Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera (vegaaninen vaihtoehto saatavilla)",
+        "es": "Frijoles refritos con queso y chorizo, servidos con totopos caseros (opción vegana disponible)"
       },
       "image": "frijoles-con-veneno.jpg"
     },
     {
       "name": "Pork in Chili Ancho",
-      "price": "€PLACEHOLDER",
+      "price": "€15",
+      "allergens": ["M", "G"],
       "description": {
-        "en": "PLACEHOLDER — need description/ingredients",
-        "fi": "PLACEHOLDER — need description/ingredients",
-        "es": "PLACEHOLDER — need description/ingredients"
+        "en": "Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions",
+        "fi": "Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia",
+        "es": "Cerdo cocinado a fuego lento, salsa de chile ancho seco, cilantro, cebolla morada marinada"
       },
       "image": "pork-chili-ancho-bowl.jpg"
     },
     {
       "name": "Quesabirria",
-      "price": "€PLACEHOLDER",
+      "price": "€18",
+      "allergens": ["L", "G"],
       "description": {
-        "en": "PLACEHOLDER — need description/ingredients",
-        "fi": "PLACEHOLDER — need description/ingredients",
-        "es": "PLACEHOLDER — need description/ingredients"
+        "en": "Slow-cooked beef, cheese, white cabbage, marinated onions, coriander, radish + birria broth",
+        "fi": "Hitaasti kypsennettyä naudanlihaa, juustoa, valkokaalia, marinoitua sipulia, korianteria, retiisiä + birria-lientä",
+        "es": "Res cocinada a fuego lento, queso, col blanca, cebolla marinada, cilantro, rábano + consomé de birria"
       },
       "image": "quesabirria-1.jpg"
     }
   ],
 
   "categories": [
+    { "id": "lunch", "label": "Lunch" },
     { "id": "starters", "label": "Starters" },
-    { "id": "mains", "label": "Mains" },
-    { "id": "sides", "label": "Sides" },
-    { "id": "bar", "label": "Bar" }
+    { "id": "tacos", "label": "Tacos" },
+    { "id": "chilaquiles", "label": "Chilaquiles" },
+    { "id": "desserts", "label": "Desserts" },
+    { "id": "drinks", "label": "Drinks", "groups": ["softDrinks", "beer", "cocktails", "wine"] }
+  ],
+
+  "lunch": [
+    {
+      "name": "Picadillo with Chorizo",
+      "price": "",
+      "allergens": ["G", "M"],
+      "description": {
+        "en": "Finnish beef and Spanish chorizo. Minced beef stew, tomato sauce, chorizo, potatoes, carrots, spices.",
+        "fi": "Suomalaista naudanlihaa ja espanjalaista chorizoa. Jauhelihamuhennos, tomaattikastike, chorizo, perunat, porkkanat, mausteet.",
+        "es": "Ternera finlandesa y chorizo español. Guiso de carne picada, salsa de tomate, chorizo, patatas, zanahorias, especias."
+      }
+    },
+    {
+      "name": "Sea Bass in Mango Salsa",
+      "price": "",
+      "allergens": [],
+      "description": {
+        "en": "Crispy fried fish, creamy green salsa, mango pico de gallo, coriander, cherry tomatoes.",
+        "fi": "Rapeaksi paistettua kalaa, kermaista vihreää salsaa, mango-pico de galloa, korianteria, kirsikkatomaatteja.",
+        "es": "Pescado frito y crujiente, salsa verde cremosa, pico de gallo de mango, cilantro, tomates cherry."
+      }
+    },
+    {
+      "name": "Chicken Mole",
+      "price": "",
+      "allergens": [],
+      "description": {
+        "en": "Chicken and sweet potato in mole sauce. Mole contains dried chilies, tomato, onion, seeds, peanuts, chocolate and chicken broth.",
+        "fi": "Kanaa ja bataattia mole-kastikkeessa. Mole sisältää kuivattuja chilejä, tomaattia, sipulia, siemeniä, maapähkinöitä, suklaata ja kanalientä.",
+        "es": "Pollo y boniato en salsa de mole. El mole contiene chiles secos, tomate, cebolla, semillas, cacahuetes, chocolate y caldo de pollo."
+      }
+    },
+    {
+      "name": "Pork in Chili Ancho Sauce",
+      "price": "",
+      "allergens": [],
+      "description": {
+        "en": "Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions.",
+        "fi": "Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia.",
+        "es": "Cerdo cocinado a fuego lento, salsa de chile ancho seco, cilantro, cebolla morada marinada."
+      }
+    },
+    {
+      "name": "Tofu in Salsa Roja",
+      "price": "",
+      "allergens": [],
+      "description": {
+        "en": "Tofu marinated in our special spices, chickpea salsa, cauliflower, red salsa, vegan sour crème, vegan cheese.",
+        "fi": "Erikoismausteillamme marinoitua tofua, kikhernesalsaa, kukkakaalia, punaista salsaa, vegaanista smetanaa, vegaanijuustoa.",
+        "es": "Tofu marinado en nuestras especias especiales, salsa de garbanzos, coliflor, salsa roja, crema agria vegana, queso vegano."
+      }
+    }
   ],
 
   "starters": [
     {
       "name": "Guacachips",
-      "tag": "V · VEGAN",
+      "allergens": ["M", "G", "VEGAN"],
       "description": {
         "en": "Guacamole + homemade tortilla chips",
         "fi": "Guacamolea + kotitekoisia tortillalastuja",
@@ -82,87 +142,298 @@
     },
     {
       "name": "Mexican Tuna Poke",
-      "tag": "",
+      "allergens": ["M", "G"],
       "description": {
-        "en": "Negra diced tuna, avocado, mango, cucumber, red onions, house salsa",
-        "fi": "Negra-tonnikalakuutioita, avokadoa, mangoa, kurkkua, punasipulia, talon salsaa",
-        "es": "Atún negra en cubos, aguacate, mango, pepino, cebolla morada, salsa de la casa"
+        "en": "Raw diced tuna, avocado, mango, cucumber, red onions, salsa negra, chipotle mayo, chives, sesame seeds",
+        "fi": "Raakaa tonnikalakuutiota, avokadoa, mangoa, kurkkua, punasipulia, salsa negraa, chipotle-majoneesia, ruohosipulia, seesaminsiemeniä",
+        "es": "Atún crudo en cubos, aguacate, mango, pepino, cebolla morada, salsa negra, mayonesa de chipotle, cebollino, semillas de sésamo"
       },
       "price": "€12.5",
       "image": "tuna-poke.jpg"
     },
     {
       "name": "Kuha Ceviche",
-      "tag": "",
+      "allergens": ["M", "G"],
       "description": {
-        "en": "Lime-cooked pike-perch, chilis, sesame seeds",
-        "fi": "Limemehussa \"kypsennettyä\" kuhaa, chiliä, seesaminsiemeniä",
-        "es": "Lucioperca \"cocinada\" en lima, chiles, semillas de sésamo"
+        "en": "Lime-cooked pike-perch, kiwi, cucumber, red onions, aguachile, salsa, coriander",
+        "fi": "Limemehussa kypsennettyä kuhaa, kiiviä, kurkkua, punasipulia, aguachilea, salsaa, korianteria",
+        "es": "Lucioperca \"cocinada\" en lima, kiwi, pepino, cebolla morada, aguachile, salsa, cilantro"
       },
-      "price": "€PLACEHOLDER",
+      "price": "€9",
       "image": "kuha-ceviche.jpg"
     },
     {
-      "name": "Prawn Salpicon",
-      "tag": "",
+      "name": "Prawn Salpicón",
+      "allergens": ["M", "G"],
       "description": {
-        "en": "Cooked prawns, pico de gallo, aguachile salsa, cucumber, red onions, mango salsa",
-        "fi": "Kypsennettyjä katkarapuja, pico de galloa, aguachile-salsaa, kurkkua, punasipulia, mangosalsaa",
-        "es": "Camarones cocidos, pico de gallo, salsa aguachile, pepino, cebolla morada, salsa de mango"
+        "en": "Cooked prawns, pico de gallo, aguachile salsa, mango, salsa negra",
+        "fi": "Kypsennettyjä katkarapuja, pico de galloa, aguachile-salsaa, mangoa, salsa negraa",
+        "es": "Camarones cocidos, pico de gallo, salsa aguachile, mango, salsa negra"
       },
-      "price": "€PLACEHOLDER"
+      "price": "€10"
     },
     {
       "name": "Frijoles con Veneno",
-      "tag": "V option",
+      "allergens": ["L", "G"],
       "description": {
-        "en": "Refried beans with cheese and chorizo, served with homemade chips (vegan option available)",
+        "en": "Refried beans with cheese and chorizo, served with homemade tortilla chips (vegan option available)",
         "fi": "Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera (vegaaninen vaihtoehto saatavilla)",
         "es": "Frijoles refritos con queso y chorizo, servidos con totopos caseros (opción vegana disponible)"
       },
-      "price": "€9",
+      "price": "€7",
       "image": "frijoles-con-veneno.jpg"
     }
   ],
 
-  "mains": [
+  "tacos": [
     {
-      "name": "Quesabirria",
-      "tag": "",
+      "name": "Beef Taquitos (5 tacos)",
+      "allergens": ["M", "G"],
       "description": {
-        "en": "PLACEHOLDER — need description/ingredients",
-        "fi": "PLACEHOLDER — need description/ingredients",
-        "es": "PLACEHOLDER — need description/ingredients"
+        "en": "Beef barbacoa, onion, coriander, lime — small white corn tortillas",
+        "fi": "Naudan barbacoaa, sipulia, korianteria, limeä — pienet valkoiset maissitortillat",
+        "es": "Barbacoa de res, cebolla, cilantro, lima — tortillas de maíz blanco pequeñas"
       },
-      "price": "€PLACEHOLDER",
+      "price": "€20"
+    },
+    {
+      "name": "Pastor Taquitos (5 tacos)",
+      "allergens": ["M", "G"],
+      "description": {
+        "en": "Chicken pastor seared on the grill, grilled pineapple, onion, coriander — small white corn tortillas",
+        "fi": "Grillattua kana pastoria, grillattua ananasta, sipulia, korianteria — pienet valkoiset maissitortillat",
+        "es": "Pollo al pastor a la parrilla, piña asada, cebolla, cilantro — tortillas de maíz blanco pequeñas"
+      },
+      "price": "€17"
+    },
+    {
+      "name": "Gringas (2 tacos)",
+      "allergens": ["L"],
+      "description": {
+        "en": "Chicken pastor seared on the grill with cheese, guacamole, coriander — wheat tortillas",
+        "fi": "Grillattua kana pastoria juuston kanssa, guacamolea, korianteria — vehnätortillat",
+        "es": "Pollo al pastor a la parrilla con queso, guacamole, cilantro — tortillas de trigo"
+      },
+      "price": "€17"
+    },
+    {
+      "name": "Quesabirria (3 tacos)",
+      "allergens": ["L", "G"],
+      "description": {
+        "en": "Slow-cooked beef, cheese, white cabbage, marinated onions, coriander, radish + birria broth — big yellow corn tortillas",
+        "fi": "Hitaasti kypsennettyä naudanlihaa, juustoa, valkokaalia, marinoitua sipulia, korianteria, retiisiä + birria-lientä — isot keltaiset maissitortillat",
+        "es": "Res cocinada a fuego lento, queso, col blanca, cebolla marinada, cilantro, rábano + consomé de birria — tortillas de maíz amarillo grandes"
+      },
+      "price": "€18",
       "image": "quesabirria-1.jpg"
     },
     {
-      "name": "Pork in Chili Ancho",
-      "tag": "",
+      "name": "Hawaiian Salmon (3 tacos)",
+      "allergens": [],
       "description": {
-        "en": "PLACEHOLDER — need description/ingredients",
-        "fi": "PLACEHOLDER — need description/ingredients",
-        "es": "PLACEHOLDER — need description/ingredients"
+        "en": "Salmon breaded with corn flakes, mixed salad, chipotle mayo, aguachile salsa, red cabbage, pineapple pico de gallo — white corn tortillas",
+        "fi": "Maissihiutaleilla panéroitua lohta, sekasalaattia, chipotle-majoneesia, aguachile-salsaa, punakaalia, ananas-pico de galloa — valkoiset maissitortillat",
+        "es": "Salmón empanizado con hojuelas de maíz, ensalada mixta, mayonesa de chipotle, salsa aguachile, col morada, pico de gallo de piña — tortillas de maíz blanco"
       },
-      "price": "€PLACEHOLDER",
+      "price": "€17"
+    },
+    {
+      "name": "Cauliflower Power (3 tacos)",
+      "allergens": ["L", "G"],
+      "description": {
+        "en": "Spiced cauliflower, beans, chipotle mayo, white cabbage, house crème, queso fresco, sesame seeds, radish — white corn tortillas",
+        "fi": "Maustettua kukkakaalia, papuja, chipotle-majoneesia, valkokaalia, talon crèmeä, queso frescoa, seesaminsiemeniä, retiisiä — valkoiset maissitortillat",
+        "es": "Coliflor especiada, frijoles, mayonesa de chipotle, col blanca, crema de la casa, queso fresco, semillas de sésamo, rábano — tortillas de maíz blanco"
+      },
+      "price": "€15"
+    },
+    {
+      "name": "Pork in Chili Ancho Sauce (3 tacos)",
+      "allergens": ["M", "G"],
+      "description": {
+        "en": "Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions",
+        "fi": "Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia",
+        "es": "Cerdo cocinado a fuego lento, salsa de chile ancho seco, cilantro, cebolla morada marinada"
+      },
+      "price": "€15",
       "image": "pork-chili-ancho-bowl.jpg"
+    },
+    {
+      "name": "Klandestina Fried Chicken (3 tacos)",
+      "allergens": ["M", "G"],
+      "description": {
+        "en": "Chicken tenders breaded with corn flakes, mixed salad, chipotle mayo, red cabbage, pico de gallo — white corn tortillas",
+        "fi": "Maissihiutaleilla panéroituja kanasuikaleita, sekasalaattia, chipotle-majoneesia, punakaalia, pico de galloa — valkoiset maissitortillat",
+        "es": "Tiras de pollo empanizadas con hojuelas de maíz, ensalada mixta, mayonesa de chipotle, col morada, pico de gallo — tortillas de maíz blanco"
+      },
+      "price": "€17"
+    },
+    {
+      "name": "Spice Tofu (3 tacos)",
+      "allergens": ["M", "G", "VEGAN"],
+      "description": {
+        "en": "Marinated tofu, beans, mixed salad, salsa roja, white cabbage, vegan crème, sesame seeds — white corn tortillas",
+        "fi": "Marinoitua tofua, papuja, sekasalaattia, salsa rojaa, valkokaalia, vegaanista crèmeä, seesaminsiemeniä — valkoiset maissitortillat",
+        "es": "Tofu marinado, frijoles, ensalada mixta, salsa roja, col blanca, crema vegana, semillas de sésamo — tortillas de maíz blanco"
+      },
+      "price": "€15"
     }
   ],
 
-  "sides": [],
+  "chilaquiles": [
+    {
+      "name": "Klandestina AMAZING Bowl",
+      "allergens": [],
+      "description": {
+        "en": "Beans, either fries or corn chips, mozzarella cheese, salsa verde, filling of your choice, mixed salad, sour cream, fresh cheese, marinated onions, coriander, radishes. Choose sides: Corn Chips / French Fries. Choose filling: Cauliflower Power / Chicken Pastor / Ancho Pork.",
+        "fi": "Papuja, valintasi mukaan joko ranskalaisia tai maissilastuja, mozzarellajuustoa, salsa verdea, valitsemasi täyte, sekasalaattia, smetanaa, tuorejuustoa, marinoitua sipulia, korianteria, retiisejä. Valitse lisuke: maissilastut / ranskalaiset. Valitse täyte: Cauliflower Power / kana pastor / ancho-possu.",
+        "es": "Frijoles, totopos o patatas fritas a elegir, queso mozzarella, salsa verde, relleno a elegir, ensalada mixta, crema agria, queso fresco, cebolla marinada, cilantro, rabanitos. Elige el acompañamiento: totopos / patatas fritas. Elige el relleno: Cauliflower Power / pollo al pastor / cerdo en ancho."
+      },
+      "price": "€17"
+    }
+  ],
 
-  "bar": [
+  "desserts": [
+    {
+      "name": "Churros with Chocolate Sauce",
+      "allergens": [],
+      "description": { "en": "", "fi": "", "es": "" },
+      "price": "€5"
+    }
+  ],
+
+  "softDrinks": [
+    {
+      "name": "Jarritos",
+      "allergens": [],
+      "description": {
+        "en": "Mandarin / Lime / Cola / Guava / Grapefruit",
+        "fi": "Mandariini / Lime / Kola / Guava / Greippi",
+        "es": "Mandarina / Lima / Cola / Guayaba / Toronja"
+      },
+      "price": "€5.5"
+    },
+    {
+      "name": "Coca Cola",
+      "allergens": [],
+      "description": { "en": "", "fi": "", "es": "" },
+      "price": "€3.5"
+    },
+    {
+      "name": "Vichy",
+      "allergens": [],
+      "description": { "en": "", "fi": "", "es": "" },
+      "price": "€3.5"
+    }
+  ],
+
+  "beer": [
+    {
+      "name": "Klandestina Sunny Lager",
+      "allergens": [],
+      "description": { "en": "", "fi": "", "es": "" },
+      "price": "€8.5"
+    },
+    {
+      "name": "Kalajoki Bay Surf Ale",
+      "allergens": [],
+      "description": { "en": "", "fi": "", "es": "" },
+      "price": "€9.5"
+    },
+    {
+      "name": "Corona",
+      "allergens": [],
+      "description": { "en": "", "fi": "", "es": "" },
+      "price": "€7.5"
+    },
+    {
+      "name": "Modelo Especial",
+      "allergens": [],
+      "description": { "en": "", "fi": "", "es": "" },
+      "price": "€9"
+    },
+    {
+      "name": "Pacifico",
+      "allergens": [],
+      "description": { "en": "", "fi": "", "es": "" },
+      "price": "€9.5"
+    },
+    {
+      "name": "Corona 0%",
+      "allergens": [],
+      "description": { "en": "", "fi": "", "es": "" },
+      "price": "€7"
+    }
+  ],
+
+  "cocktails": [
     {
       "name": "Tommy's Margarita",
-      "tag": "",
+      "allergens": [],
       "description": {
-        "en": "Tequila, lime, smoked salt rim",
-        "fi": "Tequilaa, limeä, savustettu suolareunus",
-        "es": "Tequila, lima, borde de sal ahumada"
+        "en": "Agave nectar, lime, Briottet Grapefruit Liqueur, Mundo Tequila or Almave Blanco Non-Alcoholic Blue Agave Spirit. With Mezcal: +2€.",
+        "fi": "Agavesiirappia, limeä, Briottet-greippilikööriä, Mundo-tequilaa tai Almave Blanco -alkoholitonta agavetislettä. Mezcalilla: +2€.",
+        "es": "Néctar de agave, lima, licor de pomelo Briottet, tequila Mundo o destilado de agave azul sin alcohol Almave Blanco. Con mezcal: +2€."
       },
-      "price": "€PLACEHOLDER",
+      "price": "€13",
       "image": "tommys-margarita.jpg"
+    },
+    {
+      "name": "Spicy Ananas Margarita",
+      "allergens": [],
+      "description": {
+        "en": "Briottet Pineapple Liqueur, Mundo Tequila, Botanera Hot Sauce, lime. With Mezcal: +2€.",
+        "fi": "Briottet-ananaslikööriä, Mundo-tequilaa, Botanera-chilikastiketta, limeä. Mezcalilla: +2€.",
+        "es": "Licor de piña Briottet, tequila Mundo, salsa picante Botanera, lima. Con mezcal: +2€."
+      },
+      "price": "€13"
+    },
+    {
+      "name": "Paloma",
+      "allergens": [],
+      "description": {
+        "en": "Mundo Tequila, lime, Briottet Grapefruit Liqueur, grapefruit soda. With Mezcal: +2€.",
+        "fi": "Mundo-tequilaa, limeä, Briottet-greippilikööriä, greippisoodaa. Mezcalilla: +2€.",
+        "es": "Tequila Mundo, lima, licor de pomelo Briottet, refresco de pomelo. Con mezcal: +2€."
+      },
+      "price": "€12"
+    },
+    {
+      "name": "Ron Cola",
+      "allergens": [],
+      "description": {
+        "en": "Takamaka Rum Blanc, cola, lime",
+        "fi": "Takamaka Rum Blancia, kolaa, limeä",
+        "es": "Ron Takamaka Blanc, cola, lima"
+      },
+      "price": "€10"
+    }
+  ],
+
+  "wine": [
+    {
+      "name": "Quadis",
+      "price": { "glass12": 11, "glass16": 15, "glass24": 21, "bottle": 56 }
+    },
+    {
+      "name": "Le Pompon Côte du Rhône",
+      "price": { "glass12": 8, "glass16": 12, "glass24": 15, "bottle": 43 }
+    },
+    {
+      "name": "Montesierra Verdejo Blanco",
+      "price": { "glass12": 8, "glass16": 11, "glass24": 15, "bottle": 39 }
+    },
+    {
+      "name": "Weingut Riesling",
+      "price": { "glass12": 10, "glass16": 14, "glass24": 20, "bottle": 55 }
+    },
+    {
+      "name": "House Sparkling Wine",
+      "price": { "glass12": 10, "glass16": null, "glass24": null, "bottle": 36 }
+    },
+    {
+      "name": "Txakoli Rosé Wine",
+      "price": { "glass12": 9, "glass16": 13, "glass24": 19, "bottle": 49 }
     }
   ],
 

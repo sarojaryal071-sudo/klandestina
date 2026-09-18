@@ -12,16 +12,31 @@
     "eyebrow": "Koko ruokalista",
     "heading": "Keittiö & baari",
     "comingSoon": "Tulossa pian.",
-    "categories": { "starters": "Alkuruoat", "mains": "Pääruoat", "sides": "Lisukkeet", "bar": "Baari" }
+    "categories": {
+      "lunch": "Lounas",
+      "starters": "Alkuruoat",
+      "tacos": "Tacot",
+      "chilaquiles": "Chilaquiles",
+      "desserts": "Jälkiruoat",
+      "drinks": "Juomat",
+      "softDrinks": "Virvoitusjuomat",
+      "beer": "Oluet",
+      "cocktails": "Cocktailit",
+      "wine": "Viinit"
+    },
+    "notes": {
+      "lunch": "14,90€ · Ma–Pe 11:00–14:30 · sisältää 1–2 lisuketta: Riisi / Ranskalaiset / Paahdetut kasvikset",
+      "cocktails": "Kysy tequila- ja mezcal-valikoimastamme"
+    }
   },
   "gallery": { "eyebrow": "Sisällä", "heading": "Tila" },
   "story": {
     "eyebrow": "Tarina",
-    "heading": "Ei kylttiä. Ei anteeksipyyntöjä.",
-    "body1": "Klandestina avattiin ilman kylttiä ovella, koska naapurusto löysi paikan ennen internetiä. Se ei ole muuttunut: ei katukylttiä, ei tulostettua päivän listaa — vain ovi Aleksis Kiven kadulla, jota kanta-asiakkaat osaavat työntää auki.",
-    "body2": "Sisällä keittiö toimii hiilloksella ja perhereseptiillä, suodatettuna sen läpi, mitä Helsingin torit sinä viikolla tarjoavat. Juomat kaadetaan kuin joku juhlisi syntymäpäiviään — joka ilta.",
-    "quoteText": "”Emme rakentaneet ravintolaa. Rakensimme paikan, jossa itse halusimme syödä.”",
-    "quoteAttribution": "— Andrés, keittiömestari ja omistaja"
+    "heading": "Eläköön La Klandestina",
+    "body1": "Tervetuloa Klandestinaan, arjen meksikolaiseen suosikkiravintolaasi! Tavoitteenamme on upottaa sinut täyteen Meksiko-kokemukseen jokaisen tarjoamamme annoksen kautta. Klandestinassa intohimomme ruokaa ja palvelua kohtaan on vertaansa vailla. Haluamme, että tulet, viihdyt ja palaat yhä uudelleen.",
+    "body2": "Toimittuamme Harju Kalliossa kaksi ja puoli vuotta, kohtasimme pandemia-ruletin haasteet ja kaikki sen mukanaan tuomat vaikeudet. Näistä vastoinkäymisistä huolimatta meillä oli onni saada uskollinen asiakaskunta ja monia ystäviä, jotka kävivät luonamme, mikä antoi meille motivaation jatkaa. Haluamme sinun tietävän, että teemme tämän sinua varten – olemme yhä pelissä mukana tukesi ansiosta. Ilman sinua mikään tästä ei olisi mahdollista. Olemme innoissamme paluustamme ja odotamme innolla vanhojen asiakkaidemme ja ystäviemme paluuta.",
+    "body3": "La Cantina Klandestina on kunnianosoituksemme sille tyypillisen meksikolaiselle tunteelle, ettei tarvitse noudattaa jokaista sääntöä orjallisesti, vaan tehdä asiat omalla tavallaan.",
+    "quoteText": "”Olemme laillisia kapinallisia, jotka rakastavat ruokaa ja ovat ylpeitä ystävällisestä asiakaspalvelustaan.”"
   },
   "visit": {
     "eyebrow": "Löydä meidät",

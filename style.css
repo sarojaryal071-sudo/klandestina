@@ -301,9 +301,8 @@ section { position: relative; padding: 130px 56px; }
 }
 .story-quote p {
   font-family: "Bebas Neue", sans-serif; font-size: 24px; letter-spacing: 0.01em;
-  color: var(--ink); margin: 0 0 10px; line-height: 1.25;
+  color: var(--ink); margin: 0; line-height: 1.25;
 }
-.story-quote cite { font-style: normal; font-size: 13px; color: color-mix(in srgb, var(--ink) 55%, transparent); }
 
 /* ---------- Menu ---------- */
 .tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 56px; }
@@ -332,6 +331,36 @@ section { position: relative; padding: 130px 56px; }
 .menu-item-desc { color: color-mix(in srgb, var(--ink) 50%, transparent); font-size: 14px; max-width: 460px; margin-top: 6px; }
 .menu-item-price { font-family: "Bebas Neue", sans-serif; color: var(--accent); font-size: 22px; white-space: nowrap; align-self: center; flex: 0 0 auto; }
 .menu-empty { text-align: center; color: color-mix(in srgb, var(--ink) 40%, transparent); padding: 26px 6px; }
+
+/* Wine's four-size price row — plain display text, not interactive. Four
+   columns are too wide to sit inline next to a wrapped wine name on narrow
+   screens, so that row (and only that row) is allowed to wrap the price
+   block onto its own line below the name instead of forcing everything
+   into one cramped row (this is a no-op at desktop widths, where it
+   already fits on one line). */
+.menu-item:has(.menu-item-price--wine) { flex-wrap: wrap; }
+.menu-item-price--wine { display: flex; gap: 10px; margin-left: auto; }
+.price-col { display: flex; flex-direction: column; align-items: center; min-width: 28px; }
+.price-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: color-mix(in srgb, var(--ink) 45%, transparent); margin-bottom: 3px; }
+.price-value { font-family: "Bebas Neue", sans-serif; font-size: 16px; color: var(--accent); }
+
+/* A standing note above a group's items (Lunch's fixed price/schedule,
+   Cocktails' tequila & mezcal note). */
+.menu-note {
+  text-align: center; font-size: 13px; color: color-mix(in srgb, var(--ink) 65%, transparent);
+  margin: 0 0 32px; padding: 12px 20px; border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+
+/* Sub-section heading inside the grouped Drinks tab (Soft Drinks/Beer/
+   Cocktails/Wine sharing one panel). */
+.menu-group-heading {
+  font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: 0.03em;
+  color: var(--accent); text-align: center; text-transform: uppercase;
+  margin: 40px 0 8px;
+}
+.menu-group-heading:first-of-type { margin-top: 0; }
 
 /* ---------- Gallery: scattered scrapbook ---------- */
 /* Flex-wrap (not grid) so tiles can overlap their neighbors and sit at a

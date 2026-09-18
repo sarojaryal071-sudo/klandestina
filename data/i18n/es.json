@@ -12,16 +12,31 @@
     "eyebrow": "Menú completo",
     "heading": "Cocina y barra",
     "comingSoon": "Próximamente.",
-    "categories": { "starters": "Entrantes", "mains": "Platos fuertes", "sides": "Acompañamientos", "bar": "Barra" }
+    "categories": {
+      "lunch": "Almuerzo",
+      "starters": "Entrantes",
+      "tacos": "Tacos",
+      "chilaquiles": "Chilaquiles",
+      "desserts": "Postres",
+      "drinks": "Bebidas",
+      "softDrinks": "Refrescos",
+      "beer": "Cerveza",
+      "cocktails": "Cócteles",
+      "wine": "Vino"
+    },
+    "notes": {
+      "lunch": "14,90€ · Lun–Vie 11:00–14:30 · incluye 1–2 acompañamientos: Arroz / Patatas fritas / Verduras asadas",
+      "cocktails": "Pregunta por nuestra selección de tequila y mezcal"
+    }
   },
   "gallery": { "eyebrow": "Por dentro", "heading": "El local" },
   "story": {
     "eyebrow": "La historia",
-    "heading": "Sin letrero. Sin disculpas.",
-    "body1": "Klandestina abrió sin letrero en la puerta, porque el barrio encontró el lugar antes que internet. Eso no ha cambiado: sin rótulo en la calle, sin pizarra de especiales impresa — solo una puerta en Aleksis Kiven katu que los habituales saben empujar.",
-    "body2": "Dentro, la cocina funciona con brasas vivas y recetas familiares, filtradas por lo que los mercados de Helsinki ofrezcan esa semana. Los tragos se sirven como si alguien cumpliera años, todas las noches.",
-    "quoteText": "“No construimos un restaurante. Construimos el lugar donde nosotros mismos queríamos comer.”",
-    "quoteAttribution": "— Andrés, chef y propietario"
+    "heading": "Que viva La Klandestina",
+    "body1": "¡Bienvenido a Klandestina, tu restaurante mexicano casual de confianza! Nuestro objetivo es sumergirte en la experiencia completa de México a través de cada plato que servimos. En Klandestina, nuestra pasión por la comida y el servicio no tiene igual. Queremos que vengas, disfrutes y sigas volviendo por más.",
+    "body2": "Tras dos años y medio abiertos en Harju Kallio, afrontamos los desafíos de la ruleta de la pandemia y todos los problemas que trajo consigo. A pesar de estos obstáculos, tuvimos la suerte de contar con una clientela fiel y muchos amigos que frecuentaron nuestro local, lo que nos dio la motivación para seguir adelante. Queremos que sepas que hacemos esto por ti — seguimos en el juego gracias a tu apoyo. Sin ti, nada de esto sería posible. Estamos encantados de estar de vuelta y esperamos con ganas el regreso de nuestros antiguos clientes y amigos.",
+    "body3": "La Cantina Klandestina es nuestro tributo a ese sentimiento tan mexicano de no seguir rígidamente cada regla y hacer las cosas a nuestra manera.",
+    "quoteText": "«Somos rebeldes legales que aman la comida y se enorgullecen de ofrecer un servicio al cliente cercano.»"
   },
   "visit": {
     "eyebrow": "Encuéntranos",

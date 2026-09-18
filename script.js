@@ -223,23 +223,60 @@ function initMenuTabs() {
   renderMenuCategory(activeCategoryId);
 }
 
+// Most tabs map straight to one array in menu.json (categoryId === the data
+// key). The "drinks" tab instead lists several arrays (menu.categories'
+// "groups" field) as labeled sub-sections in one panel, so Soft Drinks/
+// Beer/Cocktails/Wine don't each need their own tab.
 function renderMenuCategory(categoryId) {
   const menuList = document.getElementById("menu-list");
   menuList.innerHTML = "";
 
-  const items = menu[categoryId] || [];
-  if (items.length === 0) {
+  const category = menu.categories.find((c) => c.id === categoryId);
+  const groups = (category && category.groups) || [categoryId];
+  let renderedAny = false;
+
+  groups.forEach((groupId) => {
+    const items = menu[groupId] || [];
+    if (items.length === 0) return;
+    renderedAny = true;
+
+    if (groups.length > 1) {
+      const heading = document.createElement("h4");
+      heading.className = "menu-group-heading";
+      heading.dataset.i18n = `menu.categories.${groupId}`;
+      heading.textContent = t(`menu.categories.${groupId}`);
+      menuList.appendChild(heading);
+    }
+
+    appendGroupNote(menuList, groupId);
+
+    items.forEach((item) => {
+      menuList.appendChild(renderMenuItem({ ...item, description: pickLang(item.description) }));
+    });
+  });
+
+  if (!renderedAny) {
     const empty = document.createElement("p");
     empty.className = "menu-empty";
     empty.dataset.i18n = "menu.comingSoon";
     empty.textContent = t("menu.comingSoon");
     menuList.appendChild(empty);
-    return;
   }
+}
 
-  items.forEach((item) => {
-    menuList.appendChild(renderMenuItem({ ...item, description: pickLang(item.description) }));
-  });
+// A few groups carry a short standing note above their items — the Lunch
+// tab's fixed price/schedule, the Cocktails group's tequila/mezcal note.
+// Only rendered when that key actually exists in the EN dict, so most
+// groups render nothing extra.
+function appendGroupNote(menuList, groupId) {
+  const noteKey = `menu.notes.${groupId}`;
+  if (resolveKey(i18n.en, noteKey) == null) return;
+
+  const note = document.createElement("p");
+  note.className = "menu-note";
+  note.dataset.i18n = noteKey;
+  note.textContent = t(noteKey);
+  menuList.appendChild(note);
 }
 
 init();
