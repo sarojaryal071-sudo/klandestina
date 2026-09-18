@@ -70,6 +70,23 @@ section { position: relative; padding: 130px 56px; }
 .section-head { max-width: 620px; margin: 0 auto 60px; text-align: center; }
 .section-head h2 { font-size: clamp(38px, 5vw, 60px); margin-top: 10px; }
 
+@media (max-width: 900px) {
+  /* Desktop's 130px top padding was carrying straight over to mobile, so
+     jumping to a section via the hamburger nav (below) landed with a
+     disproportionately large gap above the heading — most noticeable on
+     Menu since its tabs sit right there to make the empty space obvious,
+     but every section had it equally. */
+  section { padding: 64px 24px; }
+
+  /* scroll-margin-top so an anchor jump lands just below the fixed mobile
+     topbar (measured at 69px) instead of tucked underneath it — 16px of
+     breathing room on top of that. Only the nav-jump targets need this
+     (Home/hero, Story, Menu, Gallery, Find Us — the same five links in
+     mobileNav.js); desktop doesn't get this rule at all since it has no
+     fixed topbar to clear in the first place. */
+  #hero, #story, #menu, #gallery, #visit { scroll-margin-top: 85px; }
+}
+
 /* ---------- 3D buttons ---------- */
 .btn {
   display: inline-flex;
