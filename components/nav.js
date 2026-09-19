@@ -28,6 +28,29 @@ export function renderNav(container) {
   });
 
   observeSections(container);
+  observeHero(container);
+}
+
+// Full opacity on the hero (top of the page); as soon as the visitor
+// scrolls far enough that the hero is no longer in view at all, the pill
+// fades to a low opacity — still fully clickable, just out of the way —
+// and CSS (:hover/:focus-within) brings it back to full opacity the
+// moment a visitor's cursor or touch actually lands on it. Separate from
+// observeSections() below: that one tracks which pill lights up as
+// active and starts at "story", not "hero" — dimming is a different
+// question (are we still on the hero at all) with its own observer,
+// rather than overloading the active-section one with a second meaning.
+function observeHero(container) {
+  const hero = document.getElementById("hero");
+  if (!hero || !("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      container.classList.toggle("shortcut-nav--dimmed", !entry.isIntersecting);
+    },
+    { threshold: 0 }
+  );
+  observer.observe(hero);
 }
 
 function setActive(container, id) {

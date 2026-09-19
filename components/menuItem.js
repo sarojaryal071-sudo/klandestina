@@ -6,15 +6,13 @@
 // stacked in that order rather than name/price sharing a row — so a long
 // name (or wine's four-column price grid) never fights anything else for
 // horizontal space or ends up vertically misaligned against wrapped text.
-//
-// Thumbnails no longer come from a manual "image" field in data/menu.json —
-// every row speculatively loads images/dishes/<slugified-name>.jpg (see
-// dishImage.js) and drops the thumbnail area entirely if that 404s, so a
-// blank tinted box never reads as a broken image. Clicking (or Enter/Space
+// A thumbnail only renders when the item actually has a real photo
+// (item.image set); items without one skip the image area entirely rather
+// than showing a placeholder square, since a blank tinted box reads as a
+// broken image rather than an intentional choice. Clicking (or Enter/Space
 // on) a row opens the shared item detail modal (itemModal.js) with the
 // same data this row already has, larger photo included.
 
-import { dishImagePath } from "./dishImage.js";
 import { openItemModal } from "./itemModal.js";
 import { renderPrice } from "./priceDisplay.js";
 
@@ -26,26 +24,20 @@ import { renderPrice } from "./priceDisplay.js";
  * @param {string|Object} item.price   - a plain string ("€15"), "" (no individual price — see a category note
  *                                        instead, e.g. lunch), or a wine-style object
  *                                        { glass12, glass16, glass24, bottle } with null for sizes not offered
+ * @param {string} [item.image]        - filename inside images/dishes/; items without one render text-only
+ * @param {string[]} [item.images]     - optional extra photos for the detail modal's gallery; falls back to [item.image]
  * @returns {HTMLElement}
  */
 export function renderMenuItem(item) {
   const row = document.createElement("div");
+  const hasPhoto = Boolean(item.image);
   const isWine = typeof item.price === "object" && item.price !== null;
-  row.className = ["menu-item", isWine && "menu-item--wine"].filter(Boolean).join(" ");
+  row.className = ["menu-item", !hasPhoto && "menu-item--no-photo", isWine && "menu-item--wine"].filter(Boolean).join(" ");
   row.tabIndex = 0;
   row.setAttribute("role", "button");
   row.setAttribute("aria-label", item.name);
 
-  // Rendered optimistically every time — most items won't have a matching
-  // file yet, and that's fine: onerror drops the <img> and adds
-  // menu-item--no-photo (a pure styling hook; nothing currently keys off
-  // it functionally, since flexbox already reclaims the space on its own
-  // once the thumbnail is simply gone from the row).
-  const thumb = `
-    <img
-      class="menu-item-thumb" src="${dishImagePath(item.name)}" alt="" loading="lazy"
-      onerror="this.closest('.menu-item').classList.add('menu-item--no-photo'); this.remove();"
-    >`;
+  const thumb = hasPhoto ? `<img class="menu-item-thumb" src="images/dishes/${item.image}" alt="" loading="lazy">` : "";
   const allergenLabel = item.allergens && item.allergens.length ? item.allergens.join(" · ") : "";
 
   row.innerHTML = `

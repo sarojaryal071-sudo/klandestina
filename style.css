@@ -46,6 +46,34 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   transition: background 0.25s ease, color 0.25s ease;
+  position: relative;
+}
+/* Global ambient background: a flat var(--bg) reads as harshly flat/dark
+   (dark theme especially) compared to a reference site whose background
+   is a soft, warm ambient gradient glow behind content rather than a flat
+   color. This is one shared, theme-agnostic recipe (built from var(--accent)/
+   var(--bg), so it re-themes for free) rather than inventing a separate
+   light/dark treatment — several large, very soft radial blobs at
+   different positions for an organic feel, not one obvious spotlight.
+   position:fixed (not absolute/static) anchors it to the VIEWPORT rather
+   than the document, so it reads as ambient light in the room rather than
+   a pattern printed on a specific point of a very tall page; z-index:-1
+   plus pointer-events:none keep it purely decorative, behind and
+   unreachable by every section's own content. Individual sections that
+   already set their own opaque background (.hero, .section-ambient)
+   simply paint over this locally, which is fine — this is the baseline
+   for everything else (Story, Dishes, Menu, Gallery, footer). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(42% 38% at 12% 12%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(48% 42% at 88% 22%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 70%),
+    radial-gradient(52% 46% at 28% 88%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+    radial-gradient(40% 38% at 92% 92%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%);
 }
 a { color: inherit; text-decoration: none; }
 
@@ -142,7 +170,18 @@ section { position: relative; padding: 130px 56px; }
   border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
   backdrop-filter: blur(16px);
   box-shadow: 0 16px 40px -16px rgba(0,0,0,0.7);
+  opacity: 1;
+  transition: opacity 0.5s ease;
 }
+/* Full opacity on the hero; dimmed (but still fully clickable — this is
+   opacity, not visibility/pointer-events) everywhere past it, restoring
+   to full the moment a visitor's cursor or touch actually reaches it
+   (nav.js's IntersectionObserver toggles this class, not a scroll
+   listener, so it doesn't fire on every scroll frame — a slow 0.5s
+   transition on top of that is what keeps it feeling smooth rather than
+   flickery crossing section boundaries). */
+.shortcut-nav--dimmed { opacity: 0.4; }
+.shortcut-nav--dimmed:hover, .shortcut-nav--dimmed:focus-within { opacity: 1; }
 .shortcut-nav a {
   position: relative; padding: 9px 18px; font-size: 12px; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase; border-radius: 999px;
@@ -172,9 +211,9 @@ section { position: relative; padding: 130px 56px; }
    they always rendered (components/logo.js's onerror fallback) — sized off
    each container's own font-size above/below, untouched by this block. */
 .brand-logo-img { display: block; width: auto; height: 26px; }
-#brand-mark .brand-logo-img { height: 26px; }
-.footer-logo .brand-logo-img { height: 42px; }
-.mobile-nav-brand .brand-logo-img { height: 36px; }
+#brand-mark .brand-logo-img { height: 38px; }
+.footer-logo .brand-logo-img { height: 56px; }
+.mobile-nav-brand .brand-logo-img { height: 46px; }
 
 /* The provided logo file is white letter-fill + black drop-shadow, drawn
    for a dark background — on dark theme it's crisp, but on light theme's
@@ -242,7 +281,7 @@ section { position: relative; padding: 130px 56px; }
   .mobile-topbar-brand {
     font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--ink);
   }
-  .mobile-topbar-brand .brand-logo-img { height: 24px; }
+  .mobile-topbar-brand .brand-logo-img { height: 34px; }
   .mobile-topbar-controls { display: flex; align-items: center; gap: 10px; }
 
   /* These reuse .lang-switch/.theme-toggle's text/icon styling but drop the
@@ -570,20 +609,26 @@ section { position: relative; padding: 130px 56px; }
   -webkit-mask-position: center;
 }
 
-.story-photo { position: relative; width: 100%; max-width: 420px; aspect-ratio: 4 / 5; }
+.story-photo { position: relative; width: 100%; max-width: 460px; aspect-ratio: 4 / 5; }
 .story-photo-img { width: 100%; height: 100%; }
-/* Same two-part fix the Menu photo column got (see its comments above),
-   brought over once it was confirmed there: a translucent var(--bg) wash
-   over the whole photo, plus overriding .soft-fade-img's default 20%
-   --fade-edge to 42% so the edges genuinely dissolve instead of reading
-   as a rectangle with a soft border. Checked directly against this exact
-   photo first (Menu's Drinks tab reuses the same tommys-margarita.jpg at
-   42%) before bringing it here — the glass and hand sit well inside the
-   16% fully-opaque core and stay sharp; only the blurred bokeh background
-   and the outer edges actually fade, so the subject itself isn't touched. */
+/* A flat, uniform wash (an earlier version of this) darkened the whole
+   photo evenly — including the center, where the actual subject sits —
+   which dulled it more than intended. A RADIAL wash instead: barely
+   touches the center (12%), then ramps up toward a full var(--bg) blend
+   at the very edge, so the subject stays close to its natural brightness
+   and the darkening only really shows up where the edge-fade mask
+   (--fade-edge below) is about to dissolve the photo into the background
+   anyway — the two effects reinforce each other there instead of the
+   wash doing its own separate, uniform thing on top of the subject. */
 .story-photo-wash {
   position: absolute; inset: 0; z-index: 1;
-  background: color-mix(in srgb, var(--bg) 45%, transparent);
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--bg) 12%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 35%, transparent) 50%,
+    color-mix(in srgb, var(--bg) 70%, transparent) 80%,
+    var(--bg) 100%
+  );
 }
 .story-photo-img, .story-photo-wash { --fade-edge: 42%; }
 
@@ -593,7 +638,7 @@ section { position: relative; padding: 130px 56px; }
   .story-text .section-head { text-align: left; margin: 0 0 32px; max-width: none; }
   .story-body { text-align: left; margin: 0; max-width: 560px; }
   .story-quote { margin-left: 0; }
-  .story-photo { flex: 1 1 0; max-width: 480px; }
+  .story-photo { flex: 1 1 0; max-width: 520px; }
 }
 
 /* ---------- Menu ---------- */
@@ -612,7 +657,7 @@ section { position: relative; padding: 130px 56px; }
    a small floating box in a lot of empty section background; this and the
    440px→520px desktop cap below are what let it actually fill its column
    instead of just sitting capped well under it. */
-.menu-photo { position: relative; width: 100%; max-width: 480px; aspect-ratio: 4 / 5; }
+.menu-photo { position: relative; width: 100%; max-width: 510px; aspect-ratio: 4 / 5; }
 /* position:absolute + inset:0 (not width/height:100%) — .menu-photo's
    height comes from aspect-ratio on a flex item, and a normal-flow
    child's height:100% doesn't reliably resolve against that (collapsed
@@ -637,21 +682,25 @@ section { position: relative; padding: 130px 56px; }
 }
 .menu-photo-frame--ambient-only .menu-photo-ambient { opacity: 1; }
 
-/* Test pass (Menu column only, not yet applied to Story): a translucent
-   wash in the page's own background color over the FULL photo, so its
-   overall brightness already sits close to the surrounding section
-   before the edge feather even starts — the two together are what should
-   read as "blends into the background" instead of "sticker with soft
-   edges." Reuses .soft-fade-img (same class, unmodified) so the wash
-   fades at all 4 edges exactly in step with the photo beneath it, rather
-   than being a flat rectangle that happens to sit on top. z-index (not
-   DOM order) puts it above both the rotating <img>s and the ambient glow,
-   since .menu-photo-img elements are appended after this element at
-   runtime (components/menuPhoto.js) and would otherwise paint over it.
-   Hidden in ambient-only mode — there's no photo underneath to wash out. */
+/* A radial wash over the photo, not a flat one — an earlier flat version
+   darkened the center (where the dish/subject sits) just as much as the
+   edges, dulling the whole photo more than intended. This barely touches
+   the center (12%) and ramps up to a full var(--bg) blend at the edge,
+   so it reinforces the edge-fade mask below rather than fighting the
+   subject for attention. z-index (not DOM order) puts it above both the
+   rotating <img>s and the ambient glow, since .menu-photo-img elements
+   are appended after this element at runtime (components/menuPhoto.js)
+   and would otherwise paint over it. Hidden in ambient-only mode —
+   there's no photo underneath to wash out. */
 .menu-photo-wash {
   position: absolute; inset: 0; z-index: 2;
-  background: color-mix(in srgb, var(--bg) 45%, transparent);
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--bg) 12%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 35%, transparent) 50%,
+    color-mix(in srgb, var(--bg) 70%, transparent) 80%,
+    var(--bg) 100%
+  );
   transition: opacity 0.9s ease;
 }
 .menu-photo-frame--ambient-only .menu-photo-wash { opacity: 0; }
@@ -677,7 +726,7 @@ section { position: relative; padding: 130px 56px; }
      from 56px/440px (see .menu-photo's comment above) for the same
      "larger, more dominant, less empty space around it" pass. */
   .menu-layout { flex-direction: row; align-items: flex-start; gap: 40px; }
-  .menu-photo { flex: 0 1 42%; max-width: 520px; position: sticky; top: 140px; }
+  .menu-photo { flex: 0 1 44%; max-width: 560px; position: sticky; top: 140px; }
   .menu-content { flex: 1 1 60%; min-width: 0; }
 }
 
@@ -698,12 +747,30 @@ section { position: relative; padding: 130px 56px; }
    with no photo (.menu-item--no-photo) skip it and the body just takes the
    full row width. */
 .menu-item {
+  position: relative;
   display: flex; align-items: flex-start; gap: 18px; padding: 20px 6px;
   border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
-  cursor: pointer; border-radius: 10px; transition: background 0.15s ease;
+  cursor: pointer; border-radius: 10px;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 .menu-item:last-child { border-bottom: none; }
-.menu-item:hover { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+/* A thin accent bar fades in at the left edge on hover, matching the
+   button/tab language's accent-as-signal treatment elsewhere on the site
+   rather than a color the row wouldn't otherwise use. Inset top/bottom
+   (not full-height) so it doesn't visually clip through the row's own
+   border-radius at its corners. */
+.menu-item::before {
+  content: "";
+  position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 2px;
+  background: var(--accent);
+  opacity: 0; transform: scaleY(0.5); transform-origin: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.menu-item:hover {
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  transform: translateX(6px);
+}
+.menu-item:hover::before { opacity: 1; transform: scaleY(1); }
 .menu-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .menu-item-thumb {
   flex: 0 0 auto; width: 60px; height: 60px; border-radius: 12px; object-fit: cover;
@@ -824,6 +891,11 @@ section { position: relative; padding: 130px 56px; }
 .lightbox-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* ---------- Visit ---------- */
+/* Tighter than .section-head's shared 60px bottom margin — scoped to just
+   this section rather than changing that shared rule, since Visit's
+   heading-then-buttons reads better as one close-knit cluster than the
+   other sections' heading-then-a-full-row-of-content spacing does. */
+#visit .section-head { margin-bottom: 28px; }
 .visit-actions { display: flex; justify-content: center; }
 #visit-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
@@ -951,8 +1023,11 @@ section { position: relative; padding: 130px 56px; }
    is zeroed out here and reapplied just to the text body below it), and
    a fade/scale-in entrance since this one opens far more often per visit
    (every menu row/dish card, not just one CTA) and benefits more from
-   feeling snappy/alive rather than an instant hard cut. */
-.item-modal-card { max-width: 480px; padding: 0; overflow: hidden; }
+   feeling snappy/alive rather than an instant hard cut. Sized as a
+   genuinely large centered card (640px, vs. the Special Event modal's
+   460px form) since it's meant to be a proper "look at this dish" moment,
+   not a compact popup; full-screen below 720px, see the media query. */
+.item-modal-card { max-width: 640px; padding: 0; overflow: hidden; }
 .item-modal-overlay:not([hidden]) .item-modal-card { animation: itemModalCardIn 0.28s cubic-bezier(0.2,0.8,0.2,1) both; }
 .item-modal-overlay:not([hidden]) { animation: itemModalOverlayIn 0.2s ease both; }
 @keyframes itemModalCardIn { from { opacity: 0; transform: scale(0.94) translateY(14px); } to { opacity: 1; transform: none; } }
@@ -960,13 +1035,12 @@ section { position: relative; padding: 130px 56px; }
 
 .item-modal-photo { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface); }
 .item-modal-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-/* No matching photo yet (dishImage.js's filename convention 404s) — a
-   small stylized strip using the site's own accent-glow technique
-   (.menu-photo-ambient/.section-ambient use the same radial-gradient
-   pair elsewhere) instead of either a broken-image icon or a big empty
-   photo-shaped hole. Collapsing the aspect-ratio down to a fixed, much
-   shorter height is what keeps it reading as "a little decorative strip"
-   rather than "the photo failed to load." */
+/* No photo at all for this item — a small stylized strip using the site's
+   own accent-glow technique (.menu-photo-ambient/.section-ambient use the
+   same radial-gradient pair elsewhere) instead of either a broken-image
+   icon or a big empty photo-shaped hole. Collapsing the aspect-ratio down
+   to a fixed, much shorter height is what keeps it reading as "a little
+   decorative strip" rather than "the photo failed to load." */
 .item-modal-photo--empty {
   aspect-ratio: auto; height: 64px;
   background:
@@ -974,22 +1048,55 @@ section { position: relative; padding: 130px 56px; }
     radial-gradient(60% 120% at 80% 50%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%);
 }
 
-/* Sits on top of the photo when there is one, so it needs its own
+/* A small tappable strip under the primary photo, only shown when an item
+   has more than one photo (data/menu.json's "images" array — e.g.
+   Quesabirria's two shots) — a lightweight product-gallery pattern rather
+   than a full swipeable carousel, since it's a rare case (most items have
+   at most one photo) that doesn't need more machinery than "click a
+   thumbnail, the primary image swaps." */
+.item-modal-thumbs { display: flex; gap: 8px; padding: 10px 16px 0; background: var(--surface); }
+.item-modal-thumb {
+  position: relative; flex: 0 0 56px; aspect-ratio: 1; border-radius: 8px; overflow: hidden;
+  padding: 0; border: 2px solid transparent; cursor: pointer; background: none;
+  opacity: 0.55; transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+.item-modal-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.item-modal-thumb:hover { opacity: 0.85; }
+.item-modal-thumb--active { opacity: 1; border-color: var(--accent); }
+
+/* z-index matters here: .item-modal-photo is itself position:relative
+   (a positioned element) and comes AFTER this button in the DOM — among
+   sibling elements that are equally "positioned" with no z-index set,
+   later DOM order wins the paint order regardless of which one is
+   visually "on top" of the other in intent, so the photo (and its <img>)
+   was silently painting over the close button and swallowing every click
+   aimed at it. This close button only ever worked via the backdrop-click
+   fallback as a result. An explicit z-index fixes it for good, rather
+   than relying on DOM order never changing again. Also its own
    contrast-safe treatment rather than inheriting the base .modal-close's
-   (which is tuned to sit on var(--surface), not a photo). Positioned the
-   same top/right as the base rule — only the visual treatment changes. */
+   (tuned to sit on var(--surface), not a photo) — same top/right position
+   as the base rule, only the visual treatment and stacking differ. */
 .item-modal-close {
+  z-index: 5;
   background: rgba(10,7,6,0.55); border: none; color: #f5ede1;
   backdrop-filter: blur(2px);
 }
 .item-modal-close:hover { color: var(--accent); background: rgba(10,7,6,0.7); }
 
-.item-modal-body { padding: 26px 28px 30px; }
+.item-modal-body { padding: 30px 34px 36px; }
 .item-modal-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
-.item-modal-card h3 { font-size: 28px; margin: 0; }
-.item-modal-desc { color: color-mix(in srgb, var(--ink) 55%, transparent); font-size: 15px; line-height: 1.5; margin: 10px 0 0; }
-#item-modal-price .menu-item-price { margin-top: 16px; font-size: 26px; }
-#item-modal-price .menu-item-price--wine { margin-top: 16px; }
+.item-modal-card h3 { font-size: 32px; margin: 0; }
+.item-modal-desc { color: color-mix(in srgb, var(--ink) 55%, transparent); font-size: 16px; line-height: 1.6; margin: 14px 0 0; }
+#item-modal-price .menu-item-price { margin-top: 20px; font-size: 28px; }
+#item-modal-price .menu-item-price--wine { margin-top: 20px; }
+
+/* Full-screen rather than a smaller floating card once the viewport's too
+   narrow for a large centered card to read comfortably. */
+@media (max-width: 720px) {
+  .item-modal-overlay { padding: 0; }
+  .item-modal-card { max-width: 100%; width: 100%; height: 100%; max-height: 100%; border-radius: 0; }
+  .item-modal-photo { aspect-ratio: 4 / 3; }
+}
 
 /* ---------- Footer ---------- */
 footer { background: var(--footer-bg); padding: 56px 56px 28px; transition: background 0.25s ease; }
