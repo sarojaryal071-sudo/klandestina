@@ -15,9 +15,9 @@
 // .section-ambient uses elsewhere, instead of a wrong-looking photo.
 
 const CATEGORY_IMAGES = {
-  lunch: ["pork-chili-ancho-bowl.jpg", "frijoles-con-veneno.jpg"],
-  starters: ["tuna-poke.jpg", "kuha-ceviche.jpg"],
-  tacos: ["quesabirria-1.jpg", "quesabirria-2.jpg", "pork-chili-ancho-bowl.jpg"],
+  lunch: ["pork-in-chili-ancho.jpg", "frijoles-con-veneno.jpg"],
+  starters: ["mexican-tuna-poke.jpg", "kuha-ceviche.jpg"],
+  tacos: ["quesabirria.jpg", "quesabirria-2.jpg", "pork-in-chili-ancho.jpg"],
   chilaquiles: ["frijoles-con-veneno.jpg"],
   desserts: [],
   drinks: ["tommys-margarita.jpg"]

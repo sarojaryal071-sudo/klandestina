@@ -46,6 +46,11 @@ export function renderDishCarousel(container, dishes, labels = {}) {
     dishes.forEach((dish) => {
       const card = renderDishCard(dish);
       card.classList.remove("reveal");
+      // The duplicate set is aria-hidden (screen readers should never
+      // reach it), but aria-hidden alone doesn't remove an element from
+      // the keyboard Tab order — without this, tabbing through the row
+      // would visit each dish's clickable card twice in a row.
+      if (isDuplicate) card.querySelector(".dish-visual")?.setAttribute("tabindex", "-1");
       set.appendChild(card);
     });
     track.appendChild(set);

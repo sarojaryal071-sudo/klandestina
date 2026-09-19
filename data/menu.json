@@ -7,8 +7,7 @@
       "description": {
         "en": "Raw diced tuna, avocado, mango, cucumber, red onions, salsa negra, chipotle mayo, chives, sesame seeds",
         "fi": "Raakaa tonnikalakuutiota, avokadoa, mangoa, kurkkua, punasipulia, salsa negraa, chipotle-majoneesia, ruohosipulia, seesaminsiemeniä"
-      },
-      "image": "tuna-poke.jpg"
+      }
     },
     {
       "name": "Kuha Ceviche",
@@ -17,8 +16,7 @@
       "description": {
         "en": "Lime-cooked pike-perch, kiwi, cucumber, red onions, aguachile, salsa, coriander",
         "fi": "Limemehussa kypsennettyä kuhaa, kiiviä, kurkkua, punasipulia, aguachilea, salsaa, korianteria"
-      },
-      "image": "kuha-ceviche.jpg"
+      }
     },
     {
       "name": "Tommy's Margarita",
@@ -26,8 +24,7 @@
       "description": {
         "en": "Agave nectar, lime, Briottet Grapefruit Liqueur, Mundo Tequila or Almave Blanco Non-Alcoholic Blue Agave Spirit. With Mezcal: +2€.",
         "fi": "Agavesiirappia, limeä, Briottet-greippilikööriä, Mundo-tequilaa tai Almave Blanco -alkoholitonta agavetislettä. Mezcalilla: +2€."
-      },
-      "image": "tommys-margarita.jpg"
+      }
     },
     {
       "name": "Frijoles con Veneno",
@@ -36,8 +33,7 @@
       "description": {
         "en": "Refried beans with cheese and chorizo, served with homemade tortilla chips (vegan option available)",
         "fi": "Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera (vegaaninen vaihtoehto saatavilla)"
-      },
-      "image": "frijoles-con-veneno.jpg"
+      }
     },
     {
       "name": "Pork in Chili Ancho",
@@ -46,8 +42,7 @@
       "description": {
         "en": "Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions",
         "fi": "Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia"
-      },
-      "image": "pork-chili-ancho-bowl.jpg"
+      }
     },
     {
       "name": "Quesabirria",
@@ -56,18 +51,41 @@
       "description": {
         "en": "Slow-cooked beef, cheese, white cabbage, marinated onions, coriander, radish + birria broth",
         "fi": "Hitaasti kypsennettyä naudanlihaa, juustoa, valkokaalia, marinoitua sipulia, korianteria, retiisiä + birria-lientä"
-      },
-      "image": "quesabirria-1.jpg"
+      }
     }
   ],
 
   "categories": [
-    { "id": "lunch", "label": "Lunch" },
-    { "id": "starters", "label": "Starters" },
-    { "id": "tacos", "label": "Tacos" },
-    { "id": "chilaquiles", "label": "Chilaquiles" },
-    { "id": "desserts", "label": "Desserts" },
-    { "id": "drinks", "label": "Drinks", "groups": ["softDrinks", "beer", "cocktails", "wine"] }
+    {
+      "id": "lunch",
+      "label": "Lunch"
+    },
+    {
+      "id": "starters",
+      "label": "Starters"
+    },
+    {
+      "id": "tacos",
+      "label": "Tacos"
+    },
+    {
+      "id": "chilaquiles",
+      "label": "Chilaquiles"
+    },
+    {
+      "id": "desserts",
+      "label": "Desserts"
+    },
+    {
+      "id": "drinks",
+      "label": "Drinks",
+      "groups": [
+        "softDrinks",
+        "beer",
+        "cocktails",
+        "wine"
+      ]
+    }
   ],
 
   "lunch": [
@@ -135,8 +153,7 @@
         "en": "Raw diced tuna, avocado, mango, cucumber, red onions, salsa negra, chipotle mayo, chives, sesame seeds",
         "fi": "Raakaa tonnikalakuutiota, avokadoa, mangoa, kurkkua, punasipulia, salsa negraa, chipotle-majoneesia, ruohosipulia, seesaminsiemeniä"
       },
-      "price": "€12.5",
-      "image": "tuna-poke.jpg"
+      "price": "€12.5"
     },
     {
       "name": "Kuha Ceviche",
@@ -145,8 +162,7 @@
         "en": "Lime-cooked pike-perch, kiwi, cucumber, red onions, aguachile, salsa, coriander",
         "fi": "Limemehussa kypsennettyä kuhaa, kiiviä, kurkkua, punasipulia, aguachilea, salsaa, korianteria"
       },
-      "price": "€9",
-      "image": "kuha-ceviche.jpg"
+      "price": "€9"
     },
     {
       "name": "Prawn Salpicón",
@@ -164,8 +180,7 @@
         "en": "Refried beans with cheese and chorizo, served with homemade tortilla chips (vegan option available)",
         "fi": "Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera (vegaaninen vaihtoehto saatavilla)"
       },
-      "price": "€7",
-      "image": "frijoles-con-veneno.jpg"
+      "price": "€7"
     }
   ],
 
@@ -204,8 +219,7 @@
         "en": "Slow-cooked beef, cheese, white cabbage, marinated onions, coriander, radish + birria broth — big yellow corn tortillas",
         "fi": "Hitaasti kypsennettyä naudanlihaa, juustoa, valkokaalia, marinoitua sipulia, korianteria, retiisiä + birria-lientä — isot keltaiset maissitortillat"
       },
-      "price": "€18",
-      "image": "quesabirria-1.jpg"
+      "price": "€18"
     },
     {
       "name": "Hawaiian Salmon (3 tacos)",
@@ -232,8 +246,7 @@
         "en": "Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions",
         "fi": "Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia"
       },
-      "price": "€15",
-      "image": "pork-chili-ancho-bowl.jpg"
+      "price": "€15"
     },
     {
       "name": "Klandestina Fried Chicken (3 tacos)",
@@ -271,7 +284,10 @@
     {
       "name": "Churros with Chocolate Sauce",
       "allergens": [],
-      "description": { "en": "", "fi": "" },
+      "description": {
+        "en": "",
+        "fi": ""
+      },
       "price": "€5"
     }
   ],
@@ -289,13 +305,19 @@
     {
       "name": "Coca Cola",
       "allergens": [],
-      "description": { "en": "", "fi": "" },
+      "description": {
+        "en": "",
+        "fi": ""
+      },
       "price": "€3.5"
     },
     {
       "name": "Vichy",
       "allergens": [],
-      "description": { "en": "", "fi": "" },
+      "description": {
+        "en": "",
+        "fi": ""
+      },
       "price": "€3.5"
     }
   ],
@@ -304,37 +326,55 @@
     {
       "name": "Klandestina Sunny Lager",
       "allergens": [],
-      "description": { "en": "", "fi": "" },
+      "description": {
+        "en": "",
+        "fi": ""
+      },
       "price": "€8.5"
     },
     {
       "name": "Kalajoki Bay Surf Ale",
       "allergens": [],
-      "description": { "en": "", "fi": "" },
+      "description": {
+        "en": "",
+        "fi": ""
+      },
       "price": "€9.5"
     },
     {
       "name": "Corona",
       "allergens": [],
-      "description": { "en": "", "fi": "" },
+      "description": {
+        "en": "",
+        "fi": ""
+      },
       "price": "€7.5"
     },
     {
       "name": "Modelo Especial",
       "allergens": [],
-      "description": { "en": "", "fi": "" },
+      "description": {
+        "en": "",
+        "fi": ""
+      },
       "price": "€9"
     },
     {
       "name": "Pacifico",
       "allergens": [],
-      "description": { "en": "", "fi": "" },
+      "description": {
+        "en": "",
+        "fi": ""
+      },
       "price": "€9.5"
     },
     {
       "name": "Corona 0%",
       "allergens": [],
-      "description": { "en": "", "fi": "" },
+      "description": {
+        "en": "",
+        "fi": ""
+      },
       "price": "€7"
     }
   ],
@@ -347,8 +387,7 @@
         "en": "Agave nectar, lime, Briottet Grapefruit Liqueur, Mundo Tequila or Almave Blanco Non-Alcoholic Blue Agave Spirit. With Mezcal: +2€.",
         "fi": "Agavesiirappia, limeä, Briottet-greippilikööriä, Mundo-tequilaa tai Almave Blanco -alkoholitonta agavetislettä. Mezcalilla: +2€."
       },
-      "price": "€13",
-      "image": "tommys-margarita.jpg"
+      "price": "€13"
     },
     {
       "name": "Spicy Ananas Margarita",
@@ -407,12 +446,12 @@
   ],
 
   "gallery": [
-    { "image": "tuna-poke.jpg" },
+    { "image": "mexican-tuna-poke.jpg" },
     { "image": "kuha-ceviche.jpg" },
     { "image": "tommys-margarita.jpg" },
     { "image": "frijoles-con-veneno.jpg" },
-    { "image": "pork-chili-ancho-bowl.jpg" },
-    { "image": "quesabirria-1.jpg" },
+    { "image": "pork-in-chili-ancho.jpg" },
+    { "image": "quesabirria.jpg" },
     { "image": "quesabirria-2.jpg" }
   ]
 }

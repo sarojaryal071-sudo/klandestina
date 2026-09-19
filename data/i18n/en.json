@@ -35,7 +35,12 @@
       "cocktails": "Ask for our selection of Tequila & Mezcal"
     }
   },
-  "gallery": { "eyebrow": "Inside", "heading": "The room" },
+  "gallery": {
+    "eyebrow": "Inside",
+    "heading": "The room",
+    "seeAllPhotos": "See All Photos",
+    "lightboxCloseLabel": "Close gallery"
+  },
   "story": {
     "eyebrow": "The Story",
     "heading": "Long live La Klandestina",
@@ -71,6 +76,9 @@
   "fab": {
     "label": "Special Event",
     "ariaLabel": "Special Events or Inquiry"
+  },
+  "itemModal": {
+    "closeLabel": "Close"
   },
   "footer": {
     "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",

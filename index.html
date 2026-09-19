@@ -158,11 +158,13 @@
       <span class="eyebrow" data-i18n="gallery.eyebrow">Inside</span>
       <h2 data-i18n="gallery.heading">The room</h2>
     </div>
-    <!-- Filled by components/galleryTile.js. .full-bleed for the same
-         reason as the dish carousel above — this is imagery, not text,
-         so it isn't held to the same readable max-width. -->
-    <div class="full-bleed">
-      <div id="gallery-grid" class="gallery-grid"></div>
+    <!-- Filled by components/galleryMosaic.js: a 3-tile crossfading teaser
+         (see style.css's "Gallery: crossfading mosaic" comment), not the
+         full photo set — "See All Photos" opens components/
+         galleryLightbox.js's full grid (mounted separately below, with
+         the other modals) for that. -->
+    <div class="container">
+      <div id="gallery-mosaic-mount"></div>
     </div>
   </section>
 
@@ -199,6 +201,14 @@
   <!-- Filled by components/eventModal.js; hidden until the "Special Events
        or Inquiry" trigger (Visit section button or the floating FAB) opens it -->
   <div id="event-modal-mount"></div>
+
+  <!-- Filled by components/itemModal.js; hidden until a menu row or dish
+       card is clicked (see menuItem.js/dishCard.js). -->
+  <div id="item-modal-mount"></div>
+
+  <!-- Filled by components/galleryLightbox.js; hidden until "See All
+       Photos" (in the gallery mosaic) is clicked. -->
+  <div id="gallery-lightbox-mount"></div>
 
   <!-- Classic (non-module) script, so the global L it defines is ready by
        the time the deferred module below runs. -->

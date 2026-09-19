@@ -6,17 +6,17 @@
 // stacked in that order rather than name/price sharing a row — so a long
 // name (or wine's four-column price grid) never fights anything else for
 // horizontal space or ends up vertically misaligned against wrapped text.
-// A thumbnail only renders when the item actually has a real photo
-// (item.image set); items without one skip the image area entirely rather
-// than showing a placeholder square, since a blank tinted box reads as a
-// broken image rather than an intentional choice.
+//
+// Thumbnails no longer come from a manual "image" field in data/menu.json —
+// every row speculatively loads images/dishes/<slugified-name>.jpg (see
+// dishImage.js) and drops the thumbnail area entirely if that 404s, so a
+// blank tinted box never reads as a broken image. Clicking (or Enter/Space
+// on) a row opens the shared item detail modal (itemModal.js) with the
+// same data this row already has, larger photo included.
 
-const WINE_SIZES = [
-  { key: "glass12", label: "12cl" },
-  { key: "glass16", label: "16cl" },
-  { key: "glass24", label: "24cl" },
-  { key: "bottle", label: "Btl" }
-];
+import { dishImagePath } from "./dishImage.js";
+import { openItemModal } from "./itemModal.js";
+import { renderPrice } from "./priceDisplay.js";
 
 /**
  * @param {Object} item
@@ -26,16 +26,26 @@ const WINE_SIZES = [
  * @param {string|Object} item.price   - a plain string ("€15"), "" (no individual price — see a category note
  *                                        instead, e.g. lunch), or a wine-style object
  *                                        { glass12, glass16, glass24, bottle } with null for sizes not offered
- * @param {string} [item.image]        - filename inside images/dishes/; items without one render text-only
  * @returns {HTMLElement}
  */
 export function renderMenuItem(item) {
   const row = document.createElement("div");
-  const hasPhoto = Boolean(item.image);
   const isWine = typeof item.price === "object" && item.price !== null;
-  row.className = ["menu-item", !hasPhoto && "menu-item--no-photo", isWine && "menu-item--wine"].filter(Boolean).join(" ");
+  row.className = ["menu-item", isWine && "menu-item--wine"].filter(Boolean).join(" ");
+  row.tabIndex = 0;
+  row.setAttribute("role", "button");
+  row.setAttribute("aria-label", item.name);
 
-  const thumb = hasPhoto ? `<img class="menu-item-thumb" src="images/dishes/${item.image}" alt="" loading="lazy">` : "";
+  // Rendered optimistically every time — most items won't have a matching
+  // file yet, and that's fine: onerror drops the <img> and adds
+  // menu-item--no-photo (a pure styling hook; nothing currently keys off
+  // it functionally, since flexbox already reclaims the space on its own
+  // once the thumbnail is simply gone from the row).
+  const thumb = `
+    <img
+      class="menu-item-thumb" src="${dishImagePath(item.name)}" alt="" loading="lazy"
+      onerror="this.closest('.menu-item').classList.add('menu-item--no-photo'); this.remove();"
+    >`;
   const allergenLabel = item.allergens && item.allergens.length ? item.allergens.join(" · ") : "";
 
   row.innerHTML = `
@@ -50,25 +60,13 @@ export function renderMenuItem(item) {
     </div>
   `;
 
+  row.addEventListener("click", () => openItemModal(item));
+  row.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openItemModal(item);
+    }
+  });
+
   return row;
-}
-
-// A price is either a plain string, empty (nothing to show — the category
-// note above covers it, e.g. Lunch's fixed price), or a wine-style object
-// with up to four sizes. Purely displayed text either way, never clickable.
-function renderPrice(price) {
-  if (!price) return "";
-
-  if (typeof price === "object") {
-    const cols = WINE_SIZES.map(
-      ({ key, label }) => `
-        <div class="price-col">
-          <span class="price-label">${label}</span>
-          <span class="price-value">${price[key] != null ? "€" + price[key] : "–"}</span>
-        </div>`
-    ).join("");
-    return `<div class="menu-item-price menu-item-price--wine">${cols}</div>`;
-  }
-
-  return `<div class="menu-item-price">${price}</div>`;
 }

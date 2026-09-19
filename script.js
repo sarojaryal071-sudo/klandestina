@@ -12,11 +12,13 @@ import { renderNav } from "./components/nav.js";
 import { renderButton } from "./components/button.js";
 import { renderDishCarousel } from "./components/dishCarousel.js";
 import { renderMenuItem } from "./components/menuItem.js";
-import { renderGalleryTile } from "./components/galleryTile.js";
+import { renderGalleryMosaic } from "./components/galleryMosaic.js";
+import { renderGalleryLightbox } from "./components/galleryLightbox.js";
 import { renderFooter } from "./components/footer.js";
 import { renderLangSwitch, setActiveLang } from "./components/langSwitch.js";
 import { renderThemeToggle } from "./components/themeToggle.js";
 import { renderEventModal, openEventModal } from "./components/eventModal.js";
+import { renderItemModal } from "./components/itemModal.js";
 import { renderFab } from "./components/fab.js";
 import { renderMobileNav } from "./components/mobileNav.js";
 import { renderMap } from "./components/map.js";
@@ -111,15 +113,18 @@ async function init() {
     `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.address)}`;
 
   renderEventModal(document.getElementById("event-modal-mount"), { email: site.email });
+  renderItemModal(document.getElementById("item-modal-mount"));
 
   // Floating action button — same trigger as the button above, just always
   // on screen (fixed bottom-right) so the inquiry path isn't only reachable
   // by scrolling all the way to Visit.
   renderFab(document.getElementById("fab-mount"), openEventModal);
 
-  // Gallery (photos and their filenames don't depend on language)
-  const galleryGrid = document.getElementById("gallery-grid");
-  menu.gallery.forEach((photo) => galleryGrid.appendChild(renderGalleryTile(photo)));
+  // Gallery (photos and their filenames don't depend on language) — a
+  // crossfading mosaic teaser, plus its own "See All Photos" full-grid
+  // modal, both driven by the same menu.gallery array.
+  renderGalleryMosaic(document.getElementById("gallery-mosaic-mount"), menu.gallery);
+  renderGalleryLightbox(document.getElementById("gallery-lightbox-mount"), menu.gallery);
 
   // Footer
   renderFooter(document.getElementById("footer-mount"), site);
