@@ -634,10 +634,24 @@ section { position: relative; padding: 130px 56px; }
    Hidden in ambient-only mode — there's no photo underneath to wash out. */
 .menu-photo-wash {
   position: absolute; inset: 0; z-index: 2;
-  background: color-mix(in srgb, var(--bg) 40%, transparent);
+  background: color-mix(in srgb, var(--bg) 45%, transparent);
   transition: opacity 0.9s ease;
 }
 .menu-photo-frame--ambient-only .menu-photo-wash { opacity: 0; }
+
+/* Follow-up to the above: the 20% band .soft-fade-img uses by default
+   still read as a rectangle with soft corners rather than genuinely
+   dissolving — comparing against a reference site's much more gradual
+   edge falloff, the fix is a wider fade zone, not a different curve
+   shape. Overriding just the --fade-edge custom property (.soft-fade-img
+   itself already builds its gradient from var(--fade-edge), so this
+   doesn't touch that shared rule) keeps it scoped to Menu: Story and
+   anything else using .soft-fade-img keep the original 20% band. At 42%,
+   only the innermost 16% of the photo (42–58%) stays fully opaque —
+   nearly the whole image now participates in the fade, matching the
+   "should cover more part" note, rather than a mostly-sharp photo with a
+   thin soft border around it. */
+.menu-photo-img, .menu-photo-wash { --fade-edge: 42%; }
 
 @media (min-width: 901px) {
   /* 40/60 split (photo/content) rather than an even 50/50 — favors the
