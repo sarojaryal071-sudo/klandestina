@@ -569,6 +569,20 @@ section { position: relative; padding: 130px 56px; }
 
 .story-photo { position: relative; width: 100%; max-width: 420px; aspect-ratio: 4 / 5; }
 .story-photo-img { width: 100%; height: 100%; }
+/* Same two-part fix the Menu photo column got (see its comments above),
+   brought over once it was confirmed there: a translucent var(--bg) wash
+   over the whole photo, plus overriding .soft-fade-img's default 20%
+   --fade-edge to 42% so the edges genuinely dissolve instead of reading
+   as a rectangle with a soft border. Checked directly against this exact
+   photo first (Menu's Drinks tab reuses the same tommys-margarita.jpg at
+   42%) before bringing it here — the glass and hand sit well inside the
+   16% fully-opaque core and stay sharp; only the blurred bokeh background
+   and the outer edges actually fade, so the subject itself isn't touched. */
+.story-photo-wash {
+  position: absolute; inset: 0; z-index: 1;
+  background: color-mix(in srgb, var(--bg) 45%, transparent);
+}
+.story-photo-img, .story-photo-wash { --fade-edge: 42%; }
 
 @media (min-width: 901px) {
   .story-layout { flex-direction: row; align-items: center; gap: 72px; }
