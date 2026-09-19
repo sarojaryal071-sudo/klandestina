@@ -588,9 +588,14 @@ section { position: relative; padding: 130px 56px; }
    stacks below it, per the "list stays easy to scan on small screens"
    priority; column-reverse is exactly "reverse the same DOM order",
    consistent with how the desktop row doesn't reverse anything either. */
-.menu-layout { display: flex; flex-direction: column-reverse; gap: 48px; align-items: center; }
+.menu-layout { display: flex; flex-direction: column-reverse; gap: 32px; align-items: center; }
 .menu-content { width: 100%; }
-.menu-photo { position: relative; width: 100%; max-width: 420px; aspect-ratio: 4 / 5; }
+/* Wider cap than a plain "photo thumbnail" would need, and a tighter gap
+   above/below (see .menu-layout) — a test pass found the column reading as
+   a small floating box in a lot of empty section background; this and the
+   440px→520px desktop cap below are what let it actually fill its column
+   instead of just sitting capped well under it. */
+.menu-photo { position: relative; width: 100%; max-width: 480px; aspect-ratio: 4 / 5; }
 /* position:absolute + inset:0 (not width/height:100%) — .menu-photo's
    height comes from aspect-ratio on a flex item, and a normal-flow
    child's height:100% doesn't reliably resolve against that (collapsed
@@ -615,12 +620,33 @@ section { position: relative; padding: 130px 56px; }
 }
 .menu-photo-frame--ambient-only .menu-photo-ambient { opacity: 1; }
 
+/* Test pass (Menu column only, not yet applied to Story): a translucent
+   wash in the page's own background color over the FULL photo, so its
+   overall brightness already sits close to the surrounding section
+   before the edge feather even starts — the two together are what should
+   read as "blends into the background" instead of "sticker with soft
+   edges." Reuses .soft-fade-img (same class, unmodified) so the wash
+   fades at all 4 edges exactly in step with the photo beneath it, rather
+   than being a flat rectangle that happens to sit on top. z-index (not
+   DOM order) puts it above both the rotating <img>s and the ambient glow,
+   since .menu-photo-img elements are appended after this element at
+   runtime (components/menuPhoto.js) and would otherwise paint over it.
+   Hidden in ambient-only mode — there's no photo underneath to wash out. */
+.menu-photo-wash {
+  position: absolute; inset: 0; z-index: 2;
+  background: color-mix(in srgb, var(--bg) 40%, transparent);
+  transition: opacity 0.9s ease;
+}
+.menu-photo-frame--ambient-only .menu-photo-wash { opacity: 0; }
+
 @media (min-width: 901px) {
   /* 40/60 split (photo/content) rather than an even 50/50 — favors the
      list's own readability over a strictly equal column, per the "don't
-     cramp item descriptions/prices" note. */
-  .menu-layout { flex-direction: row; align-items: flex-start; gap: 56px; }
-  .menu-photo { flex: 0 1 40%; max-width: 440px; position: sticky; top: 140px; }
+     cramp item descriptions/prices" note. Gap and max-width tightened
+     from 56px/440px (see .menu-photo's comment above) for the same
+     "larger, more dominant, less empty space around it" pass. */
+  .menu-layout { flex-direction: row; align-items: flex-start; gap: 40px; }
+  .menu-photo { flex: 0 1 42%; max-width: 520px; position: sticky; top: 140px; }
   .menu-content { flex: 1 1 60%; min-width: 0; }
 }
 

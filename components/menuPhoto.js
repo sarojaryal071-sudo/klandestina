@@ -35,6 +35,7 @@ export function renderMenuPhoto(container) {
   container.innerHTML = `
     <div class="menu-photo-frame">
       <div class="menu-photo-ambient"></div>
+      <div class="menu-photo-wash soft-fade-img"></div>
     </div>
   `;
   return { setCategory: (categoryId) => showCategory(container, categoryId) };
