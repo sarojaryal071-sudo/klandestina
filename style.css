@@ -795,9 +795,16 @@ section { position: relative; padding: 130px 56px; }
    finishes it by ~90px down — measured against .tabs-sticky's own
    top:88px, that's essentially fully transparent right as a row would
    otherwise reach the tabs, not still fading (or already gone and
-   popping back) once it's behind them. */
+   popping back) once it's behind them.
+   .menu-note (the Lunch tab's price/schedule line, Cocktails' tequila
+   note — appendGroupNote() in script.js) and .menu-group-heading (the
+   Drinks tab's Soft Drinks/Beer/Cocktails/Wine sub-headings) are also
+   direct children of #menu-list sitting right alongside .menu-item rows
+   — the exact same "scrolls up toward the tabs" situation, so they need
+   the same treatment or they're left showing through exactly like a
+   .menu-item would without it. */
 @supports (animation-timeline: view()) {
-  #menu .menu-item {
+  #menu .menu-item, #menu .menu-note, #menu .menu-group-heading {
     animation: menuItemFadeOut linear both;
     animation-timeline: view();
     animation-range: exit -220px exit -90px;
