@@ -474,14 +474,23 @@ section { position: relative; padding: 130px 56px; }
 .visual {
   position: relative; border-radius: 22px; overflow: hidden;
   display: flex; align-items: flex-end;
-  background-color: #221512;
+  background-color: var(--surface-edge);
 }
 /* A real <img> (dishCard.js), not a CSS background-image —
    background-images have no equivalent to loading="lazy"/decoding="async"
    and browsers are inconsistent about deferring them for off-screen
    elements, which on a page with a dozen-plus tiles meant several were
    still empty (showing this fallback background-color) well after the
-   photos above the fold had already loaded. */
+   photos above the fold had already loaded. That fallback used to be a
+   hardcoded dark brown (#221512) regardless of theme — harmless while an
+   image is genuinely still loading, but this element is also
+   overflow:hidden + border-radius on the same node as .tilt-card's
+   transitioned transform (the hover tilt), and Chromium's rounded-corner
+   clip on a transform-composited layer can leave a hairline of whatever
+   sits behind the <img> visible along one edge. Tying the fallback to
+   --surface-edge means that hairline — if it ever shows — blends with
+   the current theme instead of always being the same dark line even in
+   light mode. */
 .visual-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 /* The scrim + caption text below are always tuned for a dark photo overlay,
    regardless of the site's light/dark theme — they sit on top of a photo,
@@ -611,24 +620,16 @@ section { position: relative; padding: 130px 56px; }
 
 .story-photo { position: relative; width: 100%; max-width: 460px; aspect-ratio: 4 / 5; }
 .story-photo-img { width: 100%; height: 100%; }
-/* A flat, uniform wash (an earlier version of this) darkened the whole
-   photo evenly — including the center, where the actual subject sits —
-   which dulled it more than intended. A RADIAL wash instead: barely
-   touches the center (12%), then ramps up toward a full var(--bg) blend
-   at the very edge, so the subject stays close to its natural brightness
-   and the darkening only really shows up where the edge-fade mask
-   (--fade-edge below) is about to dissolve the photo into the background
-   anyway — the two effects reinforce each other there instead of the
-   wash doing its own separate, uniform thing on top of the subject. */
+/* A radial version of this wash (an earlier pass) ramped up to a full
+   var(--bg) blend at the edges, reinforcing the edge-fade mask below —
+   but that made the edges read as over-darkened on top of the mask
+   already dissolving them. A flat, very light 12% tint does the "ground
+   the photo into the section" job the wash exists for without fighting
+   the mask or dulling the subject: --fade-edge below is what actually
+   handles the edge falloff (a rectangular 4-side feather, not this). */
 .story-photo-wash {
   position: absolute; inset: 0; z-index: 1;
-  background: radial-gradient(
-    ellipse at center,
-    color-mix(in srgb, var(--bg) 12%, transparent) 0%,
-    color-mix(in srgb, var(--bg) 35%, transparent) 50%,
-    color-mix(in srgb, var(--bg) 70%, transparent) 80%,
-    var(--bg) 100%
-  );
+  background: color-mix(in srgb, var(--bg) 12%, transparent);
 }
 .story-photo-img, .story-photo-wash { --fade-edge: 42%; }
 
@@ -682,25 +683,18 @@ section { position: relative; padding: 130px 56px; }
 }
 .menu-photo-frame--ambient-only .menu-photo-ambient { opacity: 1; }
 
-/* A radial wash over the photo, not a flat one — an earlier flat version
-   darkened the center (where the dish/subject sits) just as much as the
-   edges, dulling the whole photo more than intended. This barely touches
-   the center (12%) and ramps up to a full var(--bg) blend at the edge,
-   so it reinforces the edge-fade mask below rather than fighting the
-   subject for attention. z-index (not DOM order) puts it above both the
-   rotating <img>s and the ambient glow, since .menu-photo-img elements
-   are appended after this element at runtime (components/menuPhoto.js)
-   and would otherwise paint over it. Hidden in ambient-only mode —
-   there's no photo underneath to wash out. */
+/* Same flat, light wash as Story (see .story-photo-wash's comment) — a
+   uniform 12% var(--bg) tint, not a radial ramp to a full edge blend,
+   so the dish/drink stays close to its natural brightness and the
+   4-side --fade-edge mask below is what does the edge falloff. z-index
+   (not DOM order) puts it above both the rotating <img>s and the ambient
+   glow, since .menu-photo-img elements are appended after this element
+   at runtime (components/menuPhoto.js) and would otherwise paint over
+   it. Hidden in ambient-only mode — there's no photo underneath to wash
+   out. */
 .menu-photo-wash {
   position: absolute; inset: 0; z-index: 2;
-  background: radial-gradient(
-    ellipse at center,
-    color-mix(in srgb, var(--bg) 12%, transparent) 0%,
-    color-mix(in srgb, var(--bg) 35%, transparent) 50%,
-    color-mix(in srgb, var(--bg) 70%, transparent) 80%,
-    var(--bg) 100%
-  );
+  background: color-mix(in srgb, var(--bg) 12%, transparent);
   transition: opacity 0.9s ease;
 }
 .menu-photo-frame--ambient-only .menu-photo-wash { opacity: 0; }
@@ -730,7 +724,23 @@ section { position: relative; padding: 130px 56px; }
   .menu-content { flex: 1 1 60%; min-width: 0; }
 }
 
-.tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 56px; }
+/* Sticky within the Full Menu section only: .tabs is a normal in-flow child
+   of .menu-content (section-head, then tabs, then menu-list), so CSS's own
+   sticky algorithm already gives the "pins at top while scrolling through
+   the list, then releases once past .menu-content's bottom edge" behavior
+   for free — no scroll listener needed. top:88px clears the shortcut nav
+   pill (bottom edge ~73px) and the mobile topbar (bottom edge ~69px) at
+   every breakpoint, with a little breathing room under either. z-index:40
+   keeps it below the pill nav (50) and mobile topbar (60) it sits under,
+   but above ordinary menu-list content scrolling past it. The glass
+   backdrop keeps item rows from visually running through the tab row once
+   it's pinned. */
+.tabs {
+  display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 56px;
+  position: sticky; top: 88px; z-index: 40;
+  background: var(--glass); backdrop-filter: blur(16px);
+  padding: 10px 0; margin-top: -10px;
+}
 .tab {
   padding: 12px 24px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
   background: var(--surface); color: color-mix(in srgb, var(--ink) 60%, transparent); font-size: 13px; font-weight: 600;
