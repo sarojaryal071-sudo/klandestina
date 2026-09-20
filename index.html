@@ -146,8 +146,12 @@
           <span class="eyebrow" data-i18n="menu.eyebrow">Full Menu</span>
           <h2 data-i18n="menu.heading">Kitchen &amp; Bar</h2>
         </div>
-        <!-- Filled by components/menuItem.js -->
-        <div id="menu-tabs" class="tabs"></div>
+        <!-- Filled by components/menuItem.js. .tabs-sticky is the sticky
+             anchor and carries the backdrop that keeps scrolled-past
+             items from showing through around the pills — see style.css. -->
+        <div class="tabs-sticky">
+          <div id="menu-tabs" class="tabs"></div>
+        </div>
         <div id="menu-list" class="menu-list"></div>
       </div>
     </div>
