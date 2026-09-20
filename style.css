@@ -634,13 +634,15 @@ section { position: relative; padding: 130px 56px; }
 /* --fade-edge history: 20% (the shared .soft-fade-img default) read as
    barely-there; 42% then went too far the other way, leaving only the
    innermost 16% of the photo (42–58%) fully clear and fading well over
-   a third of the image in from each side. 4% keeps the same smooth
-   linear-gradient falloff .soft-fade-img already builds (a gradient is
-   just as smooth compressed into a narrower band — this isn't a
-   different curve, just a shorter one), concentrated in roughly the
-   outer 4% on each edge, so the fully-clear center now covers 92% of
-   the photo instead of 16%. */
-.story-photo-img, .story-photo-wash { --fade-edge: 4%; }
+   a third of the image in from each side; 4% then over-corrected the
+   other direction — the fade band got so narrow it read as a sharp,
+   almost hard edge rather than a soft blend. 18% lands between the two:
+   noticeably softer than 4% (a wide enough band to actually read as a
+   gradient, not a cutoff), while still leaving the center 64% of the
+   photo (18–82%) fully clear — much closer to fully exposed than 42%'s
+   16%. Same linear-gradient .soft-fade-img always builds, just a
+   different width. */
+.story-photo-img, .story-photo-wash { --fade-edge: 18%; }
 
 @media (min-width: 901px) {
   .story-layout { flex-direction: row; align-items: center; gap: 72px; }
@@ -709,13 +711,11 @@ section { position: relative; padding: 130px 56px; }
 .menu-photo-frame--ambient-only .menu-photo-wash { opacity: 0; }
 
 /* Same --fade-edge history as .story-photo-img (see its comment): 20%
-   default read as barely-there, 42% over-corrected to only a 16%-wide
-   fully-clear center, and this settled on 4% — same smooth gradient
-   falloff .soft-fade-img already builds, just concentrated within
-   roughly the outer 4% of each edge instead of the inner 42%, so 92%
-   of the photo now stays fully clear. Locked in as the final treatment
-   for both Story and Menu. */
-.menu-photo-img, .menu-photo-wash { --fade-edge: 4%; }
+   default read as barely-there, 42% over-corrected to a 16%-wide
+   fully-clear center, 4% over-corrected the other way into a sharp,
+   almost hard edge. 18% settles between the two — a visibly soft band,
+   64% of the photo (18–82%) left fully clear. */
+.menu-photo-img, .menu-photo-wash { --fade-edge: 18%; }
 
 @media (min-width: 901px) {
   /* 40/60 split (photo/content) rather than an even 50/50 — favors the
@@ -738,62 +738,23 @@ section { position: relative; padding: 130px 56px; }
    little breathing room under either. z-index:40 keeps it below the
    pill nav (50) and mobile topbar (60) it sits under, but above
    ordinary menu-list content scrolling past it.
-   The sticky/z-index/fade lives on this full-width wrapper rather than
-   on .tabs itself so the fade-out below (::after) can span the whole
-   list's width — .tabs is only as wide as its pills (see below), which
-   is narrower than the list once it wraps to fewer than 6 in a row. */
+   No background here, on purpose, and no covering pseudo-elements
+   either (an earlier version had both, to hide menu items scrolling up
+   behind the pills) — even matched to var(--bg) exactly, a flat rect
+   sitting on top of the page's ambient-glow background read as a
+   visible panel, not "no panel." Instead, .menu-item itself now fades
+   its own opacity out via a scroll-driven animation as it nears the top
+   of the viewport (see its rule in the menu-item-layout section below) —
+   a real fade of the content, not an overlay sitting on top of it, so
+   there's nothing left to cover. */
 .tabs-sticky {
   position: sticky; top: 88px; z-index: 40; margin-bottom: 56px;
-  background: var(--bg);
 }
-/* var(--bg) on .tabs-sticky itself only covers its own 88px-to-its-
-   bottom band — but a menu item that's scrolled up PAST that band (now
-   positioned above y:88, between the pills and the nav pill, or higher
-   still) is ordinary in-flow content and keeps right on scrolling
-   through that space same as it always did; nothing stops it. This
-   ::before extends the exact same var(--bg) coverage upward from
-   .tabs-sticky's own top edge (position:absolute + bottom:100%, the
-   mirror of ::after's top:100% below) so nothing becomes visible again
-   once it's above the pills either — 120px comfortably reaches y:0
-   with room to spare, and overshooting further above the viewport is
-   harmless. z-index 40 here (below the nav pill's 50 / mobile topbar's
-   60) means neither of those loses any coverage even though this now
-   technically extends up behind them too. */
-.tabs-sticky::before {
-  content: "";
-  position: absolute; bottom: 100%; left: 0; right: 0; height: 120px;
-  pointer-events: none;
-  background: var(--bg);
-}
-/* Content below the tabs still needs to fade out before it'd reach that
-   band, rather than being hard-clipped by it — there's no dedicated
-   scrolling container to hang a mask-image on here (the whole page
-   scrolls, not an inner overflow:auto list), so a plain percentage mask
-   on .menu-list wouldn't track the sticky boundary as the page moves.
-   A gradient overlay anchored to .tabs-sticky's own bottom edge
-   (position:absolute + top:100%, so it re-measures itself against
-   .tabs's actual height automatically — one row or wrapped to two)
-   gets the same visual result: content fades to fully transparent over
-   the ~56px right below the tabs — by the time it'd reach the opaque
-   band above, it's already gone, not clipped by a hard edge or left
-   overlapping. pointer-events:none keeps it from intercepting clicks
-   meant for the (now safely faded) items underneath. */
-.tabs-sticky::after {
-  content: "";
-  position: absolute; top: 100%; left: 0; right: 0; height: 56px;
-  pointer-events: none;
-  background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
-}
-/* No border-radius/blur/tint styling of its own — .tabs is just the flex
-   row of pills; .tabs-sticky (above) already supplies the plain
-   page-bg-colored backdrop that keeps content from showing through, and
-   giving .tabs its own separately-styled panel on top of that (an
-   earlier version used a translucent, clearly-boxed var(--glass) +
-   backdrop-blur here, width:fit-content or not) is exactly the visibly
-   "enclosing panel" look this was asked to move away from. Each .tab
-   pill still carries its own solid var(--surface) fill below, so the
-   pills read as floating individually, closer to how .shortcut-nav's
-   own pills read. */
+/* No border-radius/blur/tint/background of its own — .tabs is just the
+   flex row of pills, floating with no group panel behind them at all.
+   Each .tab pill still carries its own solid var(--surface) fill, so
+   the pills read as floating individually, closer to how
+   .shortcut-nav's own pills read. */
 .tabs {
   display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
 }
@@ -819,6 +780,30 @@ section { position: relative; padding: 130px 56px; }
   cursor: pointer; border-radius: 10px;
   transition: background 0.2s ease, transform 0.2s ease;
 }
+/* A row fades its own opacity out as it nears the top of the viewport
+   (where the pinned category tabs sit), rather than being hidden behind
+   an opaque panel/overlay sitting on top of it — see .tabs-sticky's
+   comment for why that overlay approach was dropped. This is the same
+   view-timeline technique "Scroll reveal" above uses to fade rows IN on
+   the way down; here it runs the opposite direction, driven by the
+   item's own exit from the viewport rather than its entry.
+   A negative offset on an "exit" range moves the trigger point earlier
+   than that phase's own 0% (empirically: "exit -Npx" fires while the
+   row's top edge is still ~Npx down the viewport, not yet at 0).
+   animation-range: exit -220px exit -90px starts the fade while the
+   row's top is still ~220px down (comfortably below the tabs) and
+   finishes it by ~90px down — measured against .tabs-sticky's own
+   top:88px, that's essentially fully transparent right as a row would
+   otherwise reach the tabs, not still fading (or already gone and
+   popping back) once it's behind them. */
+@supports (animation-timeline: view()) {
+  #menu .menu-item {
+    animation: menuItemFadeOut linear both;
+    animation-timeline: view();
+    animation-range: exit -220px exit -90px;
+  }
+}
+@keyframes menuItemFadeOut { to { opacity: 0; } }
 .menu-item:last-child { border-bottom: none; }
 /* A thin accent bar fades in at the left edge on hover, matching the
    button/tab language's accent-as-signal treatment elsewhere on the site
