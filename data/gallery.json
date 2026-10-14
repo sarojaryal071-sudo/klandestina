@@ -1,6 +1,22 @@
 {
   "albums": [
     {
+      "slug": "01-summer",
+      "title": {
+        "en": "Summer",
+        "fi": "Kesä"
+      },
+      "count": 1,
+      "photos": [
+        {
+          "src": "images/gallery/01-summer/_workflow-test-photo.jpg",
+          "thumb": "images/gallery-thumbs/01-summer/_workflow-test-photo.jpg",
+          "w": 2000,
+          "h": 1333
+        }
+      ]
+    },
+    {
       "slug": "04-food-and-drinks",
       "title": {
         "en": "Food & Drinks",
@@ -53,5 +69,5 @@
       ]
     }
   ],
-  "total": 7
+  "total": 8
 }
