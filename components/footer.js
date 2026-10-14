@@ -3,9 +3,9 @@
 // carry data-i18n hooks so script.js's translation pass can relabel them;
 // the data straight from site.json (address, email, hours) isn't translated.
 
-// Hand-drawn to match the site's own stroke-icon language (theme toggle's
-// sun/moon, the FAB's calendar) rather than importing official brand SVGs —
-// same reasoning as the custom CSS map pin instead of a raster logo.
+// Hand-drawn to match the site's own stroke-icon language (the FAB's
+// calendar icon) rather than importing official brand SVGs — same
+// reasoning as the custom CSS map pin instead of a raster logo.
 import { brandLogoHTML } from "./logo.js";
 
 const SOCIAL_ICONS = {

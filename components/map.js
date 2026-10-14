@@ -8,13 +8,12 @@
 // Tiles are plain OpenStreetMap raster tiles. CartoDB's free Dark Matter/
 // Positron tiles (used previously) now require a registered API key on a
 // live domain, which showed up as a watermarked "API key required" tile
-// instead of a map. OSM only ships one (light) tile style, so the dark
-// theme is simulated with a CSS filter on .leaflet-tile-pane in
-// style.css, scoped to that pane specifically so it doesn't also invert
-// the marker or popup — see the README's "Known gaps" note. Since that's
-// pure CSS keyed off the existing :root[data-theme] selector, there's no
-// JS-side theme switching needed here at all (unlike the old per-theme
-// tile URL, which did need a MutationObserver to swap it).
+// instead of a map. OSM only ships one (light) tile style, so a dark
+// tint is simulated with a CSS filter on .leaflet-tile-pane in style.css,
+// scoped to that pane specifically so it doesn't also invert the marker
+// or popup — see the README's "Known gaps" note. That filter is plain,
+// unconditional CSS (the site is single-palette, always dark), so
+// there's no JS-side switching needed here at all.
 //
 // The marker is a plain L.divIcon styled entirely through the .map-marker
 // rule in style.css via var(--accent) — no raster pin image, so it just

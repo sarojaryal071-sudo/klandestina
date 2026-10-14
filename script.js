@@ -3,10 +3,10 @@
 // index.html. This file wires things together; it doesn't define what a
 // card or button LOOKS like — that's each component's own job.
 //
-// It also owns two small pieces of cross-cutting state that every section
-// depends on: the active language (en/fi) and the active theme
-// (dark/light, though the theme's actual styling lives entirely in
-// style.css — this file only flips the <html data-theme> attribute).
+// It also owns one small piece of cross-cutting state that every section
+// depends on: the active language (en/fi). The site used to also carry a
+// dark/light theme toggle here — removed along with the light theme
+// itself (style.css is single-palette now; see its :root comment).
 
 import { renderNav } from "./components/nav.js";
 import { renderButton } from "./components/button.js";
@@ -16,7 +16,6 @@ import { renderGalleryMosaic } from "./components/galleryMosaic.js";
 import { renderGalleryLightbox } from "./components/galleryLightbox.js";
 import { renderFooter } from "./components/footer.js";
 import { renderLangSwitch, setActiveLang } from "./components/langSwitch.js";
-import { renderThemeToggle } from "./components/themeToggle.js";
 import { renderEventModal, openEventModal } from "./components/eventModal.js";
 import { renderItemModal } from "./components/itemModal.js";
 import { renderFab } from "./components/fab.js";
@@ -26,7 +25,6 @@ import { renderMenuPhoto } from "./components/menuPhoto.js";
 import { brandLogoHTML } from "./components/logo.js";
 
 const LANG_STORAGE_KEY = "klandestina-lang";
-const THEME_STORAGE_KEY = "klandestina-theme";
 const SUPPORTED_LANGS = ["en", "fi"];
 
 let i18n = {};
@@ -48,21 +46,18 @@ async function init() {
   site = siteData;
   i18n = { en, fi };
   currentLanguage = getStoredLanguage();
+  forgetStaleTheme();
 
   // Nav
   renderNav(document.getElementById("shortcut-nav"));
   document.getElementById("brand-mark").innerHTML = brandLogoHTML(site);
   document.getElementById("mobile-topbar-brand").innerHTML = brandLogoHTML(site);
 
-  // Language switcher + theme toggle — rendered twice (desktop utility-bar,
-  // mobile topbar) since they sit in different fixed-position contexts;
-  // setLanguage() below keeps both lang-switch instances' active state in
-  // sync, and the theme toggle's icon swap is pure CSS (data-theme
-  // attribute-driven), so any number of instances stay in sync for free.
+  // Language switcher — rendered twice (desktop utility-bar, mobile
+  // topbar) since they sit in different fixed-position contexts;
+  // setLanguage() below keeps both instances' active state in sync.
   renderLangSwitch(document.getElementById("lang-switch"), currentLanguage, setLanguage);
-  renderThemeToggle(document.getElementById("theme-toggle"), toggleTheme);
   renderLangSwitch(document.getElementById("mobile-lang-switch"), currentLanguage, setLanguage);
-  renderThemeToggle(document.getElementById("mobile-theme-toggle"), toggleTheme);
   renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"), site);
 
   initMobileTopbarAutoHide();
@@ -245,17 +240,17 @@ function initMobileTopbarAutoHide() {
   );
 }
 
-// ---------- theme ----------
+// ---------- stale theme cleanup ----------
 
-function toggleTheme() {
-  const html = document.documentElement;
-  const next = html.getAttribute("data-theme") === "light" ? "dark" : "light";
-  if (next === "light") html.setAttribute("data-theme", "light");
-  else html.removeAttribute("data-theme");
+// The removed theme toggle used to persist its choice under this key —
+// clearing it here means a returning visitor who had picked "light"
+// doesn't carry that choice around forever in localStorage for no
+// reason now that there's nothing left to apply it to.
+function forgetStaleTheme() {
   try {
-    localStorage.setItem(THEME_STORAGE_KEY, next);
+    localStorage.removeItem("klandestina-theme");
   } catch (e) {
-    /* ignore — theme just won't persist across visits */
+    /* ignore — nothing to clean up if storage isn't available */
   }
 }
 

@@ -2,37 +2,53 @@
    All visual styling lives here. Nothing in this file decides WHAT content
    appears (that's data/menu.json + script.js) — only how it looks. */
 
+/* One palette, no theme switch — a single dark navy + amber-wood scheme
+   taken from the restaurant's actual interior (navy wall, amber/wood
+   tones, the neon sign). There used to be a light theme here too (see
+   git history before this commit if it's ever needed again); removing
+   it is what let every other "theme-aware" rule in this file collapse
+   to a single value instead of a dark/light pair. */
 :root {
-  --accent: #ff5a36;
-  --bg: #120d0c;
-  --bg-alt: #171110;
-  --ink: #f5ede1;
+  color-scheme: dark;
+
+  --bg: #131b30;
+  --bg-alt: #1b2642;
+  --ink: #f3ead8;
+  --accent: #d89b5c;
+  --on-accent: #131b30;
+
+  /* Derived from the five tokens above via color-mix() rather than
+     written out as their own literals, so a future palette tweak to
+     --accent/--ink/--bg propagates here for free instead of needing a
+     second edit. --accent-deep is the 3D buttons'/active-tab's contact
+     shadow (a darkened accent, not a different hue); --line/--muted are
+     hairline borders and secondary text respectively — the two most
+     common ink-alpha blends used throughout this file, named once
+     instead of re-deriving the same ~12%/~62% blend ad hoc at each call
+     site (plenty of other alpha values still exist inline where a
+     specific component wants a lighter/heavier weight than these two
+     defaults — that variety is deliberate, not an oversight). */
+  --accent-deep: color-mix(in srgb, var(--accent) 55%, black);
+  --line: color-mix(in srgb, var(--ink) 12%, transparent);
+  --muted: color-mix(in srgb, var(--ink) 62%, transparent);
 
   /* Tones for raised/extruded chrome (ghost buttons, tabs, the floating
-     nav) that can't be derived from --ink/--accent by simple alpha blends —
-     each theme picks its own values below. */
-  --surface: #1e1613;
-  --surface-edge: #0b0706;
-  --accent-shadow: #b53c20;
-  --glass: rgba(18, 13, 12, 0.65);
-  --footer-bg: #0c0908;
-  --card-shadow: 0 24px 48px -16px rgba(0,0,0,0.7);
-}
+     nav) that can't be derived from --ink/--accent by a simple alpha
+     blend. --surface reuses --bg-alt outright (same "a shade up from the
+     base background" role); --surface-edge is --bg-alt's own contact
+     shadow, same "~55% toward black" treatment as --accent-deep so the
+     two read as one consistent shadow language rather than two
+     unrelated formulas. */
+  --surface: var(--bg-alt);
+  --surface-edge: color-mix(in srgb, var(--bg-alt) 55%, black);
+  --glass: rgba(19, 27, 48, 0.65);
+  --footer-bg: color-mix(in srgb, var(--bg) 75%, black);
 
-/* Light theme. Default/dark stays the values above; this overrides them
-   when the visitor is on light mode (see the toggle wiring in script.js). */
-:root[data-theme="light"] {
-  --accent: #d94a2b;
-  --bg: #f7f3ea;
-  --bg-alt: #efe7d8;
-  --ink: #221f1a;
-
-  --surface: #ece1cd;
-  --surface-edge: #cdbfa4;
-  --accent-shadow: #a83a20;
-  --glass: rgba(247, 243, 234, 0.72);
-  --footer-bg: #e6dac2;
-  --card-shadow: 0 24px 48px -16px rgba(34,31,26,0.28);
+  /* Navy-black, not brown-black or flat black — rgb(5,8,18) is roughly
+     --bg pushed almost to black, so every drop shadow in the site reads
+     as "this navy room, further into shadow" rather than a neutral grey/
+     black dropped in from outside the palette. */
+  --card-shadow: 0 24px 48px -16px rgba(5, 8, 18, 0.6);
 }
 
 * { box-sizing: border-box; }
@@ -49,18 +65,20 @@ body {
   position: relative;
 }
 /* Global ambient background: a flat var(--bg) reads as harshly flat/dark
-   (dark theme especially) compared to a reference site whose background
-   is a soft, warm ambient gradient glow behind content rather than a flat
-   color. This is one shared, theme-agnostic recipe (built from var(--accent)/
-   var(--bg), so it re-themes for free) rather than inventing a separate
-   light/dark treatment — several large, very soft radial blobs at
-   different positions for an organic feel, not one obvious spotlight.
-   position:fixed (not absolute/static) anchors it to the VIEWPORT rather
-   than the document, so it reads as ambient light in the room rather than
-   a pattern printed on a specific point of a very tall page; z-index:-1
-   plus pointer-events:none keep it purely decorative, behind and
-   unreachable by every section's own content. Individual sections that
-   already set their own opaque background (.hero, .section-ambient)
+   compared to a soft, warm ambient gradient glow behind content. Built
+   from var(--accent)/var(--bg) so it re-themes for free rather than
+   needing its own treatment — several large, very soft radial blobs at
+   different positions for an organic feel, not one obvious spotlight,
+   plus one cooler, lighter-navy blob (a fixed #2a3a66, not derived from
+   a token — it's a step up from --bg-alt specifically for depth here,
+   not a color used anywhere else) low and to the right for a touch of
+   depth/dimension rather than every blob being the same warm accent
+   glow. position:fixed (not absolute/static) anchors it to the VIEWPORT
+   rather than the document, so it reads as ambient light in the room
+   rather than a pattern printed on a specific point of a very tall page;
+   z-index:-1 plus pointer-events:none keep it purely decorative, behind
+   and unreachable by every section's own content. Individual sections
+   that already set their own opaque background (.hero, .section-ambient)
    simply paint over this locally, which is fine — this is the baseline
    for everything else (Story, Dishes, Menu, Gallery, footer). */
 body::before {
@@ -73,7 +91,8 @@ body::before {
     radial-gradient(42% 38% at 12% 12%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
     radial-gradient(48% 42% at 88% 22%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 70%),
     radial-gradient(52% 46% at 28% 88%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
-    radial-gradient(40% 38% at 92% 92%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%);
+    radial-gradient(40% 38% at 92% 92%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%),
+    radial-gradient(60% 50% at 78% 70%, rgba(42, 58, 102, 0.35), transparent 70%);
 }
 a { color: inherit; text-decoration: none; }
 
@@ -148,16 +167,16 @@ section { position: relative; padding: 130px 56px; }
 }
 .btn-primary {
   background: var(--accent);
-  color: #1a0f0a;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 6px 0 0 var(--accent-shadow), 0 14px 26px -8px color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--on-accent);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 6px 0 0 var(--accent-deep), 0 14px 26px -8px color-mix(in srgb, var(--accent) 55%, transparent);
 }
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 9px 0 0 var(--accent-shadow), 0 22px 34px -10px color-mix(in srgb, var(--accent) 60%, transparent); }
-.btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 2px 0 0 var(--accent-shadow); }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 9px 0 0 var(--accent-deep), 0 22px 34px -10px color-mix(in srgb, var(--accent) 60%, transparent); }
+.btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 2px 0 0 var(--accent-deep); }
 .btn-ghost {
   background: var(--surface);
   color: var(--ink);
   border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 6px 0 0 var(--surface-edge), 0 14px 26px -10px rgba(0,0,0,0.6);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 6px 0 0 var(--surface-edge), 0 14px 26px -10px rgba(5,8,18,0.6);
 }
 .btn-ghost:hover { transform: translateY(-3px); }
 .btn-ghost:active { transform: translateY(3px); }
@@ -169,7 +188,7 @@ section { position: relative; padding: 130px 56px; }
   background: var(--glass);
   border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
   backdrop-filter: blur(16px);
-  box-shadow: 0 16px 40px -16px rgba(0,0,0,0.7);
+  box-shadow: 0 16px 40px -16px rgba(5,8,18,0.7);
   opacity: 1;
   transition: opacity 0.5s ease;
 }
@@ -187,7 +206,7 @@ section { position: relative; padding: 130px 56px; }
   letter-spacing: 0.06em; text-transform: uppercase; border-radius: 999px;
   color: color-mix(in srgb, var(--ink) 60%, transparent); transition: color 0.2s ease;
 }
-.shortcut-nav a.active { color: #1a0f0a; }
+.shortcut-nav a.active { color: var(--on-accent); }
 .shortcut-nav a .pill-fill {
   position: absolute; inset: 0; border-radius: 999px; background: var(--accent);
   opacity: 0; transform: scale(0.85); transition: opacity 0.25s ease, transform 0.25s ease; z-index: -1;
@@ -215,17 +234,7 @@ section { position: relative; padding: 130px 56px; }
 .footer-logo .brand-logo-img { height: 56px; }
 .mobile-nav-brand .brand-logo-img { height: 46px; }
 
-/* The provided logo file is white letter-fill + black drop-shadow, drawn
-   for a dark background — on dark theme it's crisp, but on light theme's
-   cream background the white fill nearly vanishes, leaving only a faint
-   shadow-outline ghost (confirmed by rendering it against both theme
-   backgrounds directly). Rather than asking for a second logo file,
-   inverting it under light theme turns it into black fill + white
-   shadow, which reads cleanly there too — same asset, no new file. If a
-   real two-tone brand file arrives later, this is the rule to remove. */
-:root[data-theme="light"] .brand-logo-img { filter: invert(1); }
-
-/* ---------- Utility bar: language switch + theme toggle ---------- */
+/* ---------- Utility bar: language switch ---------- */
 .utility-bar {
   position: fixed; top: 22px; right: 32px; z-index: 50;
   display: flex; align-items: center; gap: 14px;
@@ -247,20 +256,6 @@ section { position: relative; padding: 130px 56px; }
 .lang-option.active { color: var(--accent); }
 .lang-sep { color: color-mix(in srgb, var(--ink) 25%, transparent); font-size: 11px; }
 
-.theme-toggle {
-  display: flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--glass);
-  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
-  backdrop-filter: blur(16px);
-  color: var(--ink); cursor: pointer;
-  transition: transform 0.18s ease, color 0.18s ease;
-}
-.theme-toggle:hover { transform: translateY(-2px); color: var(--accent); }
-.theme-toggle .icon-moon { display: none; }
-:root[data-theme="light"] .theme-toggle .icon-sun { display: none; }
-:root[data-theme="light"] .theme-toggle .icon-moon { display: block; }
-
 /* ---------- Mobile topbar (<=900px only) ---------- */
 .mobile-topbar { display: none; }
 @media (max-width: 900px) {
@@ -273,7 +268,7 @@ section { position: relative; padding: 130px 56px; }
     background: var(--glass);
     border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
     backdrop-filter: blur(16px);
-    box-shadow: 0 16px 40px -16px rgba(0,0,0,0.7);
+    box-shadow: 0 16px 40px -16px rgba(5,8,18,0.7);
     transition: transform 0.3s ease;
   }
   .mobile-topbar.topbar--hidden { transform: translateY(-100%); }
@@ -284,13 +279,10 @@ section { position: relative; padding: 130px 56px; }
   .mobile-topbar-brand .brand-logo-img { height: 34px; }
   .mobile-topbar-controls { display: flex; align-items: center; gap: 10px; }
 
-  /* These reuse .lang-switch/.theme-toggle's text/icon styling but drop the
-     glass pill chrome, since the topbar itself already provides that. */
+  /* Reuses .lang-switch's text styling but drops the glass pill chrome,
+     since the topbar itself already provides that. */
   .mobile-topbar .lang-switch {
     background: none; border: none; backdrop-filter: none; padding: 0;
-  }
-  .mobile-topbar .theme-toggle {
-    background: none; border: none; backdrop-filter: none;
   }
 
   .mobile-nav-toggle {
@@ -305,10 +297,9 @@ section { position: relative; padding: 130px 56px; }
 
 @media (max-width: 480px) {
   /* .utility-bar itself is already hidden at <=900px (mobile topbar takes
-     over) — these two still matter there since they also size the topbar's
-     nested lang-switch/theme-toggle instances. */
+     over) — this still matters there since it also sizes the topbar's
+     nested lang-switch instance. */
   .lang-switch { padding: 6px 9px; }
-  .theme-toggle { width: 32px; height: 32px; }
 }
 
 /* ---------- Mobile nav overlay (<=900px only) ---------- */
@@ -316,9 +307,7 @@ section { position: relative; padding: 130px 56px; }
    95 sits above the FAB (90) — no reason for the FAB to float above an
    open nav — but below the event modal (100), which should always win.
    Background is the same radial-glow-over-var(--bg) treatment as .hero,
-   so it reads as part of the site rather than a flat blank screen; being
-   built from --bg/--accent means it re-themes for free under
-   :root[data-theme="light"], no separate override needed. */
+   so it reads as part of the site rather than a flat blank screen. */
 .mobile-nav-overlay {
   position: fixed; inset: 0; z-index: 95;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -349,7 +338,7 @@ section { position: relative; padding: 130px 56px; }
   background: var(--surface); color: var(--ink);
   border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
   font-size: 20px; line-height: 1; cursor: pointer;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 0 0 var(--surface-edge), 0 10px 20px -8px rgba(0,0,0,0.5);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 0 0 var(--surface-edge), 0 10px 20px -8px rgba(5,8,18,0.5);
   transition: transform 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
 }
 .mobile-nav-close:hover { color: var(--accent); transform: translateY(-2px); }
@@ -381,7 +370,7 @@ section { position: relative; padding: 130px 56px; }
 .mobile-nav-links a:hover .pill-fill, .mobile-nav-links a:active .pill-fill, .mobile-nav-links a:focus-visible .pill-fill {
   opacity: 1; transform: scale(1);
 }
-.mobile-nav-links a:hover, .mobile-nav-links a:active, .mobile-nav-links a:focus-visible { color: #1a0f0a; }
+.mobile-nav-links a:hover, .mobile-nav-links a:active, .mobile-nav-links a:focus-visible { color: var(--on-accent); }
 
 /* Staggered entrance — each link's animation-delay is set inline by
    mobileNav.js (60ms apart), so this only needs to define what plays;
@@ -412,14 +401,14 @@ section { position: relative; padding: 130px 56px; }
   position: fixed; bottom: 24px; right: 24px; z-index: 90;
   display: flex; align-items: center; gap: 8px;
   padding: 14px 20px 14px 16px; border-radius: 999px;
-  background: var(--accent); color: #1a0f0a;
+  background: var(--accent); color: var(--on-accent);
   font-family: "Space Grotesk", sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
   border: none; cursor: pointer;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 6px 0 0 var(--accent-shadow), 0 14px 26px -8px color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 6px 0 0 var(--accent-deep), 0 14px 26px -8px color-mix(in srgb, var(--accent) 55%, transparent);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
-.fab:hover { transform: translateY(-3px); box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 9px 0 0 var(--accent-shadow), 0 22px 34px -10px color-mix(in srgb, var(--accent) 60%, transparent); }
-.fab:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 2px 0 0 var(--accent-shadow); }
+.fab:hover { transform: translateY(-3px); box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 9px 0 0 var(--accent-deep), 0 22px 34px -10px color-mix(in srgb, var(--accent) 60%, transparent); }
+.fab:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 2px 0 0 var(--accent-deep); }
 .fab-icon { display: flex; }
 .fab-label { white-space: nowrap; }
 
@@ -441,7 +430,7 @@ section { position: relative; padding: 130px 56px; }
   padding: 140px 24px 100px; overflow: hidden;
   background:
     radial-gradient(90% 60% at 50% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
-    radial-gradient(70% 50% at 90% 100%, rgba(201,255,79,0.06), transparent 60%),
+    radial-gradient(70% 50% at 90% 100%, rgba(42,58,102,0.35), transparent 60%),
     var(--bg);
 }
 .hero-inner { position: relative; z-index: 2; max-width: 780px; }
@@ -467,7 +456,7 @@ section { position: relative; padding: 130px 56px; }
 }
 .tilt-frame:hover .tilt-card {
   transform: rotateX(6deg) rotateY(-8deg) translateY(-6px) translateZ(10px);
-  box-shadow: 0 40px 70px -20px rgba(0,0,0,0.8);
+  box-shadow: 0 40px 70px -20px rgba(5,8,18,0.8);
 }
 
 /* ---------- Full-bleed image + gradient overlay ---------- */
@@ -481,26 +470,31 @@ section { position: relative; padding: 130px 56px; }
    and browsers are inconsistent about deferring them for off-screen
    elements, which on a page with a dozen-plus tiles meant several were
    still empty (showing this fallback background-color) well after the
-   photos above the fold had already loaded. That fallback used to be a
-   hardcoded dark brown (#221512) regardless of theme — harmless while an
-   image is genuinely still loading, but this element is also
+   photos above the fold had already loaded. The fallback is harmless
+   while an image is genuinely still loading, but this element is also
    overflow:hidden + border-radius on the same node as .tilt-card's
    transitioned transform (the hover tilt), and Chromium's rounded-corner
    clip on a transform-composited layer can leave a hairline of whatever
    sits behind the <img> visible along one edge. Tying the fallback to
-   --surface-edge means that hairline — if it ever shows — blends with
-   the current theme instead of always being the same dark line even in
-   light mode. */
+   --surface-edge (a token, not a hardcoded color) means that hairline —
+   if it ever shows — blends with the palette instead of being an
+   unrelated color dropped in from outside it. */
 .visual-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-/* The scrim + caption text below are always tuned for a dark photo overlay,
-   regardless of the site's light/dark theme — they sit on top of a photo,
-   not the page background, so they intentionally don't use --ink/--bg. */
+/* The scrim darkens a photo toward var(--bg), not a fixed brown-black —
+   so the caption text sitting on top of it blends into the same navy
+   the rest of the page is built from, rather than looking like an
+   unrelated dark overlay color dropped onto the photo. */
 .visual .scrim {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(10,7,6,0.92) 0%, rgba(10,7,6,0.55) 38%, rgba(10,7,6,0) 68%);
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--bg) 92%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 55%, transparent) 38%,
+    transparent 68%
+  );
 }
-.visual .caption { position: relative; z-index: 2; padding: 26px 24px; width: 100%; color: #f5ede1; }
-.caption p { color: rgba(245,237,225,0.6); font-size: 14px; margin: 6px 0 0; }
+.visual .caption { position: relative; z-index: 2; padding: 26px 24px; width: 100%; color: var(--ink); }
+.caption p { color: var(--muted); font-size: 14px; margin: 6px 0 0; }
 
 /* ---------- Full-bleed wrapper ---------- */
 /* Breaks an element out of its parent's padding to span the full viewport
@@ -540,7 +534,7 @@ section { position: relative; padding: 130px 56px; }
   background: var(--surface); color: var(--ink);
   border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
   font-size: 22px; line-height: 1; cursor: pointer; opacity: 0.7;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 0 0 var(--surface-edge), 0 10px 20px -8px rgba(0,0,0,0.5);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 0 0 var(--surface-edge), 0 10px 20px -8px rgba(5,8,18,0.5);
   transition: transform 0.18s ease, box-shadow 0.18s ease, color 0.18s ease, opacity 0.18s ease;
 }
 .carousel-arrow:hover, .carousel-arrow:focus-visible { opacity: 1; color: var(--accent); transform: translateY(-50%) translateY(-2px); }
@@ -765,7 +759,7 @@ section { position: relative; padding: 130px 56px; }
   box-shadow: 0 4px 0 0 var(--surface-edge); transform: translateY(0); transition: all 0.18s ease;
 }
 .tab:hover { color: var(--ink); transform: translateY(-2px); }
-.tab.active { background: var(--accent); border-color: var(--accent); color: #1a0f0a; box-shadow: 0 4px 0 0 var(--accent-shadow); transform: translateY(-2px); }
+.tab.active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); box-shadow: 0 4px 0 0 var(--accent-deep); transform: translateY(-2px); }
 .menu-list { max-width: 740px; margin: 0 auto; }
 /* Name, then description, then price — always stacked in that order inside
    .menu-item-body rather than price sharing a row with the name, so a long
@@ -833,7 +827,7 @@ section { position: relative; padding: 130px 56px; }
 .menu-item-thumb {
   flex: 0 0 auto; width: 60px; height: 60px; border-radius: 12px; object-fit: cover;
   border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
-  box-shadow: 0 4px 10px -4px rgba(0,0,0,0.55);
+  box-shadow: 0 4px 10px -4px rgba(5,8,18,0.55);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 .menu-item-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
@@ -910,7 +904,7 @@ section { position: relative; padding: 130px 56px; }
   position: relative;
   border-radius: 22px;
   overflow: hidden;
-  background-color: #221512;
+  background-color: var(--surface-edge);
   box-shadow: var(--card-shadow);
 }
 .mosaic-tile--big { grid-row: 1 / 3; }
@@ -945,7 +939,7 @@ section { position: relative; padding: 130px 56px; }
   gap: 14px;
   margin-top: 20px;
 }
-.lightbox-tile { position: relative; aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background-color: #221512; }
+.lightbox-tile { position: relative; aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background-color: var(--surface-edge); }
 .lightbox-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* ---------- Visit ---------- */
@@ -977,12 +971,12 @@ section { position: relative; padding: 130px 56px; }
 
 /* OpenStreetMap only ships one (light) tile style — CartoDB's free dark/
    light tiles now require a registered API key on a live domain, so
-   plain OSM tiles replace them. Dark theme is simulated with a filter on
-   .leaflet-tile-pane specifically, not .map-card as a whole, so it hits
-   only the raster tiles — the marker (.map-marker, further down) and the
-   popup/attribution panes are separate Leaflet panes and stay untouched,
-   which is what keeps the pin matching var(--accent) exactly instead of
-   also getting inverted. See the README's "Known gaps" note.
+   plain OSM tiles replace them, always run through a dark tint filter
+   on .leaflet-tile-pane specifically, not .map-card as a whole, so it
+   hits only the raster tiles — the marker (.map-marker, further down)
+   and the popup/attribution panes are separate Leaflet panes and stay
+   untouched, which is what keeps the pin matching var(--accent) exactly
+   instead of also getting inverted. See the README's "Known gaps" note.
    invert(90%) hue-rotate(180deg) (an earlier version of this) is the
    common "poor man's dark map" recipe, but the partial 90% invert
    doesn't cleanly land the hue-preserving math the full trick relies on,
@@ -994,12 +988,21 @@ section { position: relative; padding: 130px 56px; }
    lifts and compresses that dark cluster so the road casing stroke
    reads as a visibly lighter gray against the land fill instead of
    nearly merging into it, and saturate(0.85) pulls hue-rotate's output
-   back from anything oversaturated toward the "subdued", not neon,
-   look. */
+   back from anything oversaturated toward a subdued, not neon, look.
+   Re-checked (same filter-math-against-OSM's-actual-palette approach,
+   not a tile screenshot — this sandbox can't reach tile servers) after
+   the navy repaint: water lands distinctly blue, the land fill a
+   near-neutral dark gray (hue-rotating a low-saturation cream like OSM's
+   land fill barely shifts it, so it was never going to read as literally
+   navy-colored — a real map's land fill looking blue would read as
+   artificial, not "navy-toned"). The navy-toned feel comes from the map
+   card sitting in the same navy chrome/shadow as everything else on the
+   page, with water as the one tile color that visibly picks up the
+   accent palette's cool end. No separate light-theme override needed
+   now — this is the only treatment. */
 .map-card .leaflet-tile-pane {
   filter: invert(100%) hue-rotate(180deg) brightness(1.25) contrast(0.8) saturate(0.85);
 }
-:root[data-theme="light"] .map-card .leaflet-tile-pane { filter: none; }
 
 /* Leaflet's own chrome (popups, attribution) re-themed to match the site
    instead of Leaflet's default white-card look. */
@@ -1018,7 +1021,7 @@ section { position: relative; padding: 130px 56px; }
   background: var(--accent);
   border: 3px solid var(--surface);
   border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+  box-shadow: 0 2px 6px rgba(5,8,18,0.45);
   position: relative;
 }
 .map-marker::after {
@@ -1040,7 +1043,7 @@ section { position: relative; padding: 130px 56px; }
   position: fixed; inset: 0; z-index: 100;
   display: flex; align-items: center; justify-content: center;
   padding: 24px;
-  background: rgba(0,0,0,0.6);
+  background: rgba(5,8,18,0.6);
   backdrop-filter: blur(4px);
 }
 .modal-overlay[hidden] { display: none; }
@@ -1151,10 +1154,10 @@ section { position: relative; padding: 130px 56px; }
    as the base rule, only the visual treatment and stacking differ. */
 .item-modal-close {
   z-index: 5;
-  background: rgba(10,7,6,0.55); border: none; color: #f5ede1;
+  background: color-mix(in srgb, var(--bg) 55%, transparent); border: none; color: var(--ink);
   backdrop-filter: blur(2px);
 }
-.item-modal-close:hover { color: var(--accent); background: rgba(10,7,6,0.7); }
+.item-modal-close:hover { color: var(--accent); background: color-mix(in srgb, var(--bg) 70%, transparent); }
 
 .item-modal-body { padding: 30px 34px 36px; }
 .item-modal-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }

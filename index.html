@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Klandestina — Cantina</title>
   <meta name="description" content="Klandestina Cantina, Helsinki — Mexican street food, mezcal, and a room with no sign out front.">
+  <meta name="theme-color" content="#131b30">
   <link rel="icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,16 +13,6 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css">
   <script>
-    // Applied before first paint so there's no flash of the wrong theme:
-    // a saved choice wins, otherwise fall back to the OS-level preference.
-    (function () {
-      try {
-        var saved = localStorage.getItem("klandestina-theme");
-        var theme = saved || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-        if (theme === "light") document.documentElement.setAttribute("data-theme", "light");
-      } catch (e) {}
-    })();
-
     // Some mobile browsers (notably iOS Safari) restore the tab's LAST
     // scroll offset on a fresh visit to the same URL, rather than starting
     // at the top — landing a visitor mid-page with no indication why. This
@@ -37,20 +28,18 @@
   <div id="brand-mark"></div>
   <nav id="shortcut-nav" class="shortcut-nav"></nav>
 
-  <!-- Filled by components/langSwitch.js + components/themeToggle.js -->
+  <!-- Filled by components/langSwitch.js -->
   <div class="utility-bar">
     <div id="lang-switch" class="lang-switch"></div>
-    <div id="theme-toggle"></div>
   </div>
 
-  <!-- Mobile-only topbar (<=900px): wordmark + lang switch + theme toggle in
-       one bar, replacing the desktop's separate brand-mark/utility-bar.
-       Auto-hides on scroll down / reappears on scroll up (see script.js). -->
+  <!-- Mobile-only topbar (<=900px): wordmark + lang switch in one bar,
+       replacing the desktop's separate brand-mark/utility-bar. Auto-hides
+       on scroll down / reappears on scroll up (see script.js). -->
   <div id="mobile-topbar" class="mobile-topbar">
     <span id="mobile-topbar-brand" class="mobile-topbar-brand"></span>
     <div class="mobile-topbar-controls">
       <div id="mobile-lang-switch" class="lang-switch"></div>
-      <div id="mobile-theme-toggle"></div>
       <!-- Filled by components/mobileNav.js: the hamburger button that opens
            the full-screen section-nav overlay below (desktop's pill nav has
            no mobile equivalent otherwise). -->
