@@ -38,8 +38,15 @@
   "gallery": {
     "eyebrow": "Sisällä",
     "heading": "Tila",
-    "seeAllPhotos": "Katso kaikki kuvat",
-    "lightboxCloseLabel": "Sulje galleria"
+    "seeAllPhotos": "Katso kaikki {count} kuvaa",
+    "all": "Kaikki",
+    "close": "Sulje",
+    "closeGallery": "Sulje galleria",
+    "previous": "Edellinen kuva",
+    "next": "Seuraava kuva",
+    "photoCounter": "{current} / {total}",
+    "photoOfTotal": "Kuva {current} / {total}",
+    "altPhoto": "{album} — kuva {n}"
   },
   "story": {
     "eyebrow": "Tarina",

@@ -900,13 +900,20 @@ section { position: relative; padding: 130px 56px; }
   margin: 0 auto;
   aspect-ratio: 16 / 9;
 }
+/* Tiles are <button>s now (each one opens the full gallery overlay, not
+   just the "See all N photos" CTA below them) — reset the button chrome
+   back down to exactly what the old <div> tiles looked like, then add
+   the hover affordance a clickable photo should have. */
 .mosaic-tile {
   position: relative;
   border-radius: 22px;
   overflow: hidden;
   background-color: var(--surface-edge);
   box-shadow: var(--card-shadow);
+  padding: 0; border: none; cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+.mosaic-tile:hover { transform: translateY(-3px); box-shadow: 0 30px 50px -18px rgba(5, 8, 18, 0.7); }
 .mosaic-tile--big { grid-row: 1 / 3; }
 /* Same crossfade mechanic as the Menu section's rotating category photos
    (.menu-photo-img/.menu-photo-img--active) — two stacked, absolutely
@@ -927,20 +934,248 @@ section { position: relative; padding: 130px 56px; }
   .gallery-mosaic-cta { margin-top: 24px; }
 }
 
-/* ---------- Gallery lightbox ("See All Photos") ---------- */
-/* Reuses .modal-overlay/.modal-card/.modal-close (same system as the
-   other two modals) with a much larger card sized to hold a scrollable
-   photo grid instead of a form or a single dish. */
-.lightbox-card { max-width: 1100px; width: calc(100% - 24px); }
-.lightbox-card h3 { text-align: center; }
-.lightbox-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 14px;
-  margin-top: 20px;
+/* ---------- Gallery overlay ("See all N photos") ---------- */
+/* A dedicated full-screen layer, not the .modal-overlay/.modal-card
+   system the other modals use — those are centered cards meant to sit
+   over the page; this is meant to BE the page while it's open, with its
+   own internal scroll region and a sticky header+pill row riding above
+   it. z-index 150 clears every other overlay on the site (modals: 100,
+   mobile nav: 95); the photo viewer that opens from inside it (below)
+   goes one layer higher still. */
+.gallery-overlay {
+  position: fixed; inset: 0; z-index: 150;
+  display: flex; flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
 }
-.lightbox-tile { position: relative; aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background-color: var(--surface-edge); }
-.lightbox-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.gallery-overlay[hidden] { display: none; }
+
+/* Header + pill row travel together as one sticky unit at the scroll
+   region's own top — see .gallery-overlay-scroll below, which is what
+   actually scrolls (not this element, so position:sticky has the right
+   containing block to stick within). */
+.gallery-overlay-sticky {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.gallery-overlay-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px;
+}
+.gallery-overlay-header h2 {
+  font-family: "Bebas Neue", sans-serif; font-size: 28px; letter-spacing: 0.02em; margin: 0;
+}
+.gallery-overlay-close {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface); border: 1px solid var(--line);
+  color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+.gallery-overlay-close:hover { color: var(--accent); transform: rotate(90deg); }
+
+/* Same pill visual language as the Full Menu's category tabs (.tab) —
+   reusing that class directly (.tab) plus this component's own
+   .gallery-pill for the few things that differ (the count badge). No
+   sticky position of its own: it travels with .gallery-overlay-sticky,
+   same reasoning the Full Menu's sticky tabs comment gives for not
+   duplicating position:sticky across a parent/child pair that would
+   both try to stick independently. */
+.gallery-overlay-pills {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 8px;
+  padding: 0 24px 18px;
+}
+.gallery-pill-count {
+  opacity: 0.65; font-size: 11px; margin-left: 2px;
+}
+.gallery-pill--active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); box-shadow: 0 4px 0 0 var(--accent-deep); }
+
+.gallery-overlay-scroll { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+/* Masonry via CSS columns rather than a JS packing library — each tile's
+   own aspect-ratio (from data/gallery.json's w/h, set as an inline style
+   per tile by galleryOverlay.js) reserves its real height up front, so
+   nothing reflows once its thumbnail finishes loading, and
+   break-inside:avoid keeps a tile from being split across two columns. */
+.gallery-masonry {
+  column-count: 2; column-gap: 12px;
+  padding: 20px 16px 60px;
+  max-width: 1400px; margin: 0 auto;
+}
+.gallery-tile {
+  display: block; width: 100%; margin: 0 0 12px; padding: 0; border: none;
+  position: relative; border-radius: 14px; overflow: hidden;
+  break-inside: avoid;
+  background: var(--surface-edge);
+  cursor: zoom-in;
+  box-shadow: 0 0 0 0 transparent;
+  transition: box-shadow 0.25s ease, transform 0.25s ease, opacity 0.2s ease;
+}
+.gallery-tile-img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+}
+/* The "developing" reveal: a tile starts dark/desaturated/blurred/
+   slightly oversized, and animates to normal once it first scrolls into
+   view (IntersectionObserver in galleryOverlay.js adds --developed,
+   then un-observes — it only ever plays once per tile, not every time
+   it re-enters view). Scoped inside the no-preference media query so a
+   visitor with reduced motion gets every tile already in its finished
+   state with nothing to animate at all, not a fast version of the same
+   animation. */
+@media (prefers-reduced-motion: no-preference) {
+  .gallery-tile-img {
+    filter: grayscale(1) blur(10px) brightness(0.5);
+    transform: scale(1.04);
+    transition: filter 900ms ease-out, transform 900ms ease-out;
+  }
+  .gallery-tile-img--developed {
+    filter: grayscale(0) blur(0) brightness(1);
+    transform: scale(1);
+  }
+}
+/* Filtering by album: a quick fade rather than an instant cut, and
+   pointer-events:none so a tile mid-fade-out can't still be clicked.
+   Deliberately opacity-only, not display:none — removing a tile from
+   layout entirely would also kill the transition (nothing to animate
+   between "there" and "gone" in the same frame), so the brief overlap
+   where a filtered-out tile still occupies its column is the tradeoff
+   for the fade actually being visible. */
+.gallery-tile--filtered-out { opacity: 0; pointer-events: none; }
+
+@media (hover: hover) {
+  .gallery-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent), 0 20px 40px -16px rgba(5, 8, 18, 0.7);
+  }
+}
+
+@media (max-width: 720px) {
+  .gallery-masonry { column-count: 2; column-gap: 10px; padding: 16px 12px 40px; }
+  .gallery-overlay-header h2 { font-size: 22px; }
+}
+@media (min-width: 721px) and (max-width: 1100px) {
+  .gallery-masonry { column-count: 3; }
+}
+@media (min-width: 1101px) {
+  .gallery-masonry { column-count: 4; }
+}
+
+/* ---------- Gallery photo viewer (the lightbox opened from a tile) ---------- */
+/* z-index 160 — one above .gallery-overlay's 150, so the lightbox always
+   paints over the grid it was opened from. */
+.gallery-viewer {
+  position: fixed; inset: 0; z-index: 160;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--bg);
+  overflow: hidden;
+}
+.gallery-viewer[hidden] { display: none; }
+
+/* Two stacked, absolutely positioned, heavily blurred copies of the
+   current photo — background-image (not <img>) since this needs a
+   uniform filter stack applied directly, not per-element loading state.
+   Crossfading between the two on every photo change (only one ever at
+   opacity:1, same mechanic as .mosaic-tile-img) is what makes the glow
+   change smoothly with the photo instead of snapping. */
+.gallery-viewer-glow { position: absolute; inset: 0; z-index: 0; }
+.gallery-viewer-glow-img {
+  position: absolute; inset: -10%; /* oversized so the heavy blur below never reveals a hard edge */
+  background-size: cover; background-position: center;
+  filter: blur(60px) saturate(1.4) brightness(0.45);
+  opacity: 0; transition: opacity 1.2s ease;
+}
+.gallery-viewer-glow-img--active { opacity: 1; }
+
+.gallery-viewer-close, .gallery-viewer-arrow {
+  position: absolute; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--line);
+  color: var(--ink); cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+.gallery-viewer-close:hover, .gallery-viewer-arrow:hover { color: var(--accent); background: color-mix(in srgb, var(--bg) 75%, transparent); }
+.gallery-viewer-close {
+  top: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%;
+  font-size: 22px; line-height: 1;
+}
+.gallery-viewer-close:hover { transform: rotate(90deg); }
+.gallery-viewer-arrow {
+  top: 50%; transform: translateY(-50%);
+  width: 52px; height: 52px; border-radius: 50%;
+  font-size: 28px; line-height: 1;
+}
+.gallery-viewer-arrow:hover { transform: translateY(-50%) scale(1.08); }
+.gallery-viewer-arrow--prev { left: 20px; }
+.gallery-viewer-arrow--next { right: 20px; }
+.gallery-viewer-arrow[hidden] { display: none; }
+
+.gallery-viewer-stage {
+  position: relative; z-index: 1;
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 80px 90px 110px;
+}
+.gallery-viewer-img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 30px 70px -20px rgba(5, 8, 18, 0.8);
+}
+/* Shorter and lighter than the masonry grid's own "developing" reveal
+   (500ms vs 900ms, not quite as dark/blurred to start) — this plays on
+   every photo change, not once ever, so a slower/heavier version of it
+   would make rapid prev/next clicks feel sluggish. Forcing it to replay
+   on every change is handled in JS (remove the class, force a reflow,
+   re-add it) since re-adding an already-present class doesn't restart a
+   CSS animation on its own. */
+@media (prefers-reduced-motion: no-preference) {
+  .gallery-viewer-img--developing { animation: galleryViewerDevelop 500ms ease-out; }
+}
+@keyframes galleryViewerDevelop {
+  from { filter: grayscale(1) blur(14px) brightness(0.5); transform: scale(1.03); }
+  to { filter: grayscale(0) blur(0) brightness(1); transform: scale(1); }
+}
+
+.gallery-viewer-meta {
+  position: absolute; z-index: 2; left: 0; right: 0; bottom: 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  text-align: center; pointer-events: none;
+}
+.gallery-viewer-album { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); }
+.gallery-viewer-counter { font-size: 12px; color: var(--muted); }
+
+/* Desktop-only filmstrip, auto-scrolled to keep the active thumb in
+   view (galleryPhotoViewer.js calls scrollIntoView on it whenever the
+   index changes) — hidden on mobile via the media query below rather
+   than not rendering it at all, since a photo set browsed on mobile
+   might later be viewed on desktop in the same session without a
+   re-open. */
+.gallery-viewer-filmstrip {
+  position: absolute; z-index: 2; left: 0; right: 0; bottom: 56px;
+  display: flex; gap: 8px; overflow-x: auto;
+  padding: 4px 24px; max-width: 100%;
+  scrollbar-width: none;
+}
+.gallery-viewer-filmstrip::-webkit-scrollbar { display: none; }
+.gallery-viewer-filmstrip[hidden] { display: none; }
+.gallery-viewer-thumb {
+  flex: 0 0 56px; width: 56px; height: 56px; border-radius: 8px; overflow: hidden;
+  padding: 0; border: 2px solid transparent; cursor: pointer;
+  opacity: 0.55; transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+.gallery-viewer-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gallery-viewer-thumb:hover { opacity: 0.85; }
+.gallery-viewer-thumb--active { opacity: 1; border-color: var(--accent); }
+
+@media (max-width: 900px) {
+  .gallery-viewer-stage { padding: 70px 20px 90px; }
+  .gallery-viewer-arrow { display: none; } /* swipe covers navigation on touch */
+  .gallery-viewer-filmstrip { display: none; }
+  .gallery-viewer-meta { bottom: 24px; }
+}
 
 /* ---------- Visit ---------- */
 /* Tighter than .section-head's shared 60px bottom margin — scoped to just

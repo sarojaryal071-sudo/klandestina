@@ -38,8 +38,15 @@
   "gallery": {
     "eyebrow": "Inside",
     "heading": "The room",
-    "seeAllPhotos": "See All Photos",
-    "lightboxCloseLabel": "Close gallery"
+    "seeAllPhotos": "See all {count} photos",
+    "all": "All",
+    "close": "Close",
+    "closeGallery": "Close gallery",
+    "previous": "Previous photo",
+    "next": "Next photo",
+    "photoCounter": "{current} / {total}",
+    "photoOfTotal": "Photo {current} of {total}",
+    "altPhoto": "{album} — photo {n}"
   },
   "story": {
     "eyebrow": "The Story",

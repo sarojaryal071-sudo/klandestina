@@ -1,0 +1,57 @@
+{
+  "albums": [
+    {
+      "slug": "04-food-and-drinks",
+      "title": {
+        "en": "Food & Drinks",
+        "fi": "Ruoka & juomat"
+      },
+      "count": 7,
+      "photos": [
+        {
+          "src": "images/gallery/04-food-and-drinks/frijoles-con-veneno.jpg",
+          "thumb": "images/gallery-thumbs/04-food-and-drinks/frijoles-con-veneno.jpg",
+          "w": 1000,
+          "h": 667
+        },
+        {
+          "src": "images/gallery/04-food-and-drinks/kuha-ceviche.jpg",
+          "thumb": "images/gallery-thumbs/04-food-and-drinks/kuha-ceviche.jpg",
+          "w": 1000,
+          "h": 655
+        },
+        {
+          "src": "images/gallery/04-food-and-drinks/mexican-tuna-poke.jpg",
+          "thumb": "images/gallery-thumbs/04-food-and-drinks/mexican-tuna-poke.jpg",
+          "w": 1000,
+          "h": 562
+        },
+        {
+          "src": "images/gallery/04-food-and-drinks/pork-in-chili-ancho.jpg",
+          "thumb": "images/gallery-thumbs/04-food-and-drinks/pork-in-chili-ancho.jpg",
+          "w": 1000,
+          "h": 550
+        },
+        {
+          "src": "images/gallery/04-food-and-drinks/quesabirria-2.jpg",
+          "thumb": "images/gallery-thumbs/04-food-and-drinks/quesabirria-2.jpg",
+          "w": 1000,
+          "h": 567
+        },
+        {
+          "src": "images/gallery/04-food-and-drinks/quesabirria.jpg",
+          "thumb": "images/gallery-thumbs/04-food-and-drinks/quesabirria.jpg",
+          "w": 1000,
+          "h": 550
+        },
+        {
+          "src": "images/gallery/04-food-and-drinks/tommys-margarita.jpg",
+          "thumb": "images/gallery-thumbs/04-food-and-drinks/tommys-margarita.jpg",
+          "w": 883,
+          "h": 706
+        }
+      ]
+    }
+  ],
+  "total": 7
+}

@@ -457,15 +457,5 @@
       "name": "Txakoli Rosé Wine",
       "price": { "glass12": 9, "glass16": 13, "glass24": 19, "bottle": 49 }
     }
-  ],
-
-  "gallery": [
-    { "image": "mexican-tuna-poke.jpg" },
-    { "image": "kuha-ceviche.jpg" },
-    { "image": "tommys-margarita.jpg" },
-    { "image": "frijoles-con-veneno.jpg" },
-    { "image": "pork-in-chili-ancho.jpg" },
-    { "image": "quesabirria.jpg" },
-    { "image": "quesabirria-2.jpg" }
   ]
 }

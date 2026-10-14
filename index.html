@@ -87,9 +87,9 @@
           </blockquote>
         </div>
       </div>
-      <!-- Filler: reused from images/dishes/ like the gallery already does
-           — no dedicated interior/portrait photography for Story yet, see
-           README's "Known gaps". Soft-edged via a CSS mask (style.css). -->
+      <!-- Filler: reused from images/dishes/ — no dedicated interior/
+           portrait photography for Story yet, see README's "Known gaps".
+           Soft-edged via a CSS mask (style.css). -->
       <div class="story-photo reveal">
         <img class="story-photo-img soft-fade-img" src="images/dishes/tommys-margarita.jpg" alt="" loading="lazy" decoding="async">
         <!-- Same wash+wider-fade edge treatment as the Menu photo column
@@ -152,10 +152,13 @@
       <h2 data-i18n="gallery.heading">The room</h2>
     </div>
     <!-- Filled by components/galleryMosaic.js: a 3-tile crossfading teaser
-         (see style.css's "Gallery: crossfading mosaic" comment), not the
-         full photo set — "See All Photos" opens components/
-         galleryLightbox.js's full grid (mounted separately below, with
-         the other modals) for that. -->
+         of 6 random photos drawn from data/gallery.json (see style.css's
+         "Gallery: crossfading mosaic" comment), not the full photo set —
+         "See all N photos" (or tapping a tile) opens the full-screen
+         gallery overlay (components/galleryOverlay.js, mounted separately
+         below with the other modals) for that. If data/gallery.json has
+         no photos at all, script.js hides this whole section (and its
+         nav links) rather than showing an empty teaser. -->
     <div class="container">
       <div id="gallery-mosaic-mount"></div>
     </div>
@@ -199,9 +202,19 @@
        card is clicked (see menuItem.js/dishCard.js). -->
   <div id="item-modal-mount"></div>
 
-  <!-- Filled by components/galleryLightbox.js; hidden until "See All
-       Photos" (in the gallery mosaic) is clicked. -->
-  <div id="gallery-lightbox-mount"></div>
+  <!-- Filled by components/galleryOverlay.js; hidden until "See all N
+       photos" (or a mosaic tile) is clicked. -->
+  <div id="gallery-overlay-mount"></div>
+
+  <!-- Filled by components/galleryPhotoViewer.js; hidden until a tile
+       inside the gallery overlay is clicked. Mounted as its own sibling
+       (not nested inside the overlay's own mount) purely so it can sit
+       above the overlay in the DOM-order default paint stack without
+       needing an explicit z-index fight — style.css still gives both
+       explicit z-indexes since relying on DOM order alone is exactly the
+       kind of thing that bit the item detail modal's close button
+       before (see README's "Item detail modal"). -->
+  <div id="gallery-viewer-mount"></div>
 
   <!-- Classic (non-module) script, so the global L it defines is ready by
        the time the deferred module below runs. -->

@@ -1,0 +1,86 @@
+name: Gallery
+
+# Keeps data/gallery.json and images/gallery-thumbs/ in sync with whatever
+# photos are actually sitting in images/gallery/<album>/ — the only thing
+# that makes "drag photos into a folder on github.com, no code edits"
+# (see README's "Adding gallery photos") actually work. scripts/
+# build-gallery.mjs does the real work; this workflow just runs it and
+# commits the result.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "images/gallery/**"
+  workflow_dispatch: {}
+
+# A second push landing mid-run shouldn't race this one — queue behind
+# whatever's already running for this branch rather than having two
+# runs fight over the same commit/push.
+concurrency:
+  group: gallery-build-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # No package.json/package-lock.json is committed (see README) — sharp
+      # is installed fresh into a gitignored node_modules/ on every run,
+      # the same way a contributor would run this locally.
+      - name: Install sharp
+        run: npm i --no-save sharp
+
+      - name: Build gallery
+        run: node scripts/build-gallery.mjs
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git add -A images/gallery images/gallery-thumbs data/gallery.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Optimize gallery photos and rebuild data/gallery.json [skip ci]"
+          # Something else may have pushed to main while this job was
+          # running (sharp install + image processing isn't instant) —
+          # rebase onto the current tip rather than racing it with a
+          # force-push.
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      # Pushes made with the default GITHUB_TOKEN don't always trigger
+      # GitHub Pages' own build-on-push the way a push from a real user
+      # does, depending on how Pages is configured for this repo — so
+      # ask for a rebuild explicitly rather than assuming the commit
+      # above was enough on its own. A harmless no-op if Pages was going
+      # to rebuild anyway.
+      - name: Request a Pages rebuild
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds"

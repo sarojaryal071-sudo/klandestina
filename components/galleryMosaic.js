@@ -1,25 +1,42 @@
 // galleryMosaic.js
-// Replaces the old scattered/tilted scrapbook gallery with a compact,
-// clean-rectangle mosaic: one big tile (spanning both rows) plus two
-// smaller tiles stacked beside it, each independently crossfading between
-// two photos from the same gallery data source on a slow, staggered loop.
-// It's a rotating teaser, not the full set — "See All Photos" below it
-// opens the complete grid (components/galleryLightbox.js).
+// The main-page teaser: one big tile (spans both rows) + two smaller
+// tiles, each independently crossfading between two photos on a slow,
+// staggered loop. A rotating sample, not the full set — "See all N
+// photos" (or tapping any tile) opens the complete gallery overlay
+// (galleryOverlay.js).
 
-import { openGalleryLightbox } from "./galleryLightbox.js";
+import { openGalleryOverlay } from "./galleryOverlay.js";
 
 const CROSSFADE_INTERVAL_MS = 12000;
 const STAGGER_MS = 4000; // each tile's own loop starts this much later than the previous tile's
 const TILE_COUNT = 3;
+const PHOTOS_NEEDED = TILE_COUNT * 2;
+
+// Fisher-Yates — picks a genuinely random, non-repeating sample rather
+// than just slicing the front of a shuffled-once array (which would bias
+// toward whatever happened to sort first) or allowing the same photo to
+// show in two tiles at once.
+function sample(array, count) {
+  const copy = array.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, count);
+}
 
 /**
  * @param {HTMLElement} container
- * @param {Object[]} photos - the gallery array from data/menu.json (each { image: "file.jpg" })
+ * @param {{albums: Object[], total: number}} galleryData - already language-resolved (album.title is a plain string)
+ * @param {{seeAllPhotosFn: (count: number) => string}} labels
  */
-export function renderGalleryMosaic(container, photos) {
+export function renderGalleryMosaic(container, galleryData, labels) {
+  const allPhotos = galleryData.albums.flatMap((a) => a.photos);
+  const picked = sample(allPhotos, Math.min(PHOTOS_NEEDED, allPhotos.length));
+
   const tilesHtml = Array.from({ length: TILE_COUNT }, (_, i) => {
-    const first = photos[(i * 2) % photos.length];
-    const second = photos[(i * 2 + 1) % photos.length];
+    const first = picked[(i * 2) % picked.length];
+    const second = picked[(i * 2 + 1) % picked.length];
     const isBig = i === 0;
     const imgs = [first, second]
       .filter(Boolean)
@@ -27,21 +44,29 @@ export function renderGalleryMosaic(container, photos) {
         (photo, j) => `
           <img
             class="mosaic-tile-img${j === 0 ? " mosaic-tile-img--active" : ""}"
-            src="images/dishes/${photo.image}" alt="" loading="lazy" decoding="async"
+            src="${photo.thumb}" alt="" loading="lazy" decoding="async"
           >`
       )
       .join("");
-    return `<div class="mosaic-tile${isBig ? " mosaic-tile--big" : ""}" data-tile="${i}">${imgs}</div>`;
+    return `<button type="button" class="mosaic-tile${isBig ? " mosaic-tile--big" : ""}" data-tile="${i}">${imgs}</button>`;
   }).join("");
 
   container.innerHTML = `
     <div class="gallery-mosaic reveal">${tilesHtml}</div>
     <div class="gallery-mosaic-cta reveal">
-      <button type="button" class="btn btn-ghost" data-i18n="gallery.seeAllPhotos">See All Photos</button>
+      <button type="button" class="btn btn-ghost" data-gallery-cta>${labels.seeAllPhotosFn(galleryData.total)}</button>
     </div>
   `;
 
+  if (allPhotos.length === 0) return; // nothing to crossfade or open
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   container.querySelectorAll(".mosaic-tile").forEach((tile, i) => {
+    tile.addEventListener("click", openGalleryOverlay);
+
+    if (reduceMotion) return; // static photos, no crossfade loop
+
     const imgs = tile.querySelectorAll(".mosaic-tile-img");
     if (imgs.length < 2) return; // nothing to crossfade to (not enough gallery photos)
 
@@ -63,7 +88,13 @@ export function renderGalleryMosaic(container, photos) {
     }, i * STAGGER_MS);
   });
 
-  container
-    .querySelector(".gallery-mosaic-cta .btn")
-    .addEventListener("click", openGalleryLightbox);
+  container.querySelector("[data-gallery-cta]").addEventListener("click", openGalleryOverlay);
+}
+
+// Called on language switch — updates just the CTA button's text (the
+// only translated string in the teaser; photos carry no language-bound
+// text) without reshuffling/rebuilding the random photo sample.
+export function refreshGalleryMosaicLabels(container, galleryData, labels) {
+  const btn = container.querySelector("[data-gallery-cta]");
+  if (btn) btn.textContent = labels.seeAllPhotosFn(galleryData.total);
 }
