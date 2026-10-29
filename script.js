@@ -7,6 +7,13 @@
 // depends on: the active language (en/fi). The site used to also carry a
 // dark/light theme toggle here — removed along with the light theme
 // itself (style.css is single-palette now; see its :root comment).
+//
+// The active language is decided ENTIRELY by the URL (/ is English,
+// /fi/ is Finnish) — not by browser language or a saved preference, so
+// each language has its own crawlable, linkable, bookmarkable address
+// (see README's "Finnish URL"). script.js itself is the same file for
+// both pages; only the two static index.html/fi/index.html documents
+// differ (generated from one another by scripts/prerender.mjs).
 
 import { renderNav } from "./components/nav.js";
 import { renderButton } from "./components/button.js";
@@ -16,7 +23,7 @@ import { renderGalleryMosaic, refreshGalleryMosaicLabels } from "./components/ga
 import { renderGalleryOverlay, refreshGalleryOverlayLabels } from "./components/galleryOverlay.js";
 import { renderGalleryPhotoViewer } from "./components/galleryPhotoViewer.js";
 import { renderFooter } from "./components/footer.js";
-import { renderLangSwitch, setActiveLang } from "./components/langSwitch.js";
+import { renderLangSwitch } from "./components/langSwitch.js";
 import { renderEventModal, openEventModal } from "./components/eventModal.js";
 import { renderItemModal } from "./components/itemModal.js";
 import { renderFab } from "./components/fab.js";
@@ -25,7 +32,6 @@ import { renderMap } from "./components/map.js";
 import { renderMenuPhoto } from "./components/menuPhoto.js";
 import { brandLogoHTML } from "./components/logo.js";
 
-const LANG_STORAGE_KEY = "klandestina-lang";
 const SUPPORTED_LANGS = ["en", "fi"];
 
 let i18n = {};
@@ -55,7 +61,7 @@ async function init() {
   site = siteData;
   rawGallery = galleryJson;
   i18n = { en, fi };
-  currentLanguage = getStoredLanguage();
+  currentLanguage = getLanguageFromPath();
   forgetStaleTheme();
 
   // Nav
@@ -161,36 +167,25 @@ async function init() {
 
 // ---------- i18n ----------
 
-function getStoredLanguage() {
-  try {
-    const saved = localStorage.getItem(LANG_STORAGE_KEY);
-    if (saved && SUPPORTED_LANGS.includes(saved)) return saved;
-  } catch (e) {
-    /* localStorage unavailable (private mode, etc.) — fall through to default */
-  }
-  return "en";
+// /fi or /fi/... is Finnish; everything else (/, or any other path) is
+// English. No browser-language or saved-preference fallback — the URL is
+// the only source of truth, which is what lets / and /fi/ be two
+// separately indexable, linkable pages rather than one page with two
+// states.
+function getLanguageFromPath() {
+  const path = window.location.pathname;
+  return path === "/fi" || path.startsWith("/fi/") ? "fi" : "en";
 }
 
+// Each language is a separate page (/ vs /fi/), not an in-place state
+// swap — so switching means a real navigation, keeping whatever #hash
+// the visitor was on (e.g. mid-scroll at #menu). A full reload re-runs
+// init() on the other static document, which already starts in the
+// right language via getLanguageFromPath() above.
 function setLanguage(lang) {
   if (!SUPPORTED_LANGS.includes(lang) || lang === currentLanguage) return;
-  currentLanguage = lang;
-  try {
-    localStorage.setItem(LANG_STORAGE_KEY, lang);
-  } catch (e) {
-    /* ignore — language just won't persist across visits */
-  }
-
-  setActiveLang(document.getElementById("lang-switch"), lang);
-  setActiveLang(document.getElementById("mobile-lang-switch"), lang);
-  renderSignatureDishes();
-  renderMenuCategory(activeCategoryId);
-  applyTranslations();
-  if (rawGallery.total > 0) {
-    const galleryLabels = buildGalleryLabels();
-    const resolvedGallery = resolveGallery();
-    refreshGalleryMosaicLabels(document.getElementById("gallery-mosaic-mount"), resolvedGallery, galleryLabels);
-    refreshGalleryOverlayLabels(resolvedGallery, galleryLabels);
-  }
+  const targetPath = lang === "fi" ? "/fi/" : "/";
+  window.location.href = targetPath + window.location.hash;
 }
 
 // ---------- gallery i18n ----------

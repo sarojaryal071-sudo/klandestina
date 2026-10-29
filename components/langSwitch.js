@@ -26,7 +26,7 @@ export function renderLangSwitch(container, activeLang, onSelect) {
   });
 }
 
-export function setActiveLang(container, lang) {
+function setActiveLang(container, lang) {
   container.querySelectorAll(".lang-option").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.lang === lang);
   });

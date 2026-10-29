@@ -6,6 +6,15 @@
   <title>Klandestina – Mexican cantina in Helsinki</title>
   <meta name="description" content="Klandestina is a Mexican cantina in Helsinki with no sign out front — tacos off live coals, mezcal poured heavy, at Aleksis Kiven katu 17.">
   <link rel="canonical" href="https://klande.fi/">
+
+  <!-- Same three links on both / and /fi/ — the English and Finnish
+       page, plus x-default for everyone else. scripts/prerender.mjs
+       copies this block as-is into fi/index.html; only canonical/
+       og:url/og:locale/title/description above and below actually
+       differ per language. -->
+  <link rel="alternate" hreflang="en" href="https://klande.fi/">
+  <link rel="alternate" hreflang="fi" href="https://klande.fi/fi/">
+  <link rel="alternate" hreflang="x-default" href="https://klande.fi/">
   <meta name="theme-color" content="#161b28">
   <link rel="icon" href="/favicon.ico">
 

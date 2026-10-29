@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Klandestina – meksikolainen cantina Helsingissä</title>
+  <meta name="description" content="Klandestina on meksikolainen cantina Helsingissä ilman kylttiä – tacoja hiilloksesta, mezcalia reilulla kädellä, osoitteessa Aleksis Kiven katu 17.">
+  <link rel="canonical" href="https://klande.fi/fi/">
+
+  <!-- Same three links on both / and /fi/ — the English and Finnish
+       page, plus x-default for everyone else. scripts/prerender.mjs
+       copies this block as-is into fi/index.html; only canonical/
+       og:url/og:locale/title/description above and below actually
+       differ per language. -->
+  <link rel="alternate" hreflang="en" href="https://klande.fi/">
+  <link rel="alternate" hreflang="fi" href="https://klande.fi/fi/">
+  <link rel="alternate" hreflang="x-default" href="https://klande.fi/">
+  <meta name="theme-color" content="#161b28">
+  <link rel="icon" href="/favicon.ico">
+
+  <!-- Open Graph / Twitter — image is images/og/og.jpg (the site's own
+       logo on its own navy background, see README's "SEO" section for
+       how it was generated). seo.title/seo.description below mirror
+       data/i18n/en.json's own seo.title/seo.description keys so there's
+       one wording to keep in sync, not two. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Klandestina – meksikolainen cantina Helsingissä">
+  <meta property="og:description" content="Klandestina on meksikolainen cantina Helsingissä ilman kylttiä – tacoja hiilloksesta, mezcalia reilulla kädellä, osoitteessa Aleksis Kiven katu 17.">
+  <meta property="og:url" content="https://klande.fi/fi/">
+  <meta property="og:image" content="https://klande.fi/images/og/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="fi_FI">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Klandestina – meksikolainen cantina Helsingissä">
+  <meta name="twitter:description" content="Klandestina on meksikolainen cantina Helsingissä ilman kylttiä – tacoja hiilloksesta, mezcalia reilulla kädellä, osoitteessa Aleksis Kiven katu 17.">
+  <meta name="twitter:image" content="https://klande.fi/images/og/og.jpg">
+
+  <!-- schema.org Restaurant — static, not injected by script.js, so it's
+       there on first paint for anything that doesn't execute JS. Built
+       only from data/site.json's own fields; telephone and priceRange
+       are left out rather than invented (site.json has neither) — see
+       README's "SEO" section. Update this block by hand whenever hours,
+       address, or contact details in data/site.json change; nothing
+       keeps the two in sync automatically. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Klandestina Cantina",
+    "url": "https://klande.fi/",
+    "image": "https://klande.fi/images/og/og.jpg",
+    "email": "andres@klande.fi",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Aleksis Kiven katu 17",
+      "addressLocality": "Helsinki"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 60.1903,
+      "longitude": 24.9535
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Tuesday", "Wednesday", "Thursday"],
+        "opens": "17:00",
+        "closes": "22:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Friday", "Saturday"],
+        "opens": "17:00",
+        "closes": "23:59"
+      }
+    ],
+    "servesCuisine": "Mexican",
+    "hasMenu": "https://klande.fi/#menu",
+    "sameAs": [
+      "https://www.instagram.com/klandestinacantina",
+      "https://www.facebook.com/share/18TQzuHcDC/",
+      "https://www.tiktok.com/@klandestinacantina"
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Leaflet (components/map.js) — free CartoDB tiles, no API key. -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/style.css">
+  <script>
+    // Some mobile browsers (notably iOS Safari) restore the tab's LAST
+    // scroll offset on a fresh visit to the same URL, rather than starting
+    // at the top — landing a visitor mid-page with no indication why. This
+    // opts out of that restoration; it doesn't affect an intentional
+    // #section link, which is a separate browser mechanism this leaves
+    // untouched.
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  </script>
+</head>
+<body>
+
+  <!-- Filled by components/nav.js -->
+  <div id="brand-mark"></div>
+  <nav id="shortcut-nav" class="shortcut-nav"></nav>
+
+  <!-- Filled by components/langSwitch.js -->
+  <div class="utility-bar">
+    <div id="lang-switch" class="lang-switch"></div>
+  </div>
+
+  <!-- Mobile-only topbar (<=900px): wordmark + lang switch in one bar,
+       replacing the desktop's separate brand-mark/utility-bar. Auto-hides
+       on scroll down / reappears on scroll up (see script.js). -->
+  <div id="mobile-topbar" class="mobile-topbar">
+    <span id="mobile-topbar-brand" class="mobile-topbar-brand"></span>
+    <div class="mobile-topbar-controls">
+      <div id="mobile-lang-switch" class="lang-switch"></div>
+      <!-- Filled by components/mobileNav.js: the hamburger button that opens
+           the full-screen section-nav overlay below (desktop's pill nav has
+           no mobile equivalent otherwise). -->
+      <div id="mobile-nav-toggle"></div>
+    </div>
+  </div>
+
+  <!-- Filled by components/mobileNav.js. Full-screen, mobile-only (<=900px)
+       nav overlay opened by the hamburger button above — the desktop pill
+       nav (#shortcut-nav) is hidden at this width with nothing replacing it
+       otherwise. -->
+  <div id="mobile-nav-overlay-mount"></div>
+
+  <!-- Filled by components/fab.js. Fixed bottom-right on every section,
+       independent of the top-anchored topbar/utility-bar. Opens the exact
+       same modal as the "Special Events or Inquiry" button in the Visit
+       section (see script.js). -->
+  <div id="fab-mount"></div>
+
+  <header class="hero" id="hero">
+    <div class="hero-inner">
+      <span class="eyebrow" data-i18n="hero.eyebrow">Klandestina Cantina · Helsinki</span>
+      <h1 data-i18n="hero.heading">Löydä ovi.</h1>
+      <p data-i18n="hero.subtext">Tacoja suoraan hiilloksesta, mezcalia reilulla kädellä ja tila, joka ei mainosta itseään.</p>
+      <div class="hero-actions">
+        <!-- Filled by components/button.js -->
+        <div id="hero-buttons"></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="story">
+    <div class="story-layout container">
+      <div class="story-text">
+        <div class="section-head reveal">
+          <span class="eyebrow" data-i18n="story.eyebrow">Tarina</span>
+          <h2 data-i18n="story.heading">Eläköön La Klandestina</h2>
+        </div>
+        <div class="story-body reveal">
+          <p data-i18n="story.body1">Tervetuloa Klandestinaan, arjen meksikolaiseen suosikkiravintolaasi! Tavoitteenamme on upottaa sinut täyteen Meksiko-kokemukseen jokaisen tarjoamamme annoksen kautta. Klandestinassa intohimomme ruokaa ja palvelua kohtaan on vertaansa vailla. Haluamme, että tulet, viihdyt ja palaat yhä uudelleen.</p>
+          <p data-i18n="story.body2">Toimittuamme Harju Kalliossa kaksi ja puoli vuotta, kohtasimme pandemia-ruletin haasteet ja kaikki sen mukanaan tuomat vaikeudet. Näistä vastoinkäymisistä huolimatta meillä oli onni saada uskollinen asiakaskunta ja monia ystäviä, jotka kävivät luonamme, mikä antoi meille motivaation jatkaa. Haluamme sinun tietävän, että teemme tämän sinua varten – olemme yhä pelissä mukana tukesi ansiosta. Ilman sinua mikään tästä ei olisi mahdollista. Olemme innoissamme paluustamme ja odotamme innolla vanhojen asiakkaidemme ja ystäviemme paluuta.</p>
+          <p data-i18n="story.body3">La Cantina Klandestina on kunnianosoituksemme sille tyypillisen meksikolaiselle tunteelle, ettei tarvitse noudattaa jokaista sääntöä orjallisesti, vaan tehdä asiat omalla tavallaan.</p>
+          <blockquote class="story-quote">
+            <p data-i18n="story.quoteText">”Olemme laillisia kapinallisia, jotka rakastavat ruokaa ja ovat ylpeitä ystävällisestä asiakaspalvelustaan.”</p>
+          </blockquote>
+        </div>
+      </div>
+      <!-- Filler: reused from images/dishes/ — no dedicated interior/
+           portrait photography for Story yet, see README's "Known gaps".
+           Soft-edged via a CSS mask (style.css). -->
+      <div class="story-photo reveal">
+        <img class="story-photo-img soft-fade-img" src="/images/dishes/tommys-margarita.jpg" alt="" width="883" height="706" loading="lazy" decoding="async">
+        <!-- Same wash+wider-fade edge treatment as the Menu photo column
+             (style.css's .story-photo-wash / .story-photo-img --fade-edge
+             override) — brought over once it read right there. -->
+        <div class="story-photo-wash soft-fade-img"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dishes">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="dishes.eyebrow">Suoraan grillistä</span>
+      <h2 data-i18n="dishes.heading">Nämä kanta-asiakkaat tilaavat aina kahdesti</h2>
+    </div>
+    <!-- Filled by components/dishCarousel.js — one continuously
+         auto-scrolling row at every screen size (see style.css's
+         "Dishes: auto-scrolling carousel" comment for how the loop
+         works). .full-bleed lets it run closer to the viewport edges on
+         wide screens instead of being boxed in by the section's own
+         padding, per the site's full-bleed-imagery/capped-text split. -->
+    <div class="full-bleed">
+      <div id="dish-grid"></div>
+    </div>
+  </section>
+
+  <section id="menu">
+    <!-- Mirrored from Story's split (which is text-left/image-right) —
+         image-left/content-right here, so the two asymmetric sections
+         alternate rather than reading as the same template twice. -->
+    <div class="menu-layout container">
+      <div class="menu-photo reveal">
+        <!-- Filled by components/menuPhoto.js: a small rotating,
+             crossfading ambient image set per active category tab (see
+             script.js's renderMenuCategory). Purely decorative, not tied
+             to specific menu items — categories with no on-theme photo
+             yet fall back to an ambient glow instead of showing
+             something misleading (e.g. a savory dish under Desserts). -->
+        <div id="menu-photo-mount"></div>
+      </div>
+      <div class="menu-content">
+        <div class="section-head reveal">
+          <span class="eyebrow" data-i18n="menu.eyebrow">Koko ruokalista</span>
+          <h2 data-i18n="menu.heading">Keittiö &amp; baari</h2>
+        </div>
+        <!-- Filled by components/menuItem.js. .tabs-sticky is the sticky
+             anchor and carries the backdrop that keeps scrolled-past
+             items from showing through around the pills — see style.css. -->
+        <div class="tabs-sticky">
+          <div id="menu-tabs" class="tabs"></div>
+        </div>
+        <!-- scripts/prerender.mjs writes the FULL menu (every category,
+             not just the active tab) between the markers below, so a
+             crawler/no-JS visitor sees every item in the raw HTML.
+             script.js's existing renderMenuCategory() already does
+             menuList.innerHTML = "" before rendering the active tab's
+             items, same as it always has — it clears this prerendered
+             content as a side effect of that, not a special case written
+             for it. See README's "SEO" section. -->
+        <div id="menu-list" class="menu-list">
+          <!-- PRERENDER:MENU:START -->
+<h3 class="menu-group-heading">Lounas</h3>
+<p class="menu-note">14,90€ · Ma–Pe 11:00–14:30 · sisältää 1–2 lisuketta: Riisi / Ranskalaiset / Paahdetut kasvikset</p>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Picadillo with Chorizo</span>
+            <span class="menu-item-tag">G · M</span>
+          </div>
+          <div class="menu-item-desc">Suomalaista naudanlihaa ja espanjalaista chorizoa. Jauhelihamuhennos, tomaattikastike, chorizo, perunat, porkkanat, mausteet.</div>
+          
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Sea Bass in Mango Salsa</span>
+            
+          </div>
+          <div class="menu-item-desc">Rapeaksi paistettua kalaa, kermaista vihreää salsaa, mango-pico de galloa, korianteria, kirsikkatomaatteja.</div>
+          
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Chicken Mole</span>
+            
+          </div>
+          <div class="menu-item-desc">Kanaa ja bataattia mole-kastikkeessa. Mole sisältää kuivattuja chilejä, tomaattia, sipulia, siemeniä, maapähkinöitä, suklaata ja kanalientä.</div>
+          
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Pork in Chili Ancho Sauce</span>
+            
+          </div>
+          <div class="menu-item-desc">Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia.</div>
+          
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Tofu in Salsa Roja</span>
+            
+          </div>
+          <div class="menu-item-desc">Erikoismausteillamme marinoitua tofua, kikhernesalsaa, kukkakaalia, punaista salsaa, vegaanista smetanaa, vegaanijuustoa.</div>
+          
+        </div>
+      </div>
+<h3 class="menu-group-heading">Alkuruoat</h3>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Guacachips</span>
+            <span class="menu-item-tag">M · G · VEGAN</span>
+          </div>
+          <div class="menu-item-desc">Guacamolea + kotitekoisia tortillalastuja</div>
+          <div class="menu-item-price">€9.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/mexican-tuna-poke.jpg" alt="Mexican Tuna Poke" loading="lazy" width="1000" height="562">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Mexican Tuna Poke</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Raakaa tonnikalakuutiota, avokadoa, mangoa, kurkkua, punasipulia, salsa negraa, chipotle-majoneesia, ruohosipulia, seesaminsiemeniä</div>
+          <div class="menu-item-price">€12.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/kuha-ceviche.jpg" alt="Kuha Ceviche" loading="lazy" width="1000" height="655">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Kuha Ceviche</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Limemehussa kypsennettyä kuhaa, kiiviä, kurkkua, punasipulia, aguachilea, salsaa, korianteria</div>
+          <div class="menu-item-price">€9</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Prawn Salpicón</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Kypsennettyjä katkarapuja, pico de galloa, aguachile-salsaa, mangoa, salsa negraa</div>
+          <div class="menu-item-price">€10</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/frijoles-con-veneno.jpg" alt="Frijoles con Veneno" loading="lazy" width="1000" height="667">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Frijoles con Veneno</span>
+            <span class="menu-item-tag">L · G</span>
+          </div>
+          <div class="menu-item-desc">Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera (vegaaninen vaihtoehto saatavilla)</div>
+          <div class="menu-item-price">€7</div>
+        </div>
+      </div>
+<h3 class="menu-group-heading">Tacot</h3>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Beef Taquitos (5 tacos)</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Naudan barbacoaa, sipulia, korianteria, limeä — pienet valkoiset maissitortillat</div>
+          <div class="menu-item-price">€20</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Pastor Taquitos (5 tacos)</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Grillattua kana pastoria, grillattua ananasta, sipulia, korianteria — pienet valkoiset maissitortillat</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Gringas (2 tacos)</span>
+            <span class="menu-item-tag">L</span>
+          </div>
+          <div class="menu-item-desc">Grillattua kana pastoria juuston kanssa, guacamolea, korianteria — vehnätortillat</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/quesabirria.jpg" alt="Quesabirria (3 tacos)" loading="lazy" width="1000" height="550">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Quesabirria (3 tacos)</span>
+            <span class="menu-item-tag">L · G</span>
+          </div>
+          <div class="menu-item-desc">Hitaasti kypsennettyä naudanlihaa, juustoa, valkokaalia, marinoitua sipulia, korianteria, retiisiä + birria-lientä — isot keltaiset maissitortillat</div>
+          <div class="menu-item-price">€18</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Hawaiian Salmon (3 tacos)</span>
+            
+          </div>
+          <div class="menu-item-desc">Maissihiutaleilla panéroitua lohta, sekasalaattia, chipotle-majoneesia, aguachile-salsaa, punakaalia, ananas-pico de galloa — valkoiset maissitortillat</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Cauliflower Power (3 tacos)</span>
+            <span class="menu-item-tag">L · G</span>
+          </div>
+          <div class="menu-item-desc">Maustettua kukkakaalia, papuja, chipotle-majoneesia, valkokaalia, talon crèmeä, queso frescoa, seesaminsiemeniä, retiisiä — valkoiset maissitortillat</div>
+          <div class="menu-item-price">€15</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/pork-in-chili-ancho.jpg" alt="Pork in Chili Ancho Sauce (3 tacos)" loading="lazy" width="1000" height="550">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Pork in Chili Ancho Sauce (3 tacos)</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia</div>
+          <div class="menu-item-price">€15</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Klandestina Fried Chicken (3 tacos)</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Maissihiutaleilla panéroituja kanasuikaleita, sekasalaattia, chipotle-majoneesia, punakaalia, pico de galloa — valkoiset maissitortillat</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Spice Tofu (3 tacos)</span>
+            <span class="menu-item-tag">M · G · VEGAN</span>
+          </div>
+          <div class="menu-item-desc">Marinoitua tofua, papuja, sekasalaattia, salsa rojaa, valkokaalia, vegaanista crèmeä, seesaminsiemeniä — valkoiset maissitortillat</div>
+          <div class="menu-item-price">€15</div>
+        </div>
+      </div>
+<h3 class="menu-group-heading">Chilaquiles</h3>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Klandestina AMAZING Bowl</span>
+            
+          </div>
+          <div class="menu-item-desc">Papuja, valintasi mukaan joko ranskalaisia tai maissilastuja, mozzarellajuustoa, salsa verdea, valitsemasi täyte, sekasalaattia, smetanaa, tuorejuustoa, marinoitua sipulia, korianteria, retiisejä. Valitse lisuke: maissilastut / ranskalaiset. Valitse täyte: Cauliflower Power / kana pastor / ancho-possu.</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+<h3 class="menu-group-heading">Jälkiruoat</h3>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Churros with Chocolate Sauce</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€5</div>
+        </div>
+      </div>
+<h3 class="menu-group-heading">Juomat</h3>
+<h4 class="menu-group-heading">Virvoitusjuomat</h4>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Jarritos</span>
+            
+          </div>
+          <div class="menu-item-desc">Mandariini / Lime / Kola / Guava / Greippi</div>
+          <div class="menu-item-price">€5.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Coca Cola</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€3.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Vichy</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€3.5</div>
+        </div>
+      </div>
+<h4 class="menu-group-heading">Oluet</h4>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Klandestina Sunny Lager</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€8.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Kalajoki Bay Surf Ale</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€9.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Corona</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€7.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Modelo Especial</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€9</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Pacifico</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€9.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Corona 0%</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€7</div>
+        </div>
+      </div>
+<h4 class="menu-group-heading">Cocktailit</h4>
+<p class="menu-note">Kysy tequila- ja mezcal-valikoimastamme</p>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/tommys-margarita.jpg" alt="Tommy&#39;s Margarita" loading="lazy" width="883" height="706">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Tommy&#39;s Margarita</span>
+            
+          </div>
+          <div class="menu-item-desc">Agavesiirappia, limeä, Briottet-greippilikööriä, Mundo-tequilaa tai Almave Blanco -alkoholitonta agavetislettä. Mezcalilla: +2€.</div>
+          <div class="menu-item-price">€13</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Spicy Ananas Margarita</span>
+            
+          </div>
+          <div class="menu-item-desc">Briottet-ananaslikööriä, Mundo-tequilaa, Botanera-chilikastiketta, limeä. Mezcalilla: +2€.</div>
+          <div class="menu-item-price">€13</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Paloma</span>
+            
+          </div>
+          <div class="menu-item-desc">Mundo-tequilaa, limeä, Briottet-greippilikööriä, greippisoodaa. Mezcalilla: +2€.</div>
+          <div class="menu-item-price">€12</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Ron Cola</span>
+            
+          </div>
+          <div class="menu-item-desc">Takamaka Rum Blancia, kolaa, limeä</div>
+          <div class="menu-item-price">€10</div>
+        </div>
+      </div>
+<h4 class="menu-group-heading">Viinit</h4>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Quadis</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€11</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€15</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€21</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€56</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Le Pompon Côte du Rhône</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€8</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€12</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€15</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€43</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Montesierra Verdejo Blanco</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€8</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€11</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€15</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€39</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Weingut Riesling</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€10</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€14</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€20</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€55</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">House Sparkling Wine</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€10</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">–</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">–</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€36</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Txakoli Rosé Wine</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€9</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€13</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€19</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€49</span>
+        </div></div>
+        </div>
+      </div>
+          <!-- PRERENDER:MENU:END -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="gallery.eyebrow">Sisällä</span>
+      <h2 data-i18n="gallery.heading">Tila</h2>
+    </div>
+    <!-- Filled by components/galleryMosaic.js: a 3-tile crossfading teaser
+         of 6 random photos drawn from data/gallery.json (see style.css's
+         "Gallery: crossfading mosaic" comment), not the full photo set —
+         "See all N photos" (or tapping a tile) opens the full-screen
+         gallery overlay (components/galleryOverlay.js, mounted separately
+         below with the other modals) for that. If data/gallery.json has
+         no photos at all, script.js hides this whole section (and its
+         nav links) rather than showing an empty teaser. -->
+    <div class="container">
+      <div id="gallery-mosaic-mount"></div>
+    </div>
+  </section>
+
+  <section id="visit" class="section-ambient">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="visit.eyebrow">Löydä meidät</span>
+      <h2 data-i18n="visit.heading">Tule löytämään ovi</h2>
+    </div>
+    <!-- Address/hours/contact live in the footer only, to avoid repeating
+         them twice on the page. This section is just the CTA moment. -->
+    <div class="visit-actions reveal">
+      <!-- "Special Events or Inquiry" trigger (primary) + Reserve button
+           (secondary), filled by script.js -->
+      <div id="visit-buttons"></div>
+    </div>
+
+    <p class="visit-fallback reveal">
+      <span data-i18n="visit.emailFallbackPrefix">Tai lähetä sähköpostia suoraan osoitteeseen</span>
+      <a id="visit-email-fallback" href="#"></a>
+    </p>
+
+    <!-- Filled by components/map.js. "Get Directions" sits directly under
+         the map card; filled/linked by script.js from site.json's address
+         so it stays in sync with the address printed everywhere else. -->
+    <div class="visit-map reveal">
+      <div id="visit-map-mount"></div>
+      <a id="visit-directions" class="btn btn-ghost" href="#" target="_blank" rel="noopener" data-i18n="visit.getDirections">Hae reittiohjeet</a>
+    </div>
+  </section>
+
+  <!-- Filled by components/footer.js, which does container.innerHTML =
+       `<footer>...` — a full replace, same as menu-list above, so the
+       prerendered contact block below (address/hours/email, written by
+       scripts/prerender.mjs) is just as cleanly cleared once that runs,
+       no special-casing needed. See README's "SEO" section. -->
+  <div id="footer-mount">
+    <!-- PRERENDER:CONTACT:START -->
+
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h4>Käynti</h4>
+        <span>Aleksis Kiven katu 17, Helsinki</span>
+        <span>andres@klande.fi</span>
+      </div>
+      <div class="footer-col">
+        <h4>Aukioloajat</h4>
+        <span>Tue–Thu 17:00–22:00</span>
+          <span>Fri–Sat 17:00–24:00</span>
+          <span>Closed Sun &amp; Mon</span>
+      </div>
+    </div>
+          <!-- PRERENDER:CONTACT:END -->
+  </div>
+
+  <!-- Filled by components/eventModal.js; hidden until the "Special Events
+       or Inquiry" trigger (Visit section button or the floating FAB) opens it -->
+  <div id="event-modal-mount"></div>
+
+  <!-- Filled by components/itemModal.js; hidden until a menu row or dish
+       card is clicked (see menuItem.js/dishCard.js). -->
+  <div id="item-modal-mount"></div>
+
+  <!-- Filled by components/galleryOverlay.js; hidden until "See all N
+       photos" (or a mosaic tile) is clicked. -->
+  <div id="gallery-overlay-mount"></div>
+
+  <!-- Filled by components/galleryPhotoViewer.js; hidden until a tile
+       inside the gallery overlay is clicked. Mounted as its own sibling
+       (not nested inside the overlay's own mount) purely so it can sit
+       above the overlay in the DOM-order default paint stack without
+       needing an explicit z-index fight — style.css still gives both
+       explicit z-indexes since relying on DOM order alone is exactly the
+       kind of thing that bit the item detail modal's close button
+       before (see README's "Item detail modal"). -->
+  <div id="gallery-viewer-mount"></div>
+
+  <!-- Classic (non-module) script, so the global L it defines is ready by
+       the time the deferred module below runs. -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="/script.js"></script>
+</body>
+</html>
