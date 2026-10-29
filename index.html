@@ -39,11 +39,11 @@
 
   <!-- schema.org Restaurant — static, not injected by script.js, so it's
        there on first paint for anything that doesn't execute JS. Built
-       only from data/site.json's own fields; telephone and priceRange
-       are left out rather than invented (site.json has neither) — see
-       README's "SEO" section. Update this block by hand whenever hours,
-       address, or contact details in data/site.json change; nothing
-       keeps the two in sync automatically. -->
+       only from data/site.json's own fields; priceRange is left out
+       rather than invented (site.json has none) — see README's "SEO"
+       section. Update this block by hand whenever hours, address, or
+       contact details in data/site.json change; nothing keeps the two
+       in sync automatically. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -52,6 +52,7 @@
     "url": "https://klande.fi/",
     "image": "https://klande.fi/images/og/og.jpg",
     "email": "andres@klande.fi",
+    "telephone": "+358413299494",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Aleksis Kiven katu 17",
@@ -858,6 +859,10 @@
       <span data-i18n="visit.emailFallbackPrefix">Or email us directly at</span>
       <a id="visit-email-fallback" href="#"></a>
     </p>
+    <p class="visit-fallback reveal">
+      <span data-i18n="visit.phoneFallbackPrefix">Or call us at</span>
+      <a id="visit-phone-fallback" class="tel-link" href="#"></a>
+    </p>
 
     <!-- Filled by components/map.js. "Get Directions" sits directly under
          the map card; filled/linked by script.js from site.json's address
@@ -881,6 +886,7 @@
         <h4>Visit</h4>
         <span>Aleksis Kiven katu 17, Helsinki</span>
         <span>andres@klande.fi</span>
+        <a class="tel-link" href="tel:+358413299494">+358 41 329 9494</a>
       </div>
       <div class="footer-col">
         <h4>Hours</h4>

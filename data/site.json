@@ -5,6 +5,7 @@
   "address": "Aleksis Kiven katu 17, Helsinki",
   "coordinates": { "lat": 60.1903, "lng": 24.9535 },
   "email": "andres@klande.fi",
+  "phone": { "display": "+358 41 329 9494", "link": "tel:+358413299494" },
   "hours": [
     "Tue–Thu 17:00–22:00",
     "Fri–Sat 17:00–24:00",

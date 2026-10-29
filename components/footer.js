@@ -53,6 +53,7 @@ export function renderFooter(container, site) {
           <h4 data-i18n="footer.visitLabel">Visit</h4>
           <span>${site.address}</span>
           <span>${site.email}</span>
+          <a class="tel-link" href="${site.phone.link}">${site.phone.display}</a>
         </div>
         <div class="footer-col">
           <h4 data-i18n="footer.hoursLabel">Hours</h4>

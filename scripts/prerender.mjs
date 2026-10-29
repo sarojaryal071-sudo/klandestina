@@ -162,12 +162,11 @@ function buildMenuHtml(dict, lang) {
   return sections.join("\n");
 }
 
-// Address/hours/email only — telephone is left out because data/site.json
-// has no phone field (never invented; see README's "SEO" section). Those
-// three are facts, not translated text, so only the "Visit"/"Hours"
-// column headings actually change between languages. Reuses
-// .footer-col/.container so it sits reasonably close to the real
-// footer's own look for the brief window before footer.js replaces it.
+// Address/hours/email/phone — all facts, not translated text, so only
+// the "Visit"/"Hours" column headings actually change between languages.
+// Reuses .footer-col/.container/.tel-link so it sits reasonably close to
+// the real footer's own look (components/footer.js) for the brief window
+// before footer.js replaces it.
 function buildContactHtml(dict) {
   const hoursHtml = site.hours.map((h) => `<span>${escapeHtml(h)}</span>`).join("\n          ");
   return `
@@ -176,6 +175,7 @@ function buildContactHtml(dict) {
         <h4>${escapeHtml(t(dict, "footer.visitLabel") || "Visit")}</h4>
         <span>${escapeHtml(site.address)}</span>
         <span>${escapeHtml(site.email)}</span>
+        <a class="tel-link" href="${escapeHtml(site.phone.link)}">${escapeHtml(site.phone.display)}</a>
       </div>
       <div class="footer-col">
         <h4>${escapeHtml(t(dict, "footer.hoursLabel") || "Hours")}</h4>

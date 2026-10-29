@@ -64,7 +64,8 @@
     "eyebrow": "Find Us",
     "heading": "Come find the door",
     "getDirections": "Get Directions",
-    "emailFallbackPrefix": "Or email us directly at"
+    "emailFallbackPrefix": "Or email us directly at",
+    "phoneFallbackPrefix": "Or call us at"
   },
   "eventModal": {
     "triggerLabel": "Special Events or Inquiry",

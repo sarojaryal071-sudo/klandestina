@@ -64,7 +64,8 @@
     "eyebrow": "Löydä meidät",
     "heading": "Tule löytämään ovi",
     "getDirections": "Hae reittiohjeet",
-    "emailFallbackPrefix": "Tai lähetä sähköpostia suoraan osoitteeseen"
+    "emailFallbackPrefix": "Tai lähetä sähköpostia suoraan osoitteeseen",
+    "phoneFallbackPrefix": "Tai soita meille numeroon"
   },
   "eventModal": {
     "triggerLabel": "Erikoistilaisuudet ja tiedustelut",

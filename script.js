@@ -90,9 +90,9 @@ async function init() {
   // Visit section is just a CTA — address/hours live in the footer only.
   // Special Events or Inquiry is the primary action here (filled accent
   // button, listed first); Reserve a Table is secondary (ghost button).
-  // The modal it opens builds a mailto: link (no backend), with a
-  // plain-text email fallback under the buttons in case the visitor's
-  // device has no mail client configured.
+  // The modal it opens builds a mailto: link (no backend), with mailto:/
+  // tel: fallback links under the buttons in case the visitor's device
+  // has no mail client configured, or they'd just rather call.
   const visitButtons = document.getElementById("visit-buttons");
 
   const eventButton = document.createElement("button");
@@ -110,6 +110,10 @@ async function init() {
   const emailFallback = document.getElementById("visit-email-fallback");
   emailFallback.href = `mailto:${site.email}`;
   emailFallback.textContent = site.email;
+
+  const phoneFallback = document.getElementById("visit-phone-fallback");
+  phoneFallback.href = site.phone.link;
+  phoneFallback.textContent = site.phone.display;
 
   // Leaflet loads from a CDN (index.html) — an ad blocker, privacy
   // extension, or a transient CDN hiccup could leave the global L
