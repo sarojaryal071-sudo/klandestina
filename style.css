@@ -17,17 +17,42 @@
   --accent: #c29a6b;
   --on-accent: #161b28;
 
-  /* Derived from the five tokens above via color-mix() rather than
-     written out as their own literals, so a future palette tweak to
-     --accent/--ink/--bg propagates here for free instead of needing a
-     second edit. --accent-deep is the 3D buttons'/active-tab's contact
-     shadow (a darkened accent, not a different hue); --line is a plain
-     ink-alpha hairline border. --muted (secondary text) is mixed against
-     a warm charcoal instead of transparent — an alpha blend over this
-     palette's cool-slate --bg read faintly blue, which is exactly what
-     muted text here shouldn't do, so it's pinned to a neutral/warm grey
-     regardless of what it sits on. */
-  --accent-deep: color-mix(in srgb, var(--accent) 55%, black);
+  /* The one token a scoped surface (.surface-light/.surface-white, below)
+     deliberately never redefines — a few things (dish-card photo-caption
+     scrims; see .visual .scrim) need to stay this exact navy regardless
+     of which surface they happen to sit on, where the scoped --bg itself
+     would turn cream/white and break them. Everything else in this file
+     keeps using the scoped --bg/--ink/--accent tokens as normal; --navy
+     is only for the handful of places that explicitly can't. */
+  --navy: #161b28;
+
+  /* Also deliberately not redefined per surface: --accent-fill is what a
+     filled, accent-colored surface (right now, only .btn-primary's own
+     background) actually paints. On this dark default it's identical to
+     --accent, so nothing changes here — .surface-light/.surface-white
+     give it a different value than --accent (a brass fill vs. a navy
+     pill-fill elsewhere on light surfaces, see their own comment), which
+     is the only reason the two tokens exist separately instead of button
+     markup just using --accent directly. */
+  --accent-fill: var(--accent);
+
+  /* Derived from the tokens above via color-mix() rather than written out
+     as their own literals, so a future palette tweak to --accent-fill/
+     --ink/--bg propagates here for free instead of needing a second edit
+     — including inside .surface-light/.surface-white below, which only
+     redefine the leaf tokens (--ink, --accent-fill, --bg, --bg-alt, ...)
+     and get every one of these for free through ordinary custom-property
+     inheritance, not by repeating the formulas. --accent-deep is the 3D
+     buttons'/active-tab's contact shadow (a darkened accent-fill, not a
+     different hue); --line is a plain ink-alpha hairline border. --muted
+     (secondary text) is mixed against a warm charcoal instead of
+     transparent — an alpha blend over this palette's cool-slate --bg
+     read faintly blue, which is exactly what muted text here shouldn't
+     do, so it's pinned to a neutral/warm grey regardless of what it sits
+     on. (The light surfaces give --muted its own literal instead of this
+     formula — a warm-charcoal anchor tuned for blending with a CREAM ink
+     makes no sense once --ink itself is navy; see their own comment.) */
+  --accent-deep: color-mix(in srgb, var(--accent-fill) 55%, black);
   --line: color-mix(in srgb, var(--ink) 12%, transparent);
   --muted: color-mix(in srgb, var(--ink) 60%, #443e36);
 
@@ -48,9 +73,67 @@
   /* Navy-black, not brown-black or flat black — rgb(5,8,18) is roughly
      --bg pushed almost to black, so every drop shadow in the site reads
      as "this navy room, further into shadow" rather than a neutral grey/
-     black dropped in from outside the palette. */
+     black dropped in from outside the palette. .surface-light/
+     .surface-white redefine this to a much softer, navy-tinted shadow —
+     this harsher one is specifically a dark-surface treatment, not
+     something that should carry over unchanged onto a light section. */
   --card-shadow: 0 24px 48px -16px rgba(5, 8, 18, 0.6);
 }
+
+/* ---------- Light surfaces (Story, Menu, Gallery teaser) ---------- */
+/* Same architecture as :root's own dark defaults above — applied
+   directly to a <section> in index.html (and fi/index.html, generated
+   from it — see scripts/prerender.mjs), redefining the same custom
+   properties locally so every component inside (buttons, pills, cards,
+   headings, hairlines, ...) repaints for a light surface automatically,
+   through ordinary CSS custom-property inheritance, not per-component
+   overrides.
+   Every derived token (--accent-deep, --line, --surface, --surface-edge,
+   --glass, --footer-bg) is restated here too, NOT just the leaf ones —
+   custom properties don't work like Sass variables: var(--bg-alt) inside
+   :root's own --surface-edge formula resolves using --bg-alt AT THE
+   ELEMENT --surface-edge IS DECLARED ON, which is :root itself, once,
+   permanently, since :root is the only place that declares it. A
+   descendant redefining --bg-alt doesn't make an ancestor's already-
+   declared --surface-edge recompute — confirmed empirically (a tiny
+   standalone test page) after it first shipped this way and the gallery
+   mosaic tiles came out navy instead of soft-grey. Repeating each
+   formula here, on a rule that targets the section itself (so it shares
+   the same element as --bg/--bg-alt's own override below), is what
+   actually makes it pick up THIS scope's tokens instead of :root's.
+   The two classes share everything except which of --bg/--bg-alt is
+   cream and which is white. --accent and --accent-fill happen to be the
+   same literal here (unlike dark surfaces, where distinguishing them
+   doesn't currently matter either) because this palette doesn't need a
+   fill color different from its own text/prices/detail color — the
+   token split exists for the one place that DOES differ: pills (see
+   .tab.active's own comment below), not for this pair's own sake.
+   --on-accent is one fixed cream value on BOTH classes (not "whichever
+   of --bg/--bg-alt" — it's chosen for its contrast against the brass
+   fill specifically, which is identical on either class), same reason
+   --navy above stays fixed rather than tracking the scoped --bg. */
+.surface-light, .surface-white {
+  color-scheme: light;
+  --ink: #161b28;
+  --accent: #8c6030;
+  --accent-fill: #8c6030;
+  --on-accent: #f6f1e7;
+  --muted: #575b68;
+  --accent-deep: color-mix(in srgb, var(--accent-fill) 55%, black);
+  --line: color-mix(in srgb, var(--ink) 12%, transparent);
+  --surface: var(--bg-alt);
+  --surface-edge: color-mix(in srgb, var(--bg-alt) 55%, black);
+  --glass: color-mix(in srgb, var(--bg) 65%, transparent);
+  --footer-bg: color-mix(in srgb, var(--bg) 75%, black);
+  /* Soft and navy-tinted, not the dark surfaces' near-black rgba(5,8,18)
+     — a shadow strong enough to lift a card off a cream/white page would
+     otherwise read as a harsh dark halo rather than depth. */
+  --card-shadow: 0 16px 32px -14px rgba(22, 27, 40, 0.09);
+  background: var(--bg);
+  color: var(--ink);
+}
+.surface-light { --bg: #f6f1e7; --bg-alt: #ffffff; }
+.surface-white { --bg: #ffffff; --bg-alt: #f6f1e7; }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -81,10 +164,13 @@ body {
    ambient light in the room rather than a pattern printed on a specific
    point of a very tall page; z-index:-1 plus pointer-events:none keep it
    purely decorative, behind and unreachable by every section's own
-   content. Individual sections that already set their own opaque
-   background (.hero, .section-ambient) simply paint over this locally,
-   which is fine — this is the baseline for everything else (Story,
-   Dishes, Menu, Gallery, footer). */
+   content. Sections that set their own opaque background — .hero,
+   .section-ambient (Visit), and now .surface-light/.surface-white
+   (Story, Menu, Gallery) — simply paint over this locally, which is
+   fine; this is the baseline only for Dishes and the footer now, the
+   two remaining sections with no opaque background of their own. The
+   light surfaces painting over it is deliberate, not incidental — see
+   their own comment for why ambient glow doesn't belong on them. */
 body::before {
   content: "";
   position: fixed;
@@ -174,14 +260,18 @@ section { position: relative; padding: 130px 56px; }
    that matters" without the glossy, neon-adjacent look the original 3D
    treatment had at this palette's higher saturation. */
 .btn-primary {
-  background: var(--accent);
+  background: var(--accent-fill);
   color: var(--on-accent);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 2px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent), 0 10px 20px -12px color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 2px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent), 0 10px 20px -12px color-mix(in srgb, var(--accent-fill) 35%, transparent);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 3px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent), 0 14px 26px -12px color-mix(in srgb, var(--accent) 40%, transparent); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 3px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent), 0 14px 26px -12px color-mix(in srgb, var(--accent-fill) 40%, transparent); }
 .btn-primary:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 1px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent); }
 /* A quiet outline, not a second raised button — no fill shadow at all,
-   just a hairline border that picks up the accent color on hover. */
+   just a hairline border that picks up the accent color on hover. On
+   light surfaces this gets a different border/background entirely (see
+   the .surface-light/.surface-white override below) — "transparent
+   outline" reads right on a cream/white page, but var(--surface) here
+   is what keeps it visible as its own shape against the dark page. */
 .btn-ghost {
   background: var(--surface);
   color: var(--ink);
@@ -189,6 +279,18 @@ section { position: relative; padding: 130px 56px; }
   box-shadow: none;
 }
 .btn-ghost:hover { transform: translateY(-2px); border-color: var(--accent); }
+/* Secondary button on a light surface: a quiet outline with no fill at
+   all (var(--surface) on dark is itself a visible navy-on-navy shade;
+   the equivalent "visible shape" on cream/white would be a flat white/
+   cream block sitting on a cream/white page, which doesn't read as
+   anything) — ink at ~25% is noticeably stronger than --line's own ~12%
+   specifically so the outline alone stays legible with no fill behind
+   it. Hover already turns the border to var(--accent) (brass, on light
+   surfaces) via the shared rule above — nothing extra needed for that. */
+.surface-light .btn-ghost, .surface-white .btn-ghost {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--ink) 25%, transparent);
+}
 .btn-ghost:active { transform: translateY(0); }
 
 /* ---------- Shortcut pill nav ---------- */
@@ -501,16 +603,18 @@ section { position: relative; padding: 130px 56px; }
    if it ever shows — blends with the palette instead of being an
    unrelated color dropped in from outside it. */
 .visual-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-/* The scrim darkens a photo toward var(--bg), not a fixed brown-black —
-   so the caption text sitting on top of it blends into the same navy
-   the rest of the page is built from, rather than looking like an
-   unrelated dark overlay color dropped onto the photo. */
+/* The scrim darkens a photo toward var(--navy) — fixed, not the scoped
+   var(--bg) — so the caption text sitting on top of it stays readable
+   against a reliably dark gradient regardless of which surface the card
+   itself sits on; var(--bg) would turn this cream/white on a light
+   surface (see --navy's own comment at the top of the file), which is
+   the opposite of what a scrim darkening toward legibility needs. */
 .visual .scrim {
   position: absolute; inset: 0;
   background: linear-gradient(
     to top,
-    color-mix(in srgb, var(--bg) 92%, transparent) 0%,
-    color-mix(in srgb, var(--bg) 55%, transparent) 38%,
+    color-mix(in srgb, var(--navy) 92%, transparent) 0%,
+    color-mix(in srgb, var(--navy) 55%, transparent) 38%,
     transparent 68%
   );
 }
@@ -700,12 +804,15 @@ section { position: relative; padding: 130px 56px; }
 /* Same radial-glow technique as .section-ambient, scoped to just this box
    — shown only when the active category has no on-theme photo at all
    (see components/menuPhoto.js), so an empty/mismatched image is never
-   the fallback for "no photo yet." */
+   the fallback for "no photo yet." Kept under 5% now that #menu is a
+   light (.surface-white) section — the 9-11% this used on the old dark
+   Menu background would glow as a visible brass smudge on cream/white
+   instead of the barely-there depth cue it's meant to be. */
 .menu-photo-ambient {
   position: absolute; inset: 0; opacity: 0; transition: opacity 0.9s ease;
   background:
-    radial-gradient(60% 55% at 25% 20%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 60%),
-    radial-gradient(55% 50% at 80% 85%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%);
+    radial-gradient(60% 55% at 25% 20%, color-mix(in srgb, var(--accent) 4%, transparent), transparent 60%),
+    radial-gradient(55% 50% at 80% 85%, color-mix(in srgb, var(--accent) 3%, transparent), transparent 60%);
 }
 .menu-photo-frame--ambient-only .menu-photo-ambient { opacity: 1; }
 
@@ -753,20 +860,18 @@ section { position: relative; padding: 130px 56px; }
    little breathing room under either. z-index:40 keeps it below the
    pill nav (50) and mobile topbar (60) it sits under, but above
    ordinary menu-list content scrolling past it.
-   No background here, on purpose, and no covering pseudo-elements
-   either (an earlier version had both, to hide menu items scrolling up
-   behind the pills) — even matched to var(--bg) exactly, a flat rect
-   sitting on top of the page's ambient-glow background read as a
-   visible panel, not "no panel." Instead, .menu-item itself now fades
-   its own opacity out via a scroll-driven animation as it nears the top
-   of the viewport (see its rule in the menu-item-layout section below) —
-   a real fade of the content, not an overlay sitting on top of it, so
-   there's nothing left to cover. */
+   A flat var(--bg) + hairline now that #menu is a solid .surface-white
+   section with no ambient glow behind it to clash with — a background
+   here used to read as a visible floating panel against that glow (an
+   earlier version tried it), but there's no glow left to fight now, and
+   without it, menu items scrolling up would show straight through the
+   pill row with nothing marking where the sticky band actually is. */
 .tabs-sticky {
   position: sticky; top: 88px; z-index: 40; margin-bottom: 56px;
+  background: var(--bg); border-bottom: 1px solid var(--line);
 }
-/* No border-radius/blur/tint/background of its own — .tabs is just the
-   flex row of pills, floating with no group panel behind them at all.
+/* No border-radius/blur/tint of its own — .tabs is just the flex row of
+   pills; .tabs-sticky (above) is what carries the shared background now.
    Each .tab pill still carries its own solid var(--surface) fill, so
    the pills read as floating individually, closer to how
    .shortcut-nav's own pills read. */
@@ -780,7 +885,29 @@ section { position: relative; padding: 130px 56px; }
   box-shadow: 0 4px 0 0 var(--surface-edge); transform: translateY(0); transition: all 0.18s ease;
 }
 .tab:hover { color: var(--ink); transform: translateY(-2px); }
-.tab.active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); box-shadow: 0 4px 0 0 var(--accent-deep); transform: translateY(-2px); }
+.tab.active { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent); box-shadow: 0 4px 0 0 var(--accent-deep); transform: translateY(-2px); }
+/* Pills on a light surface: transparent/bordered at rest instead of a
+   filled var(--surface) pill (a near-white fill on an already white/
+   cream page wouldn't read as its own shape), and NAVY — not brass —
+   when active. Brass is already the surface's own accent/text color
+   (eyebrows, prices); a brass-filled active pill right next to brass
+   prices/eyebrows nearby would blur together, where navy reads as a
+   clear, deliberate "this one's selected" signal instead. --navy (fixed,
+   not scoped) is what makes that work regardless of which light surface
+   the pills happen to sit on — see its own comment at the top of the
+   file. This only ever matches the Full Menu's own sticky tabs: the
+   gallery overlay reuses the same .tab/.tab.active classes for its album
+   pills, but that overlay always stays dark (see "Overlays stay dark" in
+   the README's Palette section) and is never a descendant of
+   .surface-light/.surface-white, so it's unaffected by this. */
+.surface-light .tab, .surface-white .tab {
+  background: transparent; border-color: var(--line); color: var(--ink);
+  box-shadow: none;
+}
+.surface-light .tab.active, .surface-white .tab.active {
+  background: var(--navy); border-color: var(--navy); color: var(--on-accent);
+  box-shadow: 0 4px 0 0 color-mix(in srgb, var(--navy) 70%, black);
+}
 .menu-list { max-width: 740px; margin: 0 auto; }
 /* Name, then description, then price — always stacked in that order inside
    .menu-item-body rather than price sharing a row with the name, so a long
@@ -868,6 +995,26 @@ section { position: relative; padding: 130px 56px; }
 .price-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: color-mix(in srgb, var(--ink) 45%, transparent); margin-bottom: 3px; }
 .price-value { font-family: "Bebas Neue", sans-serif; font-size: 16px; color: var(--accent); }
 
+/* .menu-item-tag/.menu-item-desc/.menu-empty/.price-label's own ink-alpha
+   blends above (45-55%) were tuned against the dark surfaces they were
+   written for — the same alpha against a light background's own math
+   lands much lighter in absolute terms, not darker, so on Menu (now
+   .surface-white) they dropped to ~3.2-3.3:1 against white, under the
+   4.5:1 floor. --muted is already verified ≥6:1 on both light surfaces
+   (see the Palette README section) and is the token this is for — body/
+   secondary text on a scoped surface. .price-label is shared with the
+   item detail modal (#item-modal-price .menu-item-price), which always
+   stays dark (see "Overlays stay dark" below) and was never part of this
+   contrast problem — scoping this to .surface-light/.surface-white
+   keeps that modal instance on its own, already-fine, ink-alpha blend
+   rather than touching it too. */
+.surface-light .menu-item-tag, .surface-white .menu-item-tag,
+.surface-light .menu-item-desc, .surface-white .menu-item-desc,
+.surface-light .menu-empty, .surface-white .menu-empty,
+.surface-light .price-label, .surface-white .price-label {
+  color: var(--muted);
+}
+
 /* On desktop there's ample horizontal room, so a wine row's name and its
    price grid sit on one line instead of stacking (mobile keeps the
    stacked layout/sizing above untouched — wine rows have no description,
@@ -934,7 +1081,11 @@ section { position: relative; padding: 130px 56px; }
   padding: 0; border: none; cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.mosaic-tile:hover { transform: translateY(-3px); box-shadow: 0 30px 50px -18px rgba(5, 8, 18, 0.7); }
+/* navy-based, not the fixed rgba(5,8,18) near-black other hover shadows
+   on the (still-dark) Dishes/Gallery-overlay sections use — the gallery
+   teaser sits on a light (.surface-light) section now, where that near-
+   black at 70% alpha would read as a heavy dark halo rather than lift. */
+.mosaic-tile:hover { transform: translateY(-3px); box-shadow: 0 24px 44px -16px color-mix(in srgb, var(--navy) 55%, transparent); }
 .mosaic-tile--big { grid-row: 1 / 3; }
 /* Same crossfade mechanic as the Menu section's rotating category photos
    (.menu-photo-img/.menu-photo-img--active) — two stacked, absolutely
