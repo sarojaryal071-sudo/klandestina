@@ -37,7 +37,7 @@ export function renderMenuItem(item) {
   row.setAttribute("role", "button");
   row.setAttribute("aria-label", item.name);
 
-  const thumb = hasPhoto ? `<img class="menu-item-thumb" src="images/dishes/${item.image}" alt="" loading="lazy">` : "";
+  const thumb = hasPhoto ? `<img class="menu-item-thumb" src="/images/dishes/${item.image}" alt="" loading="lazy">` : "";
   const allergenLabel = item.allergens && item.allergens.length ? item.allergens.join(" · ") : "";
 
   row.innerHTML = `

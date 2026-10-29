@@ -100,7 +100,7 @@ function renderGallery(modal, images) {
   const setPrimary = (file) => {
     photoWrap.innerHTML = `
       <img
-        src="images/dishes/${file}" alt="" loading="lazy"
+        src="/images/dishes/${file}" alt="" loading="lazy"
         onerror="this.parentElement.classList.add('item-modal-photo--empty'); this.remove();"
       >`;
   };
@@ -115,7 +115,7 @@ function renderGallery(modal, images) {
             type="button" class="item-modal-thumb${i === 0 ? " item-modal-thumb--active" : ""}"
             data-file="${file}" aria-label="Photo ${i + 1}"
           >
-            <img src="images/dishes/${file}" alt="" loading="lazy">
+            <img src="/images/dishes/${file}" alt="" loading="lazy">
           </button>`
       )
       .join("");

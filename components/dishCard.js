@@ -24,7 +24,7 @@ export function renderDishCard(dish) {
     <div
       class="dish-visual visual tilt-card" role="button" tabindex="0" aria-label="${dish.name}"
     >
-      <img class="visual-img" src="images/dishes/${dish.image}" alt="" loading="lazy" decoding="async">
+      <img class="visual-img" src="/images/dishes/${dish.image}" alt="" loading="lazy" decoding="async">
       <div class="scrim"></div>
       <div class="caption">
         <div class="dish-top">

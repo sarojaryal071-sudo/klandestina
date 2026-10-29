@@ -199,7 +199,7 @@ async function processAlbum(folderName) {
       console.log(`[build-gallery] thumbnail ${path.relative(ROOT, thumbPath)}`);
     }
 
-    photos.push({ src: `images/gallery/${folderName}/${file}`, thumb: `images/gallery-thumbs/${folderName}/${file}`, w: width, h: height });
+    photos.push({ src: `/images/gallery/${folderName}/${file}`, thumb: `/images/gallery-thumbs/${folderName}/${file}`, w: width, h: height });
   }
 
   // Delete thumbnails whose original photo is gone — otherwise a removed

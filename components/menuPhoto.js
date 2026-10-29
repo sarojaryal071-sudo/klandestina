@@ -53,7 +53,7 @@ function showCategory(container, categoryId) {
   images.forEach((file, i) => {
     const img = document.createElement("img");
     img.className = i === 0 ? "menu-photo-img soft-fade-img menu-photo-img--active" : "menu-photo-img soft-fade-img";
-    img.src = `images/dishes/${file}`;
+    img.src = `/images/dishes/${file}`;
     img.alt = "";
     img.loading = "lazy";
     img.decoding = "async";
