@@ -11,26 +11,25 @@
 :root {
   color-scheme: dark;
 
-  --bg: #131b30;
-  --bg-alt: #1b2642;
-  --ink: #f3ead8;
-  --accent: #d89b5c;
-  --on-accent: #131b30;
+  --bg: #161b28;
+  --bg-alt: #1f2636;
+  --ink: #e8e0d0;
+  --accent: #c29a6b;
+  --on-accent: #161b28;
 
   /* Derived from the five tokens above via color-mix() rather than
      written out as their own literals, so a future palette tweak to
      --accent/--ink/--bg propagates here for free instead of needing a
      second edit. --accent-deep is the 3D buttons'/active-tab's contact
-     shadow (a darkened accent, not a different hue); --line/--muted are
-     hairline borders and secondary text respectively — the two most
-     common ink-alpha blends used throughout this file, named once
-     instead of re-deriving the same ~12%/~62% blend ad hoc at each call
-     site (plenty of other alpha values still exist inline where a
-     specific component wants a lighter/heavier weight than these two
-     defaults — that variety is deliberate, not an oversight). */
+     shadow (a darkened accent, not a different hue); --line is a plain
+     ink-alpha hairline border. --muted (secondary text) is mixed against
+     a warm charcoal instead of transparent — an alpha blend over this
+     palette's cool-slate --bg read faintly blue, which is exactly what
+     muted text here shouldn't do, so it's pinned to a neutral/warm grey
+     regardless of what it sits on. */
   --accent-deep: color-mix(in srgb, var(--accent) 55%, black);
   --line: color-mix(in srgb, var(--ink) 12%, transparent);
-  --muted: color-mix(in srgb, var(--ink) 62%, transparent);
+  --muted: color-mix(in srgb, var(--ink) 60%, #443e36);
 
   /* Tones for raised/extruded chrome (ghost buttons, tabs, the floating
      nav) that can't be derived from --ink/--accent by a simple alpha
@@ -38,10 +37,12 @@
      base background" role); --surface-edge is --bg-alt's own contact
      shadow, same "~55% toward black" treatment as --accent-deep so the
      two read as one consistent shadow language rather than two
-     unrelated formulas. */
+     unrelated formulas. --glass is --bg itself diluted toward
+     transparent (not a separate literal) so it can't drift out of sync
+     with --bg again. */
   --surface: var(--bg-alt);
   --surface-edge: color-mix(in srgb, var(--bg-alt) 55%, black);
-  --glass: rgba(19, 27, 48, 0.65);
+  --glass: color-mix(in srgb, var(--bg) 65%, transparent);
   --footer-bg: color-mix(in srgb, var(--bg) 75%, black);
 
   /* Navy-black, not brown-black or flat black — rgb(5,8,18) is roughly
@@ -65,22 +66,25 @@ body {
   position: relative;
 }
 /* Global ambient background: a flat var(--bg) reads as harshly flat/dark
-   compared to a soft, warm ambient gradient glow behind content. Built
-   from var(--accent)/var(--bg) so it re-themes for free rather than
-   needing its own treatment — several large, very soft radial blobs at
-   different positions for an organic feel, not one obvious spotlight,
-   plus one cooler, lighter-navy blob (a fixed #2a3a66, not derived from
-   a token — it's a step up from --bg-alt specifically for depth here,
-   not a color used anywhere else) low and to the right for a touch of
-   depth/dimension rather than every blob being the same warm accent
-   glow. position:fixed (not absolute/static) anchors it to the VIEWPORT
-   rather than the document, so it reads as ambient light in the room
-   rather than a pattern printed on a specific point of a very tall page;
-   z-index:-1 plus pointer-events:none keep it purely decorative, behind
-   and unreachable by every section's own content. Individual sections
-   that already set their own opaque background (.hero, .section-ambient)
-   simply paint over this locally, which is fine — this is the baseline
-   for everything else (Story, Dishes, Menu, Gallery, footer). */
+   compared to a soft ambient gradient glow behind content. Built from
+   var(--accent)/var(--bg) so it re-themes for free rather than needing
+   its own treatment — several large, very soft radial blobs at different
+   positions for an organic feel, not one obvious spotlight. Kept
+   deliberately faint (8-12% accent) now that the palette itself reads
+   calmer — anything stronger started glowing orange rather than just
+   warming the room — plus one cooler, lighter-slate blob (a fixed
+   #2a3350, not derived from a token — it's a step up from --bg-alt
+   specifically for depth here, not a color used anywhere else) low and
+   to the right for a touch of depth/dimension rather than every blob
+   being the same warm accent glow. position:fixed (not absolute/static)
+   anchors it to the VIEWPORT rather than the document, so it reads as
+   ambient light in the room rather than a pattern printed on a specific
+   point of a very tall page; z-index:-1 plus pointer-events:none keep it
+   purely decorative, behind and unreachable by every section's own
+   content. Individual sections that already set their own opaque
+   background (.hero, .section-ambient) simply paint over this locally,
+   which is fine — this is the baseline for everything else (Story,
+   Dishes, Menu, Gallery, footer). */
 body::before {
   content: "";
   position: fixed;
@@ -88,11 +92,11 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(42% 38% at 12% 12%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
-    radial-gradient(48% 42% at 88% 22%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 70%),
-    radial-gradient(52% 46% at 28% 88%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
-    radial-gradient(40% 38% at 92% 92%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%),
-    radial-gradient(60% 50% at 78% 70%, rgba(42, 58, 102, 0.35), transparent 70%);
+    radial-gradient(42% 38% at 12% 12%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 70%),
+    radial-gradient(48% 42% at 88% 22%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+    radial-gradient(52% 46% at 28% 88%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%),
+    radial-gradient(40% 38% at 92% 92%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%),
+    radial-gradient(60% 50% at 78% 70%, rgba(42, 51, 80, 0.3), transparent 70%);
 }
 a { color: inherit; text-decoration: none; }
 
@@ -312,7 +316,7 @@ section { position: relative; padding: 130px 56px; }
   position: fixed; inset: 0; z-index: 95;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   background:
-    radial-gradient(90% 55% at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%),
+    radial-gradient(90% 55% at 50% 0%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 60%),
     radial-gradient(70% 45% at 85% 100%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 60%),
     var(--bg);
 }
@@ -429,8 +433,8 @@ section { position: relative; padding: 130px 56px; }
   align-items: center; justify-content: center; text-align: center;
   padding: 140px 24px 100px; overflow: hidden;
   background:
-    radial-gradient(90% 60% at 50% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
-    radial-gradient(70% 50% at 90% 100%, rgba(42,58,102,0.35), transparent 60%),
+    radial-gradient(90% 60% at 50% 0%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 60%),
+    radial-gradient(70% 50% at 90% 100%, rgba(42,51,80,0.3), transparent 60%),
     var(--bg);
 }
 .hero-inner { position: relative; z-index: 2; max-width: 780px; }
@@ -683,8 +687,8 @@ section { position: relative; padding: 130px 56px; }
 .menu-photo-ambient {
   position: absolute; inset: 0; opacity: 0; transition: opacity 0.9s ease;
   background:
-    radial-gradient(60% 55% at 25% 20%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
-    radial-gradient(55% 50% at 80% 85%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%);
+    radial-gradient(60% 55% at 25% 20%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 60%),
+    radial-gradient(55% 50% at 80% 85%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%);
 }
 .menu-photo-frame--ambient-only .menu-photo-ambient { opacity: 1; }
 
@@ -1222,21 +1226,19 @@ section { position: relative; padding: 130px 56px; }
    preserved for saturated colors); brightness(1.25) contrast(0.8)
    lifts and compresses that dark cluster so the road casing stroke
    reads as a visibly lighter gray against the land fill instead of
-   nearly merging into it, and saturate(0.85) pulls hue-rotate's output
+   nearly merging into it, and saturate(0.6) pulls hue-rotate's output
    back from anything oversaturated toward a subdued, not neon, look.
    Re-checked (same filter-math-against-OSM's-actual-palette approach,
-   not a tile screenshot — this sandbox can't reach tile servers) after
-   the navy repaint: water lands distinctly blue, the land fill a
-   near-neutral dark gray (hue-rotating a low-saturation cream like OSM's
-   land fill barely shifts it, so it was never going to read as literally
-   navy-colored — a real map's land fill looking blue would read as
-   artificial, not "navy-toned"). The navy-toned feel comes from the map
-   card sitting in the same navy chrome/shadow as everything else on the
-   page, with water as the one tile color that visibly picks up the
-   accent palette's cool end. No separate light-theme override needed
-   now — this is the only treatment. */
+   not a tile screenshot — this sandbox can't reach tile servers) against
+   the muted slate repaint: at the previous saturate(0.85), water landed
+   a distinctly saturated teal-blue that read too vivid against the new
+   calmer palette; dropping to saturate(0.6) pulls it toward a near-
+   neutral slate-grey much closer to --bg-alt, and major-road fills land
+   in the same brass-grey family as the new --accent instead of orange.
+   No separate light-theme override needed now — this is the only
+   treatment. */
 .map-card .leaflet-tile-pane {
-  filter: invert(100%) hue-rotate(180deg) brightness(1.25) contrast(0.8) saturate(0.85);
+  filter: invert(100%) hue-rotate(180deg) brightness(1.2) contrast(0.82) saturate(0.6);
 }
 
 /* Leaflet's own chrome (popups, attribution) re-themed to match the site
@@ -1355,8 +1357,8 @@ section { position: relative; padding: 130px 56px; }
 .item-modal-photo--empty {
   aspect-ratio: auto; height: 64px;
   background:
-    radial-gradient(60% 120% at 20% 50%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 70%),
-    radial-gradient(60% 120% at 80% 50%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%);
+    radial-gradient(60% 120% at 20% 50%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
+    radial-gradient(60% 120% at 80% 50%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%);
 }
 
 /* A small tappable strip under the primary photo, only shown when an item
