@@ -48,7 +48,7 @@ export function renderGalleryMosaic(container, galleryData, labels) {
           >`
       )
       .join("");
-    return `<button type="button" class="mosaic-tile${isBig ? " mosaic-tile--big" : ""}" data-tile="${i}">${imgs}</button>`;
+    return `<button type="button" class="mosaic-tile${isBig ? " mosaic-tile--big" : ""}" data-tile="${i}" aria-label="${labels.seeAllPhotosFn(galleryData.total)}">${imgs}</button>`;
   }).join("");
 
   container.innerHTML = `

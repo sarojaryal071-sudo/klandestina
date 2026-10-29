@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found – Klandestina</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#161b28">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Static page, no script.js — GitHub Pages serves this file directly
+       on a 404, so it can't depend on a fetch()'d data/site.json or any
+       other JS-rendered content. The logo/wordmark markup below is
+       hand-written to match components/logo.js's own fallback exactly
+       (same TEXT_MARK, same onerror swap) rather than importing it,
+       since that module expects a site.json object as input. -->
+  <header class="hero" id="hero" style="min-height: 100vh;">
+    <div class="hero-inner">
+      <div style="margin-bottom: 28px;">
+        <img
+          class="brand-logo-img" src="/images/logo/klandestina-logo.png" alt="Klandestina"
+          style="height: 46px;" onerror="this.outerHTML='Klande&middot;stina'"
+        >
+      </div>
+      <span class="eyebrow">404 — Page not found</span>
+      <h1 style="font-size: clamp(48px, 10vw, 96px);">Wrong door.</h1>
+      <p>That page doesn't exist — moved, renamed, or never here. The menu, gallery, and everything else still is.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/">Back to the front page</a>
+      </div>
+    </div>
+  </header>
+</body>
+</html>

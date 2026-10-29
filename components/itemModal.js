@@ -10,6 +10,7 @@
 // two modals read as the same system rather than two different ones.
 
 import { renderPrice } from "./priceDisplay.js";
+import { dishImageSizeAttrs } from "./dishImageDims.js";
 
 export function renderItemModal(container) {
   container.innerHTML = `
@@ -71,7 +72,7 @@ export function openItemModal(item) {
   modal.querySelector("#item-modal-price").innerHTML = renderPrice(item.price);
 
   const images = item.images && item.images.length ? item.images : item.image ? [item.image] : [];
-  renderGallery(modal, images);
+  renderGallery(modal, images, item.name);
 
   modal.hidden = false;
   document.body.style.overflow = "hidden";
@@ -84,7 +85,7 @@ export function openItemModal(item) {
 // still just have a single "image" and never show a strip at all). No
 // matching photo at all falls back to a small stylized accent-glow strip
 // instead of a broken-image icon.
-function renderGallery(modal, images) {
+function renderGallery(modal, images, itemName) {
   const photoWrap = modal.querySelector("#item-modal-photo");
   const thumbsWrap = modal.querySelector("#item-modal-thumbs");
 
@@ -100,7 +101,7 @@ function renderGallery(modal, images) {
   const setPrimary = (file) => {
     photoWrap.innerHTML = `
       <img
-        src="/images/dishes/${file}" alt="" loading="lazy"
+        src="/images/dishes/${file}" alt="${itemName}" loading="lazy"${dishImageSizeAttrs(file)}
         onerror="this.parentElement.classList.add('item-modal-photo--empty'); this.remove();"
       >`;
   };
@@ -115,7 +116,7 @@ function renderGallery(modal, images) {
             type="button" class="item-modal-thumb${i === 0 ? " item-modal-thumb--active" : ""}"
             data-file="${file}" aria-label="Photo ${i + 1}"
           >
-            <img src="/images/dishes/${file}" alt="" loading="lazy">
+            <img src="/images/dishes/${file}" alt="${itemName} — photo ${i + 1}" loading="lazy"${dishImageSizeAttrs(file)}>
           </button>`
       )
       .join("");

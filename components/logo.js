@@ -27,5 +27,9 @@ export function brandLogoHTML(site) {
   // missing/renamed logo file degrades to the old look instead of leaving
   // a broken-image icon or an empty gap in the nav/footer.
   const escapedFallback = TEXT_MARK.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-  return `<img class="brand-logo-img" src="${site.logo}" alt="Klandestina" onerror="this.outerHTML='${escapedFallback}'">`;
+  // 721x346 is the real logo file's own intrinsic size — every placement
+  // overrides the rendered height via CSS (.brand-logo-img) with
+  // width:auto, so these attributes only ever set the aspect ratio the
+  // browser reserves space with, never the actual displayed size.
+  return `<img class="brand-logo-img" src="${site.logo}" alt="Klandestina" width="721" height="346" onerror="this.outerHTML='${escapedFallback}'">`;
 }

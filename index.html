@@ -160,7 +160,7 @@
            portrait photography for Story yet, see README's "Known gaps".
            Soft-edged via a CSS mask (style.css). -->
       <div class="story-photo reveal">
-        <img class="story-photo-img soft-fade-img" src="/images/dishes/tommys-margarita.jpg" alt="" loading="lazy" decoding="async">
+        <img class="story-photo-img soft-fade-img" src="/images/dishes/tommys-margarita.jpg" alt="" width="883" height="706" loading="lazy" decoding="async">
         <!-- Same wash+wider-fade edge treatment as the Menu photo column
              (style.css's .story-photo-wash / .story-photo-img --fade-edge
              override) — brought over once it read right there. -->
@@ -210,7 +210,606 @@
         <div class="tabs-sticky">
           <div id="menu-tabs" class="tabs"></div>
         </div>
-        <div id="menu-list" class="menu-list"></div>
+        <!-- scripts/prerender.mjs writes the FULL menu (every category,
+             not just the active tab) between the markers below, so a
+             crawler/no-JS visitor sees every item in the raw HTML.
+             script.js's existing renderMenuCategory() already does
+             menuList.innerHTML = "" before rendering the active tab's
+             items, same as it always has — it clears this prerendered
+             content as a side effect of that, not a special case written
+             for it. See README's "SEO" section. -->
+        <div id="menu-list" class="menu-list">
+          <!-- PRERENDER:MENU:START -->
+<h3 class="menu-group-heading">Lunch</h3>
+<p class="menu-note">14,90€ · Mon–Fri 11:00–14:30 · includes 1–2 sides: Rice / French Fries / Roasted Veggies</p>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Picadillo with Chorizo</span>
+            <span class="menu-item-tag">G · M</span>
+          </div>
+          <div class="menu-item-desc">Finnish beef and Spanish chorizo. Minced beef stew, tomato sauce, chorizo, potatoes, carrots, spices.</div>
+          
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Sea Bass in Mango Salsa</span>
+            
+          </div>
+          <div class="menu-item-desc">Crispy fried fish, creamy green salsa, mango pico de gallo, coriander, cherry tomatoes.</div>
+          
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Chicken Mole</span>
+            
+          </div>
+          <div class="menu-item-desc">Chicken and sweet potato in mole sauce. Mole contains dried chilies, tomato, onion, seeds, peanuts, chocolate and chicken broth.</div>
+          
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Pork in Chili Ancho Sauce</span>
+            
+          </div>
+          <div class="menu-item-desc">Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions.</div>
+          
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Tofu in Salsa Roja</span>
+            
+          </div>
+          <div class="menu-item-desc">Tofu marinated in our special spices, chickpea salsa, cauliflower, red salsa, vegan sour crème, vegan cheese.</div>
+          
+        </div>
+      </div>
+<h3 class="menu-group-heading">Starters</h3>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Guacachips</span>
+            <span class="menu-item-tag">M · G · VEGAN</span>
+          </div>
+          <div class="menu-item-desc">Guacamole + homemade tortilla chips</div>
+          <div class="menu-item-price">€9.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/mexican-tuna-poke.jpg" alt="Mexican Tuna Poke" loading="lazy" width="1000" height="562">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Mexican Tuna Poke</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Raw diced tuna, avocado, mango, cucumber, red onions, salsa negra, chipotle mayo, chives, sesame seeds</div>
+          <div class="menu-item-price">€12.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/kuha-ceviche.jpg" alt="Kuha Ceviche" loading="lazy" width="1000" height="655">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Kuha Ceviche</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Lime-cooked pike-perch, kiwi, cucumber, red onions, aguachile, salsa, coriander</div>
+          <div class="menu-item-price">€9</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Prawn Salpicón</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Cooked prawns, pico de gallo, aguachile salsa, mango, salsa negra</div>
+          <div class="menu-item-price">€10</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/frijoles-con-veneno.jpg" alt="Frijoles con Veneno" loading="lazy" width="1000" height="667">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Frijoles con Veneno</span>
+            <span class="menu-item-tag">L · G</span>
+          </div>
+          <div class="menu-item-desc">Refried beans with cheese and chorizo, served with homemade tortilla chips (vegan option available)</div>
+          <div class="menu-item-price">€7</div>
+        </div>
+      </div>
+<h3 class="menu-group-heading">Tacos</h3>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Beef Taquitos (5 tacos)</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Beef barbacoa, onion, coriander, lime — small white corn tortillas</div>
+          <div class="menu-item-price">€20</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Pastor Taquitos (5 tacos)</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Chicken pastor seared on the grill, grilled pineapple, onion, coriander — small white corn tortillas</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Gringas (2 tacos)</span>
+            <span class="menu-item-tag">L</span>
+          </div>
+          <div class="menu-item-desc">Chicken pastor seared on the grill with cheese, guacamole, coriander — wheat tortillas</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/quesabirria.jpg" alt="Quesabirria (3 tacos)" loading="lazy" width="1000" height="550">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Quesabirria (3 tacos)</span>
+            <span class="menu-item-tag">L · G</span>
+          </div>
+          <div class="menu-item-desc">Slow-cooked beef, cheese, white cabbage, marinated onions, coriander, radish + birria broth — big yellow corn tortillas</div>
+          <div class="menu-item-price">€18</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Hawaiian Salmon (3 tacos)</span>
+            
+          </div>
+          <div class="menu-item-desc">Salmon breaded with corn flakes, mixed salad, chipotle mayo, aguachile salsa, red cabbage, pineapple pico de gallo — white corn tortillas</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Cauliflower Power (3 tacos)</span>
+            <span class="menu-item-tag">L · G</span>
+          </div>
+          <div class="menu-item-desc">Spiced cauliflower, beans, chipotle mayo, white cabbage, house crème, queso fresco, sesame seeds, radish — white corn tortillas</div>
+          <div class="menu-item-price">€15</div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/pork-in-chili-ancho.jpg" alt="Pork in Chili Ancho Sauce (3 tacos)" loading="lazy" width="1000" height="550">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Pork in Chili Ancho Sauce (3 tacos)</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions</div>
+          <div class="menu-item-price">€15</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Klandestina Fried Chicken (3 tacos)</span>
+            <span class="menu-item-tag">M · G</span>
+          </div>
+          <div class="menu-item-desc">Chicken tenders breaded with corn flakes, mixed salad, chipotle mayo, red cabbage, pico de gallo — white corn tortillas</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Spice Tofu (3 tacos)</span>
+            <span class="menu-item-tag">M · G · VEGAN</span>
+          </div>
+          <div class="menu-item-desc">Marinated tofu, beans, mixed salad, salsa roja, white cabbage, vegan crème, sesame seeds — white corn tortillas</div>
+          <div class="menu-item-price">€15</div>
+        </div>
+      </div>
+<h3 class="menu-group-heading">Chilaquiles</h3>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Klandestina AMAZING Bowl</span>
+            
+          </div>
+          <div class="menu-item-desc">Beans, either fries or corn chips, mozzarella cheese, salsa verde, filling of your choice, mixed salad, sour cream, fresh cheese, marinated onions, coriander, radishes. Choose sides: Corn Chips / French Fries. Choose filling: Cauliflower Power / Chicken Pastor / Ancho Pork.</div>
+          <div class="menu-item-price">€17</div>
+        </div>
+      </div>
+<h3 class="menu-group-heading">Desserts</h3>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Churros with Chocolate Sauce</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€5</div>
+        </div>
+      </div>
+<h3 class="menu-group-heading">Drinks</h3>
+<h4 class="menu-group-heading">Soft Drinks</h4>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Jarritos</span>
+            
+          </div>
+          <div class="menu-item-desc">Mandarin / Lime / Cola / Guava / Grapefruit</div>
+          <div class="menu-item-price">€5.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Coca Cola</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€3.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Vichy</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€3.5</div>
+        </div>
+      </div>
+<h4 class="menu-group-heading">Beer</h4>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Klandestina Sunny Lager</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€8.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Kalajoki Bay Surf Ale</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€9.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Corona</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€7.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Modelo Especial</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€9</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Pacifico</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€9.5</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Corona 0%</span>
+            
+          </div>
+          
+          <div class="menu-item-price">€7</div>
+        </div>
+      </div>
+<h4 class="menu-group-heading">Cocktails</h4>
+<p class="menu-note">Ask for our selection of Tequila &amp; Mezcal</p>
+
+      <div class="menu-item">
+        <img class="menu-item-thumb" src="/images/dishes/tommys-margarita.jpg" alt="Tommy&#39;s Margarita" loading="lazy" width="883" height="706">
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Tommy&#39;s Margarita</span>
+            
+          </div>
+          <div class="menu-item-desc">Agave nectar, lime, Briottet Grapefruit Liqueur, Mundo Tequila or Almave Blanco Non-Alcoholic Blue Agave Spirit. With Mezcal: +2€.</div>
+          <div class="menu-item-price">€13</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Spicy Ananas Margarita</span>
+            
+          </div>
+          <div class="menu-item-desc">Briottet Pineapple Liqueur, Mundo Tequila, Botanera Hot Sauce, lime. With Mezcal: +2€.</div>
+          <div class="menu-item-price">€13</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Paloma</span>
+            
+          </div>
+          <div class="menu-item-desc">Mundo Tequila, lime, Briottet Grapefruit Liqueur, grapefruit soda. With Mezcal: +2€.</div>
+          <div class="menu-item-price">€12</div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Ron Cola</span>
+            
+          </div>
+          <div class="menu-item-desc">Takamaka Rum Blanc, cola, lime</div>
+          <div class="menu-item-price">€10</div>
+        </div>
+      </div>
+<h4 class="menu-group-heading">Wine</h4>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Quadis</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€11</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€15</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€21</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€56</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Le Pompon Côte du Rhône</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€8</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€12</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€15</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€43</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Montesierra Verdejo Blanco</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€8</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€11</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€15</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€39</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Weingut Riesling</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€10</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€14</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€20</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€55</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">House Sparkling Wine</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€10</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">–</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">–</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€36</span>
+        </div></div>
+        </div>
+      </div>
+
+      <div class="menu-item menu-item--no-photo menu-item--wine">
+        
+        <div class="menu-item-body">
+          <div class="menu-item-top">
+            <span class="menu-item-name">Txakoli Rosé Wine</span>
+            
+          </div>
+          
+          <div class="menu-item-price menu-item-price--wine">
+        <div class="price-col">
+          <span class="price-label">12cl</span>
+          <span class="price-value">€9</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">16cl</span>
+          <span class="price-value">€13</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">24cl</span>
+          <span class="price-value">€19</span>
+        </div>
+        <div class="price-col">
+          <span class="price-label">Btl</span>
+          <span class="price-value">€49</span>
+        </div></div>
+        </div>
+      </div>
+          <!-- PRERENDER:MENU:END -->
+        </div>
       </div>
     </div>
   </section>
@@ -260,8 +859,29 @@
     </div>
   </section>
 
-  <!-- Filled by components/footer.js -->
-  <div id="footer-mount"></div>
+  <!-- Filled by components/footer.js, which does container.innerHTML =
+       `<footer>...` — a full replace, same as menu-list above, so the
+       prerendered contact block below (address/hours/email, written by
+       scripts/prerender.mjs) is just as cleanly cleared once that runs,
+       no special-casing needed. See README's "SEO" section. -->
+  <div id="footer-mount">
+    <!-- PRERENDER:CONTACT:START -->
+
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h4>Visit</h4>
+        <span>Aleksis Kiven katu 17, Helsinki</span>
+        <span>andres@klande.fi</span>
+      </div>
+      <div class="footer-col">
+        <h4>Hours</h4>
+        <span>Tue–Thu 17:00–22:00</span>
+          <span>Fri–Sat 17:00–24:00</span>
+          <span>Closed Sun &amp; Mon</span>
+      </div>
+    </div>
+          <!-- PRERENDER:CONTACT:END -->
+  </div>
 
   <!-- Filled by components/eventModal.js; hidden until the "Special Events
        or Inquiry" trigger (Visit section button or the floating FAB) opens it -->

@@ -7,6 +7,7 @@
 // (itemModal.js) with the same dish data.
 
 import { openItemModal } from "./itemModal.js";
+import { dishImageSizeAttrs } from "./dishImageDims.js";
 
 /**
  * @param {Object} dish
@@ -24,7 +25,7 @@ export function renderDishCard(dish) {
     <div
       class="dish-visual visual tilt-card" role="button" tabindex="0" aria-label="${dish.name}"
     >
-      <img class="visual-img" src="/images/dishes/${dish.image}" alt="" loading="lazy" decoding="async">
+      <img class="visual-img" src="/images/dishes/${dish.image}" alt="${dish.name}" loading="lazy" decoding="async"${dishImageSizeAttrs(dish.image)}>
       <div class="scrim"></div>
       <div class="caption">
         <div class="dish-top">

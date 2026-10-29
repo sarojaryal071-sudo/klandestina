@@ -1,0 +1,92 @@
+name: Prerender
+
+# Keeps the static menu/contact HTML inside index.html (between the
+# PRERENDER:MENU and PRERENDER:CONTACT marker comments) in sync with
+# data/menu.json, data/site.json, and data/i18n/en.json — the only thing
+# that makes "edit the menu JSON, the crawlable HTML updates itself, no
+# manual index.html edits" actually true. scripts/prerender.mjs does the
+# real work; this workflow just runs it and commits the result. Same
+# shape as .github/workflows/gallery.yml, on purpose.
+#
+# data/i18n/fi.json is watched too even though scripts/prerender.mjs
+# doesn't read it yet as of this commit (a run triggered by it today is a
+# harmless no-op — "Check for changes" below finds nothing changed and
+# skips the commit) — it's there ready for once the script is extended to
+# also prerender a Finnish page from it.
+#
+# Does NOT watch data/gallery.json (gallery photos have nothing to do
+# with the prerendered content) or index.html itself (editing index.html
+# by hand doesn't change what data the script reads, so it wouldn't
+# produce a different result — see README's "SEO" section for why a
+# manual index.html edit needs a manual dispatch afterward instead).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/menu.json"
+      - "data/site.json"
+      - "data/i18n/en.json"
+      - "data/i18n/fi.json"
+  workflow_dispatch: {}
+
+concurrency:
+  group: prerender-build-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Prerender menu + contact content
+        run: node scripts/prerender.mjs
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git add -A index.html
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Regenerate prerendered menu/contact content [skip ci]"
+          # Something else may have pushed to main while this job was
+          # running — rebase onto the current tip rather than racing it
+          # with a force-push.
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      # Pushes made with the default GITHUB_TOKEN don't always trigger
+      # GitHub Pages' own build-on-push the way a push from a real user
+      # does, depending on how Pages is configured for this repo — so ask
+      # for a rebuild explicitly rather than assuming the commit above was
+      # enough on its own. A harmless no-op if Pages was going to rebuild
+      # anyway. Same step as .github/workflows/gallery.yml.
+      - name: Request a Pages rebuild
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds"

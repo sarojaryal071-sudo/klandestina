@@ -14,6 +14,8 @@
 // look generic) fall back to the same radial-glow ambient treatment
 // .section-ambient uses elsewhere, instead of a wrong-looking photo.
 
+import { DISH_IMAGE_DIMS } from "./dishImageDims.js";
+
 const CATEGORY_IMAGES = {
   lunch: ["pork-in-chili-ancho.jpg", "frijoles-con-veneno.jpg"],
   starters: ["mexican-tuna-poke.jpg", "kuha-ceviche.jpg"],
@@ -57,6 +59,11 @@ function showCategory(container, categoryId) {
     img.alt = "";
     img.loading = "lazy";
     img.decoding = "async";
+    const dims = DISH_IMAGE_DIMS[file];
+    if (dims) {
+      img.width = dims.w;
+      img.height = dims.h;
+    }
     frame.appendChild(img);
   });
 
