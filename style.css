@@ -152,7 +152,7 @@ section { position: relative; padding: 130px 56px; }
   #hero, #story, #menu, #gallery, #visit { scroll-margin-top: 85px; }
 }
 
-/* ---------- 3D buttons ---------- */
+/* ---------- Buttons ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -167,23 +167,29 @@ section { position: relative; padding: 130px 56px; }
   border: none;
   cursor: pointer;
   transform: translateY(0);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
+/* A flat fill with a thin contact shadow (2px, not the old 6px raised
+   block) and a softened outer glow — enough to read as "the one button
+   that matters" without the glossy, neon-adjacent look the original 3D
+   treatment had at this palette's higher saturation. */
 .btn-primary {
   background: var(--accent);
   color: var(--on-accent);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 6px 0 0 var(--accent-deep), 0 14px 26px -8px color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 2px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent), 0 10px 20px -12px color-mix(in srgb, var(--accent) 35%, transparent);
 }
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 9px 0 0 var(--accent-deep), 0 22px 34px -10px color-mix(in srgb, var(--accent) 60%, transparent); }
-.btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 2px 0 0 var(--accent-deep); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 3px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent), 0 14px 26px -12px color-mix(in srgb, var(--accent) 40%, transparent); }
+.btn-primary:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 1px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent); }
+/* A quiet outline, not a second raised button — no fill shadow at all,
+   just a hairline border that picks up the accent color on hover. */
 .btn-ghost {
   background: var(--surface);
   color: var(--ink);
-  border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 6px 0 0 var(--surface-edge), 0 14px 26px -10px rgba(5,8,18,0.6);
+  border: 1px solid var(--line);
+  box-shadow: none;
 }
-.btn-ghost:hover { transform: translateY(-3px); }
-.btn-ghost:active { transform: translateY(3px); }
+.btn-ghost:hover { transform: translateY(-2px); border-color: var(--accent); }
+.btn-ghost:active { transform: translateY(0); }
 
 /* ---------- Shortcut pill nav ---------- */
 .shortcut-nav {
@@ -253,7 +259,7 @@ section { position: relative; padding: 130px 56px; }
 }
 .lang-option {
   background: none; border: none; padding: 2px; margin: 0; cursor: pointer;
-  font: inherit; letter-spacing: inherit; color: color-mix(in srgb, var(--ink) 55%, transparent);
+  font: inherit; letter-spacing: inherit; color: var(--muted);
   transition: color 0.18s ease;
 }
 .lang-option:hover:not(.active) { color: var(--ink); }
@@ -400,7 +406,14 @@ section { position: relative; padding: 130px 56px; }
    living in the opposite corner means it never has to fight them for
    space. z-index 90 keeps it above ordinary page content but below the
    modal overlay (100) so opening the modal doesn't leave the FAB floating
-   on top of it. */
+   on top of it. Same flattened shadow language as .btn-primary now (a
+   thin 2px contact shadow, a softened outer glow) rather than its own
+   separate, more raised treatment. Visible by default — fab.js adds
+   .fab--hero-hidden only once it confirms (via IntersectionObserver)
+   that the hero's own buttons are in view, so a browser without
+   IntersectionObserver support, or a visitor with JS partially broken,
+   fails open (FAB stays reachable) rather than fails closed (booking
+   button silently gone forever). */
 .fab {
   position: fixed; bottom: 24px; right: 24px; z-index: 90;
   display: flex; align-items: center; gap: 8px;
@@ -408,11 +421,15 @@ section { position: relative; padding: 130px 56px; }
   background: var(--accent); color: var(--on-accent);
   font-family: "Space Grotesk", sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
   border: none; cursor: pointer;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 6px 0 0 var(--accent-deep), 0 14px 26px -8px color-mix(in srgb, var(--accent) 55%, transparent);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 2px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent), 0 10px 20px -12px color-mix(in srgb, var(--accent) 35%, transparent);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.4s ease;
 }
-.fab:hover { transform: translateY(-3px); box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 9px 0 0 var(--accent-deep), 0 22px 34px -10px color-mix(in srgb, var(--accent) 60%, transparent); }
-.fab:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 2px 0 0 var(--accent-deep); }
+.fab:hover { transform: translateY(-2px); box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 3px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent), 0 14px 26px -12px color-mix(in srgb, var(--accent) 40%, transparent); }
+.fab:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 1px 0 0 color-mix(in srgb, var(--accent-deep) 65%, transparent); }
+.fab--hero-hidden { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .fab { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+}
 .fab-icon { display: flex; }
 .fab-label { white-space: nowrap; }
 
@@ -438,8 +455,8 @@ section { position: relative; padding: 130px 56px; }
     var(--bg);
 }
 .hero-inner { position: relative; z-index: 2; max-width: 780px; }
-.hero .eyebrow { display: block; margin-bottom: 20px; }
-.hero h1 { font-size: clamp(64px, 13vw, 148px); line-height: 0.92; margin-bottom: 20px; }
+.hero .eyebrow { display: block; margin-bottom: 20px; font-size: 11px; font-weight: 500; }
+.hero h1 { font-size: clamp(64px, 13vw, 148px); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 20px; }
 .hero p { color: color-mix(in srgb, var(--ink) 65%, transparent); font-size: 18px; max-width: 460px; margin: 0 auto 40px; }
 .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 #hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }

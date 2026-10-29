@@ -23,4 +23,25 @@ export function renderFab(container, onClick) {
   `;
 
   container.querySelector(".fab").addEventListener("click", onClick);
+  observeHeroButtons(container);
+}
+
+// Hides the FAB while the hero's own buttons are on screen (no point
+// floating a second "Reserve"/"Special Event" prompt right next to the
+// first one) and fades it in once they've scrolled out of view. Same
+// IntersectionObserver-on-a-landmark-element approach as nav.js's
+// observeHero(); if IntersectionObserver isn't available, this simply
+// never runs and the FAB stays at its default visible state.
+function observeHeroButtons(container) {
+  const heroButtons = document.getElementById("hero-buttons");
+  if (!heroButtons || !("IntersectionObserver" in window)) return;
+
+  const fab = container.querySelector(".fab");
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      fab.classList.toggle("fab--hero-hidden", entry.isIntersecting);
+    },
+    { threshold: 0 }
+  );
+  observer.observe(heroButtons);
 }
