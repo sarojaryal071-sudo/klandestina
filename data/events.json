@@ -1,0 +1,27 @@
+[
+  {
+    "id": "karaoke-friday",
+    "type": "recurring",
+    "weekday": 5,
+    "startTime": "21:00",
+    "endTime": "01:30",
+    "title": { "en": "Karaoke night", "fi": "Karaokeilta" },
+    "description": {
+      "en": "Grab the mic. Every Friday night, free entry.",
+      "fi": "Ota mikki käteen. Joka perjantai-ilta, vapaa pääsy."
+    },
+    "tag": { "en": "Every Friday", "fi": "Joka perjantai" },
+    "price": { "en": "Free entry", "fi": "Vapaa pääsy" }
+  },
+  {
+    "id": "halloween-2026",
+    "type": "oneoff",
+    "date": "2026-10-31",
+    "title": { "en": "Halloween special", "fi": "Halloween-erikoisilta" },
+    "description": {
+      "en": "Halloween night at Klandestina. Come in costume.",
+      "fi": "Halloween-ilta Klandestinassa. Tule naamioituneena."
+    },
+    "tag": { "en": "Halloween", "fi": "Halloween" }
+  }
+]

@@ -19,6 +19,7 @@ const SECTIONS = [
   { id: "hero", i18n: "mobileNav.home", label: "Home" },
   { id: "story", i18n: "nav.story", label: "Story" },
   { id: "menu", i18n: "nav.menu", label: "Menu" },
+  { id: "events", i18n: "nav.events", label: "Events" },
   { id: "gallery", i18n: "nav.gallery", label: "Gallery" },
   { id: "visit", i18n: "mobileNav.visit", label: "Find Us" }
 ];

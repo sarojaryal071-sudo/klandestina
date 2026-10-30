@@ -3,7 +3,7 @@
     "title": "Klandestina – meksikolainen cantina Helsingissä",
     "description": "Klandestina on meksikolainen cantina Helsingissä ilman kylttiä – tacoja hiilloksesta, mezcalia reilulla kädellä, osoitteessa Aleksis Kiven katu 17."
   },
-  "nav": { "story": "Tarina", "menu": "Ruokalista", "gallery": "Galleria", "visit": "Käynti" },
+  "nav": { "story": "Tarina", "menu": "Ruokalista", "events": "Tapahtumat", "gallery": "Galleria", "visit": "Käynti" },
   "mobileNav": {
     "home": "Etusivu",
     "visit": "Löydä meidät",
@@ -51,6 +51,13 @@
     "photoCounter": "{current} / {total}",
     "photoOfTotal": "Kuva {current} / {total}",
     "altPhoto": "{album} — kuva {n}"
+  },
+  "events": {
+    "eyebrow": "Tapahtumat",
+    "heading": "Tulevat tapahtumat",
+    "upNext": "Seuraavaksi",
+    "tonight": "Tänään illalla",
+    "weekdayShort": ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"]
   },
   "story": {
     "eyebrow": "Tarina",

@@ -5,6 +5,7 @@
 const SECTIONS = [
   { id: "story", label: "Story" },
   { id: "menu", label: "Menu" },
+  { id: "events", label: "Events" },
   { id: "gallery", label: "Gallery" },
   { id: "visit", label: "Visit" }
 ];

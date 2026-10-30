@@ -235,7 +235,7 @@ section { position: relative; padding: 130px 56px; }
      (Home/hero, Story, Menu, Gallery, Find Us — the same five links in
      mobileNav.js); desktop doesn't get this rule at all since it has no
      fixed topbar to clear in the first place. */
-  #hero, #story, #menu, #gallery, #visit { scroll-margin-top: 85px; }
+  #hero, #story, #menu, #events, #gallery, #visit { scroll-margin-top: 85px; }
 }
 
 /* ---------- Buttons ---------- */
@@ -1090,6 +1090,79 @@ section { position: relative; padding: 130px 56px; }
   margin: 40px 0 8px;
 }
 .menu-group-heading:first-of-type { margin-top: 0; }
+
+/* ---------- Events ---------- */
+/* Stays on the plain dark :root surface (no .surface-light/.surface-white
+   class on the section) — see index.html's own comment on why. Cards
+   reuse .menu-item's "thumb-left, body-right" skeleton rather than
+   inventing a new one, just with a date block standing in for the photo
+   thumb. The soonest occurrence (always index 0 — resolveUpcomingEvents
+   already sorts by it) gets .event-card--hero: a brass accent wash + a
+   bigger date block, so it reads as "the one that matters" the same way
+   .btn-primary already does for buttons, not a new visual language. */
+.events-grid {
+  display: flex; flex-direction: column; gap: 18px;
+  max-width: 760px; margin: 0 auto;
+}
+.event-card {
+  position: relative; display: flex; gap: 20px; align-items: flex-start;
+  padding: 22px; border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--card-shadow);
+}
+.event-date {
+  flex: 0 0 auto; width: 64px; padding: 10px 0; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+.event-date-weekday { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.event-date-day { font-family: "Bebas Neue", sans-serif; font-size: 30px; line-height: 1; margin-top: 2px; }
+.event-body { flex: 1 1 auto; min-width: 0; }
+.event-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.event-title { font-family: "Bebas Neue", sans-serif; font-size: 24px; letter-spacing: 0.01em; }
+.event-time { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.event-desc { color: var(--muted); font-size: 14px; max-width: 460px; margin-top: 8px; }
+.event-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.event-tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;
+}
+.event-price { font-family: "Bebas Neue", sans-serif; color: var(--accent); font-size: 18px; white-space: nowrap; }
+.event-image {
+  flex: 0 0 96px; width: 96px; height: 96px; border-radius: 12px; object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+}
+/* "Up next"/"Tonight" — small uppercase tags, not full badges-with-icons,
+   same restrained tag language .event-tag/.menu-item-tag already use.
+   "Up next" is filled (brass, --on-accent text — the same pairing
+   .btn-primary uses, already ≥4.5:1) since it only ever appears on the
+   hero card's own accent-tinted background; "Tonight" is an outline so
+   the two can sit side by side without reading as two filled pills. */
+.event-upnext {
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
+  background: var(--accent-fill); color: var(--on-accent);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.event-badge {
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid var(--accent); color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.event-card--hero {
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  padding: 28px;
+}
+.event-card--hero .event-date { background: var(--accent-fill); }
+.event-card--hero .event-date-weekday { color: color-mix(in srgb, var(--on-accent) 75%, transparent); }
+.event-card--hero .event-date-day { color: var(--on-accent); }
+.event-card--hero .event-title { font-size: 30px; }
+
+@media (max-width: 560px) {
+  .event-card { flex-wrap: wrap; }
+  .event-image { flex-basis: 100%; width: 100%; height: 160px; order: 10; }
+}
 
 /* ---------- Gallery: crossfading mosaic ---------- */
 /* One big tile (spans both rows) + two smaller tiles stacked beside it —
