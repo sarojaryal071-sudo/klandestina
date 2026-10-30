@@ -824,6 +824,141 @@
     </div>
   </section>
 
+  <!-- Hidden entirely (section + nav links) when data/events.json has no
+       upcoming events at all — see script.js's events-render block, same
+       "hide rather than show empty" rule Gallery already follows above.
+       Sits between Menu and Gallery per the task's layout, and stays the
+       plain dark :root surface (no .surface-light/.surface-white) so the
+       white→dark→light rhythm continues rather than repeating Menu's or
+       Gallery's own surface back to back. -->
+  <section id="events">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="events.eyebrow">Tapahtumat</span>
+      <h2 data-i18n="events.heading">Tulevat tapahtumat</h2>
+    </div>
+    <div class="container">
+      <!-- Filled by components/eventsSection.js. scripts/prerender.mjs
+           writes the same cards as plain HTML between the markers below
+           so a crawler/no-JS visitor sees them too — see README's "SEO"
+           section. renderEventsSection() does container.innerHTML = "…"
+           on every run (incl. language switch), same as menu-list/
+           footer-mount above, so this is just as cleanly overwritten. -->
+      <div id="events-grid" class="events-grid">
+        <!-- PRERENDER:EVENTS:START -->
+
+      <article class="event-card event-card--hero">
+        <div class="event-date">
+          <span class="event-date-weekday">Pe</span>
+          <span class="event-date-day">30</span>
+        </div>
+        <div class="event-body">
+          <div class="event-top">
+            <h3 class="event-title">Karaokeilta</h3>
+            <span class="event-upnext">Seuraavaksi</span>
+            <span class="event-badge">Tänään illalla</span>
+          </div>
+          <p class="event-time">21:00–01:30</p>
+          <p class="event-desc">Ota mikki käteen. Joka perjantai-ilta, vapaa pääsy.</p>
+          <div class="event-meta">
+            <span class="event-tag">Joka perjantai</span>
+            <span class="event-price">Vapaa pääsy</span>
+          </div>
+        </div>
+        
+      </article>
+
+      <article class="event-card">
+        <div class="event-date">
+          <span class="event-date-weekday">La</span>
+          <span class="event-date-day">31</span>
+        </div>
+        <div class="event-body">
+          <div class="event-top">
+            <h3 class="event-title">Halloween-erikoisilta</h3>
+            
+            
+          </div>
+          
+          <p class="event-desc">Halloween-ilta Klandestinassa. Tule naamioituneena.</p>
+          <div class="event-meta">
+            <span class="event-tag">Halloween</span>
+            
+          </div>
+        </div>
+        
+      </article>
+          <!-- PRERENDER:EVENTS:END -->
+      </div>
+    </div>
+  </section>
+
+  <!-- schema.org Event JSON-LD, one per currently-upcoming event — written
+       by scripts/prerender.mjs between these markers (never by script.js;
+       see its own comment for why a static, pre-JS block is what search
+       engines actually need). Empty (no <script> tag at all) when there
+       are no upcoming events, same "nothing invented" rule as the section
+       above. -->
+  <!-- PRERENDER:EVENTS_JSONLD:START -->
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Karaokeilta",
+    "description": "Ota mikki käteen. Joka perjantai-ilta, vapaa pääsy.",
+    "startDate": "2026-10-30T19:00:00.000Z",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "location": {
+      "@type": "Place",
+      "name": "Klandestina Cantina",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Aleksis Kiven katu 17",
+        "addressLocality": "Helsinki"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 60.1903,
+        "longitude": 24.9535
+      }
+    },
+    "endDate": "2026-10-30T23:30:00.000Z",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "url": "https://klande.fi/#events"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Halloween-erikoisilta",
+    "description": "Halloween-ilta Klandestinassa. Tule naamioituneena.",
+    "startDate": "2026-10-30T22:00:00.000Z",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "location": {
+      "@type": "Place",
+      "name": "Klandestina Cantina",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Aleksis Kiven katu 17",
+        "addressLocality": "Helsinki"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 60.1903,
+        "longitude": 24.9535
+      }
+    }
+  }
+]
+  </script>
+          <!-- PRERENDER:EVENTS_JSONLD:END -->
+
   <section id="gallery" class="surface-light">
     <div class="section-head reveal">
       <span class="eyebrow" data-i18n="gallery.eyebrow">Sisällä</span>

@@ -49,12 +49,29 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { DISH_IMAGE_DIMS } from "../components/dishImageDims.js";
+import { resolveUpcomingEvents, helsinkiDateParts } from "../components/eventsLogic.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITE_URL = "https://klande.fi";
 
 const menu = JSON.parse(readFileSync(path.join(ROOT, "data/menu.json"), "utf8"));
 const site = JSON.parse(readFileSync(path.join(ROOT, "data/site.json"), "utf8"));
+// Missing data/events.json is a valid state (same "optional, not an
+// error" treatment data/gallery.json gets in script.js) — a brand-new
+// checkout before anyone's ever added an event just prerenders an empty,
+// hidden Events section rather than failing the whole build.
+let rawEvents = [];
+try {
+  rawEvents = JSON.parse(readFileSync(path.join(ROOT, "data/events.json"), "utf8"));
+} catch (e) {
+  if (e.code !== "ENOENT") throw e;
+}
+// Resolved ONCE per run (not once per language) so both index.html and
+// fi/index.html agree on exactly which events are upcoming — only their
+// text differs, never the underlying set, same split as the menu/contact
+// blocks above.
+const upcomingEvents = resolveUpcomingEvents(rawEvents);
+
 const i18n = {
   en: JSON.parse(readFileSync(path.join(ROOT, "data/i18n/en.json"), "utf8")),
   fi: JSON.parse(readFileSync(path.join(ROOT, "data/i18n/fi.json"), "utf8"))
@@ -66,6 +83,14 @@ function t(dict, dotPath) {
 
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
+
+// Mirrors script.js's own pickLang(): resolves a data/events.json field
+// that's a { en, fi } object (or absent, for Halloween's unset price)
+// to the given language's plain string.
+function pickLang(field, lang) {
+  if (field && typeof field === "object") return field[lang] || field.en || "";
+  return field;
 }
 
 // Mirrors components/priceDisplay.js's renderPrice() exactly (plain
@@ -184,6 +209,99 @@ function buildContactHtml(dict) {
     </div>`;
 }
 
+// Mirrors components/eventsSection.js's own formatTimeRange()/renderCard()
+// markup exactly, so there's no layout shift between this static version
+// and the one script.js renders over it moments later.
+function formatTimeRange(startTime, endTime) {
+  if (!startTime) return "";
+  if (!endTime) return startTime;
+  return `${startTime}–${endTime}`;
+}
+
+function renderEventCardHtml(entry, isHero, dict, lang) {
+  const { event, occurrence, isTonight } = entry;
+  const parts = helsinkiDateParts(occurrence.start);
+  const weekdayShort = t(dict, "events.weekdayShort") || [];
+  const weekday = weekdayShort[(parts.weekday - 1 + 7) % 7] || "";
+  const title = pickLang(event.title, lang);
+  const description = pickLang(event.description, lang);
+  const tag = pickLang(event.tag, lang);
+  const price = pickLang(event.price, lang);
+  const timeRange = formatTimeRange(event.startTime, event.endTime);
+  const image = event.image
+    ? `<img class="event-image" src="/images/events/${event.image}" alt="" loading="lazy" decoding="async">`
+    : "";
+
+  return `
+      <article class="event-card${isHero ? " event-card--hero" : ""}">
+        <div class="event-date">
+          <span class="event-date-weekday">${escapeHtml(weekday)}</span>
+          <span class="event-date-day">${parts.d}</span>
+        </div>
+        <div class="event-body">
+          <div class="event-top">
+            <h3 class="event-title">${escapeHtml(title)}</h3>
+            ${isHero ? `<span class="event-upnext">${escapeHtml(t(dict, "events.upNext") || "")}</span>` : ""}
+            ${isTonight ? `<span class="event-badge">${escapeHtml(t(dict, "events.tonight") || "")}</span>` : ""}
+          </div>
+          ${timeRange ? `<p class="event-time">${escapeHtml(timeRange)}</p>` : ""}
+          <p class="event-desc">${escapeHtml(description)}</p>
+          <div class="event-meta">
+            ${tag ? `<span class="event-tag">${escapeHtml(tag)}</span>` : ""}
+            ${price ? `<span class="event-price">${escapeHtml(price)}</span>` : ""}
+          </div>
+        </div>
+        ${image}
+      </article>`;
+}
+
+function buildEventsHtml(dict, lang) {
+  return upcomingEvents.map((entry, index) => renderEventCardHtml(entry, index === 0, dict, lang)).join("\n");
+}
+
+// schema.org Event, one per currently-upcoming occurrence — only the
+// fields events.json (or its own next-occurrence math) actually gives
+// us: no invented price, venue, or performer. "Free" is detected from
+// the EN price text containing the word "free" (exactly what the
+// karaoke seed event's "Free entry" is) rather than parsing arbitrary
+// currency strings into a number, which could invent a price that
+// isn't really there — an event with a real paid price just gets no
+// `offers` block at all rather than a guessed one. See
+// docs/HOW-TO-ADD-AN-EVENT.md.
+function buildEventJsonLd(dict, lang) {
+  if (upcomingEvents.length === 0) return "";
+
+  const events = upcomingEvents.map(({ event, occurrence }) => {
+    const isFree = typeof event.price?.en === "string" && /free/i.test(event.price.en);
+    const json = {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: pickLang(event.title, lang),
+      description: pickLang(event.description, lang),
+      startDate: occurrence.start.toISOString(),
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      eventStatus: "https://schema.org/EventScheduled",
+      location: {
+        "@type": "Place",
+        name: "Klandestina Cantina",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: site.address.split(",")[0].trim(),
+          addressLocality: "Helsinki"
+        },
+        geo: { "@type": "GeoCoordinates", latitude: site.coordinates.lat, longitude: site.coordinates.lng }
+      }
+    };
+    if (occurrence.end) json.endDate = occurrence.end.toISOString();
+    if (isFree) {
+      json.offers = { "@type": "Offer", price: "0", priceCurrency: "EUR", availability: "https://schema.org/InStock", url: `${SITE_URL}/#events` };
+    }
+    return json;
+  });
+
+  return `<script type="application/ld+json">\n${JSON.stringify(events, null, 2)}\n  </script>`;
+}
+
 // Replaces everything between a pair of marker comments that must already
 // exist in the html exactly once each — throws rather than silently
 // no-op'ing if either marker is missing, so a renamed/removed marker
@@ -281,6 +399,26 @@ function localizeHead(html) {
   return out;
 }
 
+// Adds or removes a literal `hidden` attribute right after
+// `<section id="${sectionId}"` — idempotent either direction, so it works
+// whether index.html's own checked-in markup currently has it or not.
+// This is what keeps a crawler/no-JS visitor from seeing an empty Events
+// section (just the eyebrow/heading, no cards) on a build with zero
+// upcoming events — script.js does the equivalent at runtime by setting
+// .hidden once it has fetched events.json, but that's no help before JS
+// has run.
+function setSectionHidden(html, sectionId, hidden) {
+  const openTag = `<section id="${sectionId}"`;
+  if (!html.includes(openTag)) {
+    throw new Error(`prerender.mjs: couldn't find ${JSON.stringify(openTag)} in index.html`);
+  }
+  const hiddenTag = `${openTag} hidden`;
+  const alreadyHidden = html.includes(hiddenTag);
+  if (hidden && !alreadyHidden) return html.replace(openTag, hiddenTag);
+  if (!hidden && alreadyHidden) return html.replace(hiddenTag, openTag);
+  return html;
+}
+
 function buildPage(lang) {
   const dict = i18n[lang];
   const templatePath = path.join(ROOT, "index.html");
@@ -288,6 +426,14 @@ function buildPage(lang) {
 
   html = spliceBetweenMarkers(html, "<!-- PRERENDER:MENU:START -->", "<!-- PRERENDER:MENU:END -->", buildMenuHtml(dict, lang));
   html = spliceBetweenMarkers(html, "<!-- PRERENDER:CONTACT:START -->", "<!-- PRERENDER:CONTACT:END -->", buildContactHtml(dict));
+  html = spliceBetweenMarkers(html, "<!-- PRERENDER:EVENTS:START -->", "<!-- PRERENDER:EVENTS:END -->", buildEventsHtml(dict, lang));
+  html = spliceBetweenMarkers(
+    html,
+    "<!-- PRERENDER:EVENTS_JSONLD:START -->",
+    "<!-- PRERENDER:EVENTS_JSONLD:END -->",
+    buildEventJsonLd(dict, lang)
+  );
+  html = setSectionHidden(html, "events", upcomingEvents.length === 0);
 
   if (lang === "fi") {
     html = translateStaticText(html, dict);
