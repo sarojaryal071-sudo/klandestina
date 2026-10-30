@@ -101,8 +101,8 @@
        it still gets the photo normally via the WebP/JPG fallbacks in
        the <picture> below, just without this early-fetch boost. See
        README's "Hero photo". -->
-  <link rel="preload" as="image" type="image/avif" media="(max-width: 900px), (orientation: portrait)" href="/images/hero/hero-mobile-940.avif" imagesrcset="/images/hero/hero-mobile-720.avif 720w, /images/hero/hero-mobile-940.avif 940w" imagesizes="100vw">
-  <link rel="preload" as="image" type="image/avif" media="(min-width: 901px) and (orientation: landscape)" href="/images/hero/hero-desktop-1672.avif" imagesrcset="/images/hero/hero-desktop-1280.avif 1280w, /images/hero/hero-desktop-1672.avif 1672w" imagesizes="100vw">
+  <link rel="preload" as="image" type="image/avif" media="(max-width: 768px)" href="/images/hero/hero-mobile-556.avif" imagesrcset="/images/hero/hero-mobile-375.avif 375w, /images/hero/hero-mobile-556.avif 556w" imagesizes="100vw">
+  <link rel="preload" as="image" type="image/avif" media="(min-width: 769px)" href="/images/hero/hero-desktop-1672.avif" imagesrcset="/images/hero/hero-desktop-1280.avif 1280w, /images/hero/hero-desktop-1672.avif 1672w" imagesizes="100vw">
   <script>
     // Some mobile browsers (notably iOS Safari) restore the tab's LAST
     // scroll offset on a fresh visit to the same URL, rather than starting
@@ -156,13 +156,17 @@
          hero-{desktop,mobile}-source.png; see README's "Hero photo").
          No lazy-loading, fetchpriority="high", and the <head> preloads
          above target exactly these sources. The mobile <source>s match
-         the same (max-width: 900px), (orientation: portrait) condition
-         .hero's own mobile CSS below switches on, so the photo and the
-         text layout always agree on which "mode" the hero is in. -->
+         the same (max-width: 768px) condition .hero's own mobile CSS
+         below switches on, so the photo and the text layout always agree
+         on which "mode" the hero is in. The mobile variants are a tight
+         crop (not the full portrait photo) — see build-hero.mjs's own
+         comment for why a plain resize/object-position can't put the
+         sign in the upper portion of the screen the way this layout
+         needs, only a real crop can. -->
     <div class="hero-media">
       <picture>
-        <source media="(max-width: 900px), (orientation: portrait)" type="image/avif" srcset="/images/hero/hero-mobile-720.avif 720w, /images/hero/hero-mobile-940.avif 940w" sizes="100vw">
-        <source media="(max-width: 900px), (orientation: portrait)" type="image/webp" srcset="/images/hero/hero-mobile-720.webp 720w, /images/hero/hero-mobile-940.webp 940w" sizes="100vw">
+        <source media="(max-width: 768px)" type="image/avif" srcset="/images/hero/hero-mobile-375.avif 375w, /images/hero/hero-mobile-556.avif 556w" sizes="100vw">
+        <source media="(max-width: 768px)" type="image/webp" srcset="/images/hero/hero-mobile-375.webp 375w, /images/hero/hero-mobile-556.webp 556w" sizes="100vw">
         <source type="image/avif" srcset="/images/hero/hero-desktop-1280.avif 1280w, /images/hero/hero-desktop-1672.avif 1672w" sizes="100vw">
         <source type="image/webp" srcset="/images/hero/hero-desktop-1280.webp 1280w, /images/hero/hero-desktop-1672.webp 1672w" sizes="100vw">
         <img
@@ -176,8 +180,8 @@
         >
       </picture>
     </div>
-    <!-- Navy tint + the text-legibility gradient — see style.css's own
-         comment for the contrast calculation behind it. -->
+    <!-- Navy tint + the text-legibility gradient(s) — see style.css's own
+         comment for the contrast calculation behind them. -->
     <div class="hero-overlay"></div>
     <div class="hero-inner">
       <div class="hero-text">
@@ -189,13 +193,6 @@
         <div class="hero-actions">
           <!-- Filled by components/button.js -->
           <div id="hero-buttons"></div>
-        </div>
-        <!-- Mobile-only (see style.css) — the bottom 20% of the mobile
-             photo is reserved for this + the buttons above it. -->
-        <div class="hero-scroll-cue" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 5v14M5 12l7 7 7-7"></path>
-          </svg>
         </div>
       </div>
     </div>
