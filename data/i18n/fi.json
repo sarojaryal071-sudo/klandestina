@@ -15,7 +15,8 @@
     "heading": "Löydä ovi.",
     "subtext": "Tacoja suoraan hiilloksesta, mezcalia reilulla kädellä ja tila, joka ei mainosta itseään.",
     "reserve": "Varaa pöytä",
-    "seeMenu": "Katso ruokalista"
+    "seeMenu": "Katso ruokalista",
+    "imageAlt": "Klandestinan neonkyltti avoimen keittiön ikkunan yläpuolella"
   },
   "dishes": { "eyebrow": "Suoraan grillistä", "heading": "Nämä kanta-asiakkaat tilaavat aina kahdesti" },
   "menu": {

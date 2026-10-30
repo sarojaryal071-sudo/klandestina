@@ -15,7 +15,8 @@
     "heading": "Find the door.",
     "subtext": "Tacos off live coals, mezcal poured heavy, and a room that doesn't announce itself.",
     "reserve": "Reserve a Table",
-    "seeMenu": "See the Menu"
+    "seeMenu": "See the Menu",
+    "imageAlt": "Klandestina's neon sign above the open kitchen window"
   },
   "dishes": { "eyebrow": "Off the Grill", "heading": "Regulars order these twice" },
   "menu": {

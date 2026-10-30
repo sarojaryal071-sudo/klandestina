@@ -299,10 +299,11 @@ function pickLang(field) {
 
 // Single pass over every element tagged data-i18n="some.path" (textContent),
 // data-i18n-placeholder="some.path" (the placeholder attribute, for form
-// inputs), or data-i18n-aria-label="some.path" (the aria-label attribute,
-// for icon-only controls like the FAB) — covers static markup in
-// index.html plus the hooks nav.js, footer.js, button.js, eventModal.js and
-// fab.js leave on the elements they render.
+// inputs), data-i18n-aria-label="some.path" (the aria-label attribute,
+// for icon-only controls like the FAB), or data-i18n-alt="some.path" (the
+// alt attribute, for the hero photo's <img> — see "Hero photo") — covers
+// static markup in index.html plus the hooks nav.js, footer.js, button.js,
+// eventModal.js and fab.js leave on the elements they render.
 function applyTranslations() {
   document.documentElement.lang = currentLanguage;
   document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -313,6 +314,9 @@ function applyTranslations() {
   });
   document.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
     el.setAttribute("aria-label", t(el.dataset.i18nAriaLabel));
+  });
+  document.querySelectorAll("[data-i18n-alt]").forEach((el) => {
+    el.alt = t(el.dataset.i18nAlt);
   });
 }
 

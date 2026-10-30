@@ -346,6 +346,19 @@ function requireReplace(html, oldStr, newStr) {
   return html.replace(oldStr, newStr);
 }
 
+// Same "plain pattern match, not a DOM parser" approach as
+// translateStaticText(), but for an `alt="...text..." data-i18n-alt="key"`
+// attribute pair (alt before data-i18n-alt, exactly how the hero <img> in
+// index.html is written) instead of a `data-i18n="key">text<` text node —
+// there's only the one hero image today, but this generalizes to any
+// future img written the same way.
+function translateStaticAlt(html, dict) {
+  return html.replace(/alt="([^"]*)" data-i18n-alt="([\w.]+)"/g, (match, _original, key) => {
+    const translated = t(dict, key);
+    return translated == null ? match : `alt="${escapeHtml(translated)}" data-i18n-alt="${key}"`;
+  });
+}
+
 // <title>/meta description/canonical/og:*/twitter:* all need the
 // language-specific seo.title/seo.description and the /fi/ URL instead
 // of the root. Each swap below targets one exact, unique, full tag (or
@@ -437,6 +450,7 @@ function buildPage(lang) {
 
   if (lang === "fi") {
     html = translateStaticText(html, dict);
+    html = translateStaticAlt(html, dict);
     html = localizeHead(html);
   }
 
