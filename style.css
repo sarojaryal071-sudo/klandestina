@@ -865,26 +865,69 @@ section { position: relative; padding: 130px 56px; }
    here used to read as a visible floating panel against that glow (an
    earlier version tried it), but there's no glow left to fight now, and
    without it, menu items scrolling up would show straight through the
-   pill row with nothing marking where the sticky band actually is. */
+   pill row with nothing marking where the sticky band actually is.
+   Also establishes the positioning context for the edge-fade
+   pseudo-elements below — sticky already does this (any position other
+   than static does), called out explicitly since it's easy to assume
+   otherwise. A fixed, single-row height here (see .tabs below) is what
+   actually keeps this from ever overlapping .menu-note/the first
+   .menu-item under it — a wrapped 2-3 row version of the old layout
+   made the sticky band tall enough to cover that content the moment a
+   visitor scrolled even slightly, at any width under ~640px. */
 .tabs-sticky {
   position: sticky; top: 88px; z-index: 40; margin-bottom: 56px;
   background: var(--bg); border-bottom: 1px solid var(--line);
 }
-/* No border-radius/blur/tint of its own — .tabs is just the flex row of
-   pills; .tabs-sticky (above) is what carries the shared background now.
-   Each .tab pill still carries its own solid var(--surface) fill, so
-   the pills read as floating individually, closer to how
-   .shortcut-nav's own pills read. */
+/* One row, always — never wraps, scrolls horizontally instead once the
+   six pills don't fit. `safe center` centers them (like the old
+   wrapping layout did) whenever they DO all fit, but falls back to
+   plain start-alignment the instant they overflow, so scrolling never
+   has to fight a centered start position to reach the first pill —
+   without `safe`, a centered flex row that overflows can land its
+   initial scroll position mid-content, making the first item require
+   scrolling backward to reach. `scroll-snap-type: x proximity` (not
+   `mandatory`) gives each pill a gentle resting point without fighting
+   the visitor's own momentum scroll. Scrollbar hidden three ways (one
+   per engine) since this is a deliberately chrome-free pill row, not a
+   visible scroll widget — the edge fades below are what signal "more
+   content" instead. No border-radius/blur/tint of its own beyond that —
+   .tabs-sticky (above) carries the shared background. Each .tab pill
+   still carries its own solid var(--surface) fill, so the pills read as
+   floating individually, closer to how .shortcut-nav's own pills read. */
 .tabs {
-  display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+  display: flex; flex-wrap: nowrap; justify-content: safe center; align-items: center;
+  gap: 8px; padding: 6px 4px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none; -ms-overflow-style: none;
 }
+.tabs::-webkit-scrollbar { display: none; }
 .tab {
+  flex: 0 0 auto; scroll-snap-align: center;
   padding: 12px 24px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
   background: var(--surface); color: color-mix(in srgb, var(--ink) 60%, transparent); font-size: 13px; font-weight: 600;
   letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer;
   box-shadow: 0 4px 0 0 var(--surface-edge); transform: translateY(0); transition: all 0.18s ease;
 }
 .tab:hover { color: var(--ink); transform: translateY(-2px); }
+.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Soft fade hinting "this scrolls" at each edge of the pill row — a
+   solid-to-transparent gradient painted on var(--tabs-sticky's own
+   background, not a mask on the pills themselves (a mask would fade the
+   pills' own borders/fill to see-through right at the clip, which reads
+   as broken rather than as a scroll hint). Harmless/invisible when the
+   row doesn't overflow (centered pills never reach these 32px edge
+   zones, so there's nothing to fade over), so no extra logic is needed
+   to hide them on wide screens — see the .tabs comment above for how
+   `safe center` handles that case. bottom:1px keeps the fade just above
+   .tabs-sticky's own hairline border rather than painting over it;
+   pointer-events:none so the fade strip never blocks a tap on a pill
+   scrolled half underneath it. */
+.tabs-sticky::before, .tabs-sticky::after {
+  content: ""; position: absolute; top: 0; bottom: 1px; width: 32px; z-index: 1; pointer-events: none;
+}
+.tabs-sticky::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+.tabs-sticky::after { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
 .tab.active { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent); box-shadow: 0 4px 0 0 var(--accent-deep); transform: translateY(-2px); }
 /* Pills on a light surface: transparent/bordered at rest instead of a
    filled var(--surface) pill (a near-white fill on an already white/

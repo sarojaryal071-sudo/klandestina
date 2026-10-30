@@ -352,6 +352,12 @@ function initMenuTabs() {
       tab.classList.add("active");
       activeCategoryId = category.id;
       renderMenuCategory(category.id);
+      // .tabs is a horizontally scrolling row now (see style.css) — a tab
+      // tapped near either edge could be half-hidden under the fade/off
+      // the visible strip entirely; "nearest" on the block axis keeps
+      // this from also trying to scroll the whole page vertically, which
+      // scrollIntoView does by default.
+      tab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
     });
 
     tabsContainer.appendChild(tab);
