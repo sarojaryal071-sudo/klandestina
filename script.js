@@ -36,6 +36,11 @@ import { renderEventsSection } from "./components/eventsSection.js";
 
 const SUPPORTED_LANGS = ["en", "fi"];
 
+// Mirrors scripts/prerender.mjs's own SITE_URL — both files are small and
+// independent (one runs in Node, one in the browser), so this is a
+// deliberate duplication rather than a shared module for one constant.
+const SITE_URL = "https://klande.fi";
+
 let i18n = {};
 let menu = null;
 let site = null;
@@ -44,6 +49,8 @@ let rawEvents = [];
 let currentLanguage = "en";
 let activeCategoryId = null;
 let menuPhoto = null;
+let dishCarouselHandle = null;
+let mobileNavHandle = null;
 
 async function init() {
   const [menuData, siteData, galleryJson, eventsJson, en, fi] = await Promise.all([
@@ -81,7 +88,7 @@ async function init() {
   // setLanguage() below keeps both instances' active state in sync.
   renderLangSwitch(document.getElementById("lang-switch"), currentLanguage, setLanguage);
   renderLangSwitch(document.getElementById("mobile-lang-switch"), currentLanguage, setLanguage);
-  renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"), site);
+  mobileNavHandle = renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"), site);
 
   initMobileTopbarAutoHide();
 
@@ -192,15 +199,202 @@ function getLanguageFromPath() {
   return path === "/fi" || path.startsWith("/fi/") ? "fi" : "en";
 }
 
-// Each language is a separate page (/ vs /fi/), not an in-place state
-// swap — so switching means a real navigation, keeping whatever #hash
-// the visitor was on (e.g. mid-scroll at #menu). A full reload re-runs
-// init() on the other static document, which already starts in the
-// right language via getLanguageFromPath() above.
+// Each language is still its own real, separate, independently-indexable
+// page (/ vs /fi/, see getLanguageFromPath() above) — but switching no
+// longer means a real navigation to get there. It used to
+// (`window.location.href = targetPath + window.location.hash`), and that
+// was the bug: a full reload starts the browser fresh at that URL's hash
+// (or the top, if there wasn't one) — not wherever the visitor actually
+// was on the page, since window.location.hash is only ever set by a
+// literal #section anchor click (nav.js's pill links are real <a
+// href="#id">s) and goes stale the moment the visitor scrolls past that
+// point by any other means (which is most of the time). Landing "around
+// the Menu section" after toggling from deep in Gallery, or at the top
+// after never having clicked a pill at all, are both just that stale/
+// absent hash playing out.
+//
+// setLanguage() now swaps every piece of language-dependent state in
+// place — translations, the per-language dynamic sections (menu, dish
+// carousel, events, gallery chrome), and the URL/title/meta tags (via
+// history.replaceState, so /fi/ stays the real, shareable, crawlable
+// address without an actual page load) — then restores the scroll
+// position against a DOM element that's still there afterward, the same
+// way a browser's own scroll anchoring works, just done explicitly so it
+// can't be thrown off by the amount of content above the viewport
+// changing size (longer/shorter Finnish text, a menu category rebuilding
+// with different line counts, etc).
 function setLanguage(lang) {
   if (!SUPPORTED_LANGS.includes(lang) || lang === currentLanguage) return;
-  const targetPath = lang === "fi" ? "/fi/" : "/";
-  window.location.href = targetPath + window.location.hash;
+
+  // While the mobile nav overlay covers the screen, the page underneath
+  // isn't what the visitor is looking at — skip anchoring to it
+  // entirely (elementFromPoint would just hit the overlay's own links
+  // anyway) rather than risk a bogus correction from measuring a
+  // now-hidden element.
+  const overlayOpen = Boolean(mobileNavHandle && mobileNavHandle.isOpen());
+  const scrollAnchor = overlayOpen ? null : captureScrollAnchor();
+
+  currentLanguage = lang;
+
+  applyTranslations();
+  updateHeadForLanguage(lang);
+
+  // Re-render exactly the pieces whose actual CONTENT is per-language
+  // (not just chrome already covered by data-i18n above) — each one
+  // chosen to preserve whatever state the visitor had going:
+  // - renderMenuCategory(activeCategoryId), not initMenuTabs() — rebuilds
+  //   #menu-list's item descriptions in the new language without
+  //   touching the tabs row at all, so the active tab and its own
+  //   horizontal scroll position are simply never disturbed.
+  // - renderSignatureDishes(dishCarouselHandle?.getOffset() ?? 0) reads
+  //   the carousel's current auto-scroll offset out before rebuilding
+  //   it (dish descriptions are per-language) and hands it back in as
+  //   the new loop's starting point, so it continues rather than
+  //   visibly snapping back to the start.
+  // - renderEvents() re-resolves event text/ordering for the new
+  //   language inside the stable #events-grid container.
+  // - refreshGalleryMosaicLabels()/refreshGalleryOverlayLabels() update
+  //   just the gallery's own chrome text in place — built for exactly
+  //   this (see their own comments) but never actually wired up until
+  //   now, since language switching used to mean a full reload.
+  if (menu) {
+    renderMenuCategory(activeCategoryId);
+    renderSignatureDishes(dishCarouselHandle ? dishCarouselHandle.getOffset() : 0);
+  }
+  renderEvents();
+  if (rawGallery.total > 0) {
+    const resolvedGallery = resolveGallery();
+    const galleryLabels = buildGalleryLabels();
+    refreshGalleryMosaicLabels(document.getElementById("gallery-mosaic-mount"), resolvedGallery, galleryLabels);
+    refreshGalleryOverlayLabels(resolvedGallery, galleryLabels);
+  }
+
+  // Re-render rather than just re-translate: the only thing visibly
+  // different is which button is "active" (EN vs FI), simplest to just
+  // rebuild both small instances the same way init() first rendered them.
+  renderLangSwitch(document.getElementById("lang-switch"), currentLanguage, setLanguage);
+  renderLangSwitch(document.getElementById("mobile-lang-switch"), currentLanguage, setLanguage);
+
+  // Closed, not left open — per the task's own "close it after
+  // switching, but keep the page position" — a plain close() (as
+  // opposed to a link click's close(onDone)) has no scroll side effect
+  // of its own, so this doesn't interfere with the restore below.
+  if (overlayOpen) mobileNavHandle.close();
+
+  restoreScrollAnchor(scrollAnchor);
+
+  const url = (lang === "fi" ? "/fi/" : "/") + window.location.hash;
+  // replaceState, not pushState — a language toggle isn't a new place in
+  // history the way a real navigation is (nothing on screen changed
+  // "pages"), and not adding an entry is what trivially satisfies "the
+  // back button should not get stuck in a loop or add broken history
+  // entries": there's nothing here for it to get stuck on.
+  history.replaceState(history.state, "", url);
+}
+
+// Point-sampled, not just "whatever's at window.scrollY=0" — the
+// visitor's actual reference point is whatever content is actually
+// under the fixed header, not the page's raw scroll offset, and object
+// identity (not a selector or an id) is what survives a re-render
+// cleanly: innerHTML-replacing a child doesn't retroactively change
+// what object a variable here points to, so document.body.contains()
+// below reliably detects exactly when that's happened.
+//
+// Returns an array of {node, beforeTop} for the hit element and every
+// one of its ancestors up to <body> — a fallback chain, not just the
+// single deepest hit, since the deepest one is often exactly what a
+// language-dependent re-render replaces (e.g. a single .menu-item inside
+// #menu-list): restoreScrollAnchor() below walks it front-to-back and
+// uses the first node still actually in the document.
+function captureScrollAnchor() {
+  const x = window.innerWidth / 2;
+  let hit = null;
+  // Starts below the fixed header/pill-nav/sticky-tabs band and steps
+  // down looking for a point that isn't inside one of them — a fixed or
+  // sticky element's own screen position doesn't move when content
+  // above it reflows, so anchoring to one (a real risk at the exact
+  // point where the sticky menu tabs bar sits, or the bottom of the
+  // mobile topbar) would silently produce a zero/near-zero correction
+  // instead of actually compensating for anything.
+  for (let y = 90; y <= Math.min(window.innerHeight - 20, 600); y += 40) {
+    let el = document.elementFromPoint(x, y);
+    if (!el) continue;
+    while (el && el !== document.body) {
+      const position = getComputedStyle(el).position;
+      if (position === "fixed" || position === "sticky") {
+        el = null; // this whole point is under fixed/sticky chrome — try the next y
+        break;
+      }
+      el = el.parentElement;
+    }
+    if (el === document.body) {
+      hit = document.elementFromPoint(x, y);
+      break;
+    }
+  }
+  if (!hit) return null;
+
+  const chain = [];
+  let node = hit;
+  while (node && node !== document.body && node !== document.documentElement) {
+    chain.push({ node, beforeTop: node.getBoundingClientRect().top });
+    node = node.parentElement;
+  }
+  return chain.length ? chain : null;
+}
+
+// Scrolls by exactly the amount the anchor itself moved — not to an
+// absolute position — so this corrects for reflow (content above it
+// getting taller/shorter) regardless of how big that reflow turned out
+// to be, without needing to know its size in advance.
+function restoreScrollAnchor(chain) {
+  if (!chain) return;
+  const survivor = chain.find(({ node }) => document.body.contains(node));
+  if (!survivor) return;
+
+  const afterTop = survivor.node.getBoundingClientRect().top;
+  const delta = afterTop - survivor.beforeTop;
+  if (delta === 0) return;
+
+  // Forces an instant jump for this one correction — html's own
+  // site-wide scroll-behavior:smooth (style.css) would otherwise animate
+  // it, which is exactly the kind of visible "jump" this whole fix is
+  // for avoiding. Restored immediately after; nothing else runs
+  // synchronously in between that would need the smooth behavior to
+  // apply to a different scroll in the meantime.
+  const prevBehavior = document.documentElement.style.scrollBehavior;
+  document.documentElement.style.scrollBehavior = "auto";
+  window.scrollBy(0, delta);
+  document.documentElement.style.scrollBehavior = prevBehavior;
+}
+
+// <title>/meta description/canonical/og:*/twitter:* — the exact same
+// set scripts/prerender.mjs's own localizeHead() swaps for the static
+// fi/index.html build, just done here for the live, already-loaded page
+// instead of at build time. og:image and the JSON-LD block are
+// deliberately left untouched, same reasoning as prerender.mjs: both
+// describe the one restaurant, not "this page".
+function updateHeadForLanguage(lang) {
+  const seoTitle = t("seo.title");
+  const seoDescription = t("seo.description");
+  const url = lang === "fi" ? `${SITE_URL}/fi/` : `${SITE_URL}/`;
+
+  const setContent = (selector, value) => {
+    const el = document.querySelector(selector);
+    if (el) el.setAttribute("content", value);
+  };
+
+  document.title = seoTitle;
+  setContent('meta[name="description"]', seoDescription);
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.setAttribute("href", url);
+  setContent('meta[property="og:title"]', seoTitle);
+  setContent('meta[property="og:description"]', seoDescription);
+  setContent('meta[property="og:url"]', url);
+  setContent('meta[property="og:locale"]', lang === "fi" ? "fi_FI" : "en_US");
+  setContent('meta[property="og:locale:alternate"]', lang === "fi" ? "en_US" : "fi_FI");
+  setContent('meta[name="twitter:title"]', seoTitle);
+  setContent('meta[name="twitter:description"]', seoDescription);
 }
 
 // ---------- gallery i18n ----------
@@ -375,9 +569,14 @@ function forgetStaleTheme() {
 
 // ---------- language-dependent rendering ----------
 
-function renderSignatureDishes() {
+function renderSignatureDishes(startOffset = 0) {
   const dishes = menu.signatureDishes.map((dish) => ({ ...dish, description: pickLang(dish.description) }));
-  renderDishCarousel(document.getElementById("dish-grid"), dishes, { prev: t("dishCarousel.prev"), next: t("dishCarousel.next") });
+  dishCarouselHandle = renderDishCarousel(
+    document.getElementById("dish-grid"),
+    dishes,
+    { prev: t("dishCarousel.prev"), next: t("dishCarousel.next") },
+    startOffset
+  );
 }
 
 // Wires the category pills above the full menu: renders one tab per entry in

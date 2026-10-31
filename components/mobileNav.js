@@ -33,6 +33,7 @@ const CLOSE_MS = 200;
  * @param {HTMLElement} toggleContainer - mounted inside the mobile topbar
  * @param {HTMLElement} overlayContainer - mounted once, anywhere in the body
  * @param {Object} site - from data/site.json, for the shared brand mark
+ * @returns {{ close: (onDone?: () => void) => void, isOpen: () => boolean }}
  */
 export function renderMobileNav(toggleContainer, overlayContainer, site) {
   toggleContainer.innerHTML = `
@@ -112,4 +113,9 @@ export function renderMobileNav(toggleContainer, overlayContainer, site) {
       });
     });
   });
+
+  // Exposed for script.js's language switch — closes the overlay (if
+  // open) with no scroll side effect of its own (only a link click does
+  // that, via the onDone callback above; a plain close() does not).
+  return { close, isOpen: () => !overlay.hidden };
 }

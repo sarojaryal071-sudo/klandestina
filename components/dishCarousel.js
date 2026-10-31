@@ -20,8 +20,15 @@ const PIXELS_PER_SECOND = 32;
  * @param {HTMLElement} container
  * @param {Object[]} dishes - dish objects ready for renderDishCard (description already resolved to a plain string)
  * @param {Object} [t] - optional {prev, next} label strings for the arrow buttons' aria-labels
+ * @param {number} [startOffset] - resume the loop from this translateX offset instead of 0 — used on a
+ *                                  language switch, where script.js re-calls this (dish descriptions are
+ *                                  per-language, so the DOM has to be rebuilt) but wants the auto-scroll
+ *                                  loop to keep going from where it was rather than visibly snapping back
+ *                                  to the start. The returned handle's getOffset() is how the caller reads
+ *                                  the value back out beforehand.
+ * @returns {{ getOffset: () => number }}
  */
-export function renderDishCarousel(container, dishes, labels = {}) {
+export function renderDishCarousel(container, dishes, labels = {}, startOffset = 0) {
   container.innerHTML = `
     <div class="dish-carousel">
       <div class="dish-carousel-track"></div>
@@ -56,7 +63,7 @@ export function renderDishCarousel(container, dishes, labels = {}) {
     track.appendChild(set);
   });
 
-  let offset = 0;
+  let offset = startOffset;
   let paused = false;
   let setWidth = 0;
   let lastTs = null;
@@ -80,6 +87,11 @@ export function renderDishCarousel(container, dishes, labels = {}) {
   function apply() {
     track.style.transform = `translateX(${-offset}px)`;
   }
+  // Paints startOffset immediately — tick()'s own first call only sets
+  // lastTs and skips the first apply() (no dt yet), which would otherwise
+  // show one frame at the old transform (0, from the fresh container.innerHTML
+  // above) before the loop catches up.
+  apply();
 
   function tick(ts) {
     if (!document.body.contains(track)) return;
@@ -126,4 +138,6 @@ export function renderDishCarousel(container, dishes, labels = {}) {
 
   container.querySelector(".carousel-arrow--prev").addEventListener("click", () => step(-1));
   container.querySelector(".carousel-arrow--next").addEventListener("click", () => step(1));
+
+  return { getOffset: () => offset };
 }

@@ -137,6 +137,13 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+/* script.js's language switch does its own explicit scroll correction
+   (captureScrollAnchor()/restoreScrollAnchor()) after swapping content —
+   the browser's own native scroll anchoring would otherwise sometimes
+   also kick in afterward (content shifted above the viewport is exactly
+   what it watches for) and double-correct on top of that. One mechanism
+   doing this, not two fighting each other. */
+html { overflow-anchor: none; }
 body {
   margin: 0;
   background: var(--bg);
