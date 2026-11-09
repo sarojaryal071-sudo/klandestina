@@ -50,11 +50,7 @@
        contact details in data/site.json change; nothing keeps the two
        in sync automatically. Sunday has no entry at all (closed) — the
        standard schema.org convention for a day with no hours, same as
-       Monday used to have none before it reopened for lunch. Friday's
-       "01:30" closes is read by consumers as the following calendar day
-       (schema.org's own documented behavior for a closes time earlier
-       than opens on the same spec), matching how it actually runs past
-       midnight into Saturday. -->
+       Monday used to have none before it reopened for lunch. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -86,15 +82,9 @@
       },
       {
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Tuesday", "Wednesday", "Thursday"],
+        "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday"],
         "opens": "11:00",
         "closes": "22:00"
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": "Friday",
-        "opens": "11:00",
-        "closes": "01:30"
       },
       {
         "@type": "OpeningHoursSpecification",
@@ -1060,8 +1050,7 @@
       <div class="footer-col">
         <h4>Hours</h4>
         <span>Mon 11:00–14:30</span>
-          <span>Tue–Thu 11:00–22:00</span>
-          <span>Fri 11:00–01:30</span>
+          <span>Tue–Fri 11:00–22:00</span>
           <span>Sat 17:00–22:00</span>
           <span>Sun Closed</span>
       </div>

@@ -11,7 +11,7 @@
     { "day": "tue", "opens": "11:00", "closes": "22:00" },
     { "day": "wed", "opens": "11:00", "closes": "22:00" },
     { "day": "thu", "opens": "11:00", "closes": "22:00" },
-    { "day": "fri", "opens": "11:00", "closes": "01:30" },
+    { "day": "fri", "opens": "11:00", "closes": "22:00" },
     { "day": "sat", "opens": "17:00", "closes": "22:00" },
     { "day": "sun", "closed": true }
   ],
