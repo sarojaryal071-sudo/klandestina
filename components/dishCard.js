@@ -38,11 +38,11 @@ export function renderDishCard(dish) {
   `;
 
   const card = frame.querySelector(".dish-visual");
-  card.addEventListener("click", () => openItemModal(dish));
+  card.addEventListener("click", () => openItemModal(dish, card));
   card.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      openItemModal(dish);
+      openItemModal(dish, card);
     }
   });
 

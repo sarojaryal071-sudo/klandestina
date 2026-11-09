@@ -1779,7 +1779,14 @@ section { position: relative; padding: 130px 56px; }
    genuinely large centered card (640px, vs. the Special Event modal's
    460px form) since it's meant to be a proper "look at this dish" moment,
    not a compact popup; full-screen below 720px, see the media query. */
-.item-modal-card { max-width: 640px; padding: 0; overflow: hidden; }
+/* overflow-y:auto (not plain "hidden") still clips the photo to the
+   card's rounded corners exactly the same way, but also lets content
+   taller than max-height scroll instead of being silently cut off.
+   overscroll-behavior:contain stops that scroll from "chaining" into the
+   page behind once it hits the top/bottom — without it, a visitor who
+   scrolls to the end of a long description keeps scrolling the page
+   underneath the modal on the very next tick of the same gesture. */
+.item-modal-card { max-width: 640px; padding: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
 .item-modal-overlay:not([hidden]) .item-modal-card { animation: itemModalCardIn 0.28s cubic-bezier(0.2,0.8,0.2,1) both; }
 .item-modal-overlay:not([hidden]) { animation: itemModalOverlayIn 0.2s ease both; }
 @keyframes itemModalCardIn { from { opacity: 0; transform: scale(0.94) translateY(14px); } to { opacity: 1; transform: none; } }
@@ -1793,11 +1800,25 @@ section { position: relative; padding: 130px 56px; }
    icon or a big empty photo-shaped hole. Collapsing the aspect-ratio down
    to a fixed, much shorter height is what keeps it reading as "a little
    decorative strip" rather than "the photo failed to load." */
+/* A designed placeholder, not a broken-image icon or a blank hole: a
+   cream/navy tile with the brand's own donkey mark (dimmed, oversized,
+   bleeding off the right edge — decorative, hence aria-hidden) and a
+   plain-language note that this specific dish has no photo yet, rather
+   than hiding the fact silently. */
 .item-modal-photo--empty {
-  aspect-ratio: auto; height: 64px;
-  background:
-    radial-gradient(60% 120% at 20% 50%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
-    radial-gradient(60% 120% at 80% 50%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%);
+  aspect-ratio: auto; height: 160px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--navy), color-mix(in srgb, var(--navy) 70%, var(--bg)));
+  overflow: hidden;
+}
+.item-modal-photo-mark {
+  position: absolute; right: -18px; bottom: -18px;
+  width: 140px; height: 140px; opacity: 0.1; pointer-events: none;
+}
+.item-modal-photo-empty-text {
+  position: relative; z-index: 1; max-width: 70%;
+  color: color-mix(in srgb, #f6f1e7 75%, transparent);
+  font-size: 14px; text-align: center; line-height: 1.5;
 }
 
 /* A small tappable strip under the primary photo, only shown when an item
@@ -1839,6 +1860,7 @@ section { position: relative; padding: 130px 56px; }
 .item-modal-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
 .item-modal-card h3 { font-size: 32px; margin: 0; }
 .item-modal-desc { color: color-mix(in srgb, var(--ink) 55%, transparent); font-size: 16px; line-height: 1.6; margin: 14px 0 0; }
+.item-modal-desc--fallback { font-style: italic; color: color-mix(in srgb, var(--ink) 40%, transparent); }
 #item-modal-price .menu-item-price { margin-top: 20px; font-size: 28px; }
 #item-modal-price .menu-item-price--wine { margin-top: 20px; }
 
@@ -1847,7 +1869,7 @@ section { position: relative; padding: 130px 56px; }
 @media (max-width: 720px) {
   .item-modal-overlay { padding: 0; }
   .item-modal-card { max-width: 100%; width: 100%; height: 100%; max-height: 100%; border-radius: 0; }
-  .item-modal-photo { aspect-ratio: 4 / 3; }
+  .item-modal-photo:not(.item-modal-photo--empty) { aspect-ratio: 4 / 3; }
 }
 
 /* ---------- Footer ---------- */

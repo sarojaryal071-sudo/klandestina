@@ -25,7 +25,7 @@ import { renderGalleryPhotoViewer } from "./components/galleryPhotoViewer.js";
 import { renderFooter } from "./components/footer.js";
 import { renderLangSwitch } from "./components/langSwitch.js";
 import { renderEventModal, openEventModal } from "./components/eventModal.js";
-import { renderItemModal } from "./components/itemModal.js";
+import { renderItemModal, setItemModalStrings } from "./components/itemModal.js";
 import { renderFab } from "./components/fab.js";
 import { renderMobileNav } from "./components/mobileNav.js";
 import { renderMap } from "./components/map.js";
@@ -144,6 +144,7 @@ async function init() {
 
   renderEventModal(document.getElementById("event-modal-mount"), { email: site.email });
   renderItemModal(document.getElementById("item-modal-mount"));
+  setItemModalStrings({ noPhoto: t("itemModal.noPhoto"), noDescription: t("itemModal.noDescription") });
 
   // Floating action button — same trigger as the button above, just always
   // on screen (fixed bottom-right) so the inquiry path isn't only reachable
@@ -283,6 +284,7 @@ function setLanguage(lang) {
     refreshGalleryOverlayLabels(resolvedGallery, galleryLabels);
   }
   renderFooter(document.getElementById("footer-mount"), site, buildHoursLines(), homeHref());
+  setItemModalStrings({ noPhoto: t("itemModal.noPhoto"), noDescription: t("itemModal.noDescription") });
 
   // Re-render rather than just re-translate: the only thing visibly
   // different is which button is "active" (EN vs FI), simplest to just

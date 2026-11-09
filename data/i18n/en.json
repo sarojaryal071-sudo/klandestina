@@ -102,7 +102,9 @@
     "ariaLabel": "Special Events or Inquiry"
   },
   "itemModal": {
-    "closeLabel": "Close"
+    "closeLabel": "Close",
+    "noPhoto": "No photo available for this dish yet",
+    "noDescription": "No description available for this item"
   },
   "footer": {
     "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",

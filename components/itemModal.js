@@ -12,6 +12,82 @@
 import { renderPrice } from "./priceDisplay.js";
 import { dishImageSizeAttrs } from "./dishImageDims.js";
 
+// Fallback copy for the no-photo/no-description states below — the
+// component itself doesn't know about i18n (same split footer.js/
+// dishCarousel.js follow), so script.js hands in the active language's
+// resolved strings once at init and again on every language switch.
+let fallbackStrings = { noPhoto: "", noDescription: "" };
+export function setItemModalStrings(strings) {
+  fallbackStrings = strings;
+}
+
+// The element that opened the modal (a menu row or dish card) — focus
+// returns to it on close, per standard dialog a11y practice, instead of
+// being dropped back onto <body>.
+let triggerEl = null;
+
+// Scroll lock: instead of overflow:hidden on body alone (which iOS Safari
+// happily ignores for touch-scrolling the page behind a fixed overlay),
+// body is pinned with position:fixed at its negative current scroll
+// offset — the one combination that actually blocks background scroll on
+// iOS — then restored to the exact same offset on close via
+// window.scrollTo rather than letting the browser pick wherever
+// position:fixed's removal leaves it. The vanished scrollbar would
+// otherwise shift all fixed-width content sideways by its width for as
+// long as the modal is open; compensating with that same width as
+// padding-right keeps the page from visibly shifting.
+let savedScrollY = 0;
+
+function lockBodyScroll() {
+  savedScrollY = window.scrollY;
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${savedScrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+  if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+}
+
+function unlockBodyScroll() {
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  document.body.style.width = "";
+  document.body.style.paddingRight = "";
+  // "instant", not the site's global smooth-scroll default (style.css's
+  // html { scroll-behavior: smooth }) — restoring position is a snap back
+  // to where the visitor actually was, not a scroll they should watch
+  // happen.
+  window.scrollTo({ top: savedScrollY, left: 0, behavior: "instant" });
+}
+
+// All natively-focusable, visible elements inside the modal, in DOM order
+// — used both to move focus in on open and to cycle Tab/Shift+Tab inside
+// it on its own (trapFocus below) while it's open.
+function getFocusable(modal) {
+  return Array.from(modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(
+    (el) => !el.disabled && el.offsetParent !== null
+  );
+}
+
+function trapFocus(event) {
+  const modal = document.getElementById("item-modal");
+  if (event.key !== "Tab" || !modal || modal.hidden) return;
+  const focusable = getFocusable(modal);
+  if (focusable.length === 0) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
 export function renderItemModal(container) {
   container.innerHTML = `
     <div class="modal-overlay item-modal-overlay" id="item-modal" hidden>
@@ -43,6 +119,7 @@ export function renderItemModal(container) {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !modal.hidden) closeItemModal();
   });
+  document.addEventListener("keydown", trapFocus);
 }
 
 /**
@@ -53,10 +130,14 @@ export function renderItemModal(container) {
  * @param {string|Object} item.price - same shape renderMenuItem's price accepts (plain string, "", or a wine object)
  * @param {string} [item.image]      - filename inside images/dishes/, used when item.images isn't set
  * @param {string[]} [item.images]   - optional multi-photo set for the gallery; falls back to [item.image]
+ * @param {HTMLElement} [openedFrom] - the row/card that was clicked/activated to open this modal;
+ *   focus returns to it on close instead of being dropped onto <body>.
  */
-export function openItemModal(item) {
+export function openItemModal(item, openedFrom) {
   const modal = document.getElementById("item-modal");
   if (!modal) return;
+
+  triggerEl = openedFrom || null;
 
   modal.querySelector("#item-modal-title").textContent = item.name;
 
@@ -65,9 +146,13 @@ export function openItemModal(item) {
   tagEl.textContent = allergenLabel;
   tagEl.hidden = !allergenLabel;
 
+  // Never a silently empty box: a genuinely missing description shows the
+  // same fallback copy a missing photo does below, rather than hiding the
+  // paragraph outright and leaving unexplained whitespace.
   const descEl = modal.querySelector("#item-modal-desc");
-  descEl.textContent = item.description || "";
-  descEl.hidden = !item.description;
+  descEl.textContent = item.description || fallbackStrings.noDescription;
+  descEl.classList.toggle("item-modal-desc--fallback", !item.description);
+  descEl.hidden = false;
 
   modal.querySelector("#item-modal-price").innerHTML = renderPrice(item.price);
 
@@ -75,7 +160,12 @@ export function openItemModal(item) {
   renderGallery(modal, images, item.name);
 
   modal.hidden = false;
-  document.body.style.overflow = "hidden";
+  lockBodyScroll();
+
+  // Move focus into the dialog — its own close button, the one control
+  // guaranteed to exist regardless of whether this item has a photo
+  // gallery or thumbnail strip.
+  modal.querySelector(".item-modal-close").focus();
 }
 
 // A large primary photo, plus — only when the item actually has more than
@@ -91,7 +181,9 @@ function renderGallery(modal, images, itemName) {
 
   if (images.length === 0) {
     photoWrap.className = "item-modal-photo item-modal-photo--empty";
-    photoWrap.innerHTML = "";
+    photoWrap.innerHTML = `
+      <img class="item-modal-photo-mark" src="/images/logo/badge.png" alt="" aria-hidden="true">
+      <span class="item-modal-photo-empty-text">${fallbackStrings.noPhoto}</span>`;
     thumbsWrap.hidden = true;
     thumbsWrap.innerHTML = "";
     return;
@@ -139,5 +231,8 @@ export function closeItemModal() {
   const modal = document.getElementById("item-modal");
   if (!modal) return;
   modal.hidden = true;
-  document.body.style.overflow = "";
+  unlockBodyScroll();
+
+  if (triggerEl && document.body.contains(triggerEl)) triggerEl.focus();
+  triggerEl = null;
 }

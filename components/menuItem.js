@@ -55,11 +55,11 @@ export function renderMenuItem(item) {
     </div>
   `;
 
-  row.addEventListener("click", () => openItemModal(item));
+  row.addEventListener("click", () => openItemModal(item, row));
   row.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      openItemModal(item);
+      openItemModal(item, row);
     }
   });
 
