@@ -782,13 +782,18 @@ section { position: relative; padding: 130px 56px; }
 
 /* ---------- Dishes: auto-scrolling carousel ---------- */
 /* One component, one behavior, at every screen size — see
-   components/dishCarousel.js for the loop/pause/arrow logic. The card
-   list is rendered twice back-to-back (.dish-carousel-set, display:contents
-   so it groups for aria-hidden without breaking the track's flex layout)
-   and a rAF loop drives .dish-carousel-track's transform; overflow:hidden
-   here is what actually clips it down to one visible row. */
+   components/dishCarousel.js for the loop/pause/arrow/drag/wheel logic.
+   The card list is rendered as many times as the viewport needs
+   (.dish-carousel-set, display:contents so it groups for aria-hidden
+   without breaking the track's flex layout) and a rAF loop drives
+   .dish-carousel-track's transform; overflow:hidden here is what
+   actually clips it down to one visible row. touch-action: pan-y on the
+   track leaves vertical page scroll to the browser as normal but stops
+   it from also trying to interpret a horizontal swipe as its own
+   gesture — that swipe is this component's own pointer-drag handling. */
 .dish-carousel { position: relative; overflow: hidden; padding: 4px 56px; }
-.dish-carousel-track { display: flex; gap: 16px; width: max-content; will-change: transform; }
+.dish-carousel-track { display: flex; gap: 16px; width: max-content; will-change: transform; touch-action: pan-y; cursor: grab; }
+.dish-carousel-track:active { cursor: grabbing; }
 .dish-carousel-set { display: contents; }
 .dish-carousel .tilt-frame { flex: 0 0 240px; }
 .dish-visual { aspect-ratio: 3 / 4; cursor: pointer; }

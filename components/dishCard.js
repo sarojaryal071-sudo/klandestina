@@ -5,6 +5,13 @@
 // this file never needs to change just because a dish was added or removed.
 // Clicking (or Enter/Space on) a card opens the shared item detail modal
 // (itemModal.js) with the same dish data.
+//
+// No loading="lazy" on the image: this card's only caller is the
+// auto-scrolling carousel (components/dishCarousel.js), where every card
+// — including ones currently offscreen past the track's overflow:hidden
+// edge — is "about to be visible" within seconds, not a one-time
+// vertical-scroll reveal. Deferring the fetch risks a blank card
+// flashing in mid-scroll right as it would otherwise need to be ready.
 
 import { openItemModal } from "./itemModal.js";
 import { dishImageSizeAttrs } from "./dishImageDims.js";
@@ -25,7 +32,7 @@ export function renderDishCard(dish) {
     <div
       class="dish-visual visual tilt-card" role="button" tabindex="0" aria-label="${dish.name}"
     >
-      <img class="visual-img" src="/images/dishes/${dish.image}" alt="${dish.name}" loading="lazy" decoding="async"${dishImageSizeAttrs(dish.image)}>
+      <img class="visual-img" src="/images/dishes/${dish.image}" alt="${dish.name}" decoding="async"${dishImageSizeAttrs(dish.image)}>
       <div class="scrim"></div>
       <div class="caption">
         <div class="dish-top">
