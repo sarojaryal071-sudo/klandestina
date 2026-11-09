@@ -130,17 +130,7 @@ async function init() {
   phoneFallback.href = site.phone.link;
   phoneFallback.textContent = site.phone.display;
 
-  // Leaflet loads from a CDN (index.html) — an ad blocker, privacy
-  // extension, or a transient CDN hiccup could leave the global L
-  // undefined. That should cost the page a map, not everything after
-  // it (footer, menu tabs, gallery, translations all still run below).
-  try {
-    renderMap(document.getElementById("visit-map-mount"), { ...site.coordinates, label: `${site.name} — ${site.address}` });
-  } catch (e) {
-    console.error("Map failed to load:", e);
-  }
-  document.getElementById("visit-directions").href =
-    `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.address)}`;
+  renderMap(document.getElementById("visit-map-mount"), { address: site.address, lang: currentLanguage, strings: mapStrings() });
 
   renderEventModal(document.getElementById("event-modal-mount"), { email: site.email });
   renderItemModal(document.getElementById("item-modal-mount"));
@@ -205,6 +195,21 @@ function getLanguageFromPath() {
 // viewed (see getLanguageFromPath() above), not always English.
 function homeHref() {
   return currentLanguage === "fi" ? "/fi/" : "/";
+}
+
+// components/map.js doesn't know about i18n itself (same split footer.js/
+// itemModal.js follow) — this bundles the translated strings it needs.
+function mapStrings() {
+  return {
+    findTheDoor: t("visit.findTheDoor"),
+    marketHallNote: t("visit.marketHallNote"),
+    showMap: t("visit.showMap"),
+    getDirections: t("visit.getDirections"),
+    openInGoogleMaps: t("visit.openInGoogleMaps"),
+    tapToInteract: t("visit.tapToInteract"),
+    mapCookieNote: t("visit.mapCookieNote"),
+    mapTitlePrefix: t("visit.mapTitlePrefix")
+  };
 }
 
 // Each language is still its own real, separate, independently-indexable
@@ -285,6 +290,14 @@ function setLanguage(lang) {
   }
   renderFooter(document.getElementById("footer-mount"), site, buildHoursLines(), homeHref());
   setItemModalStrings({ noPhoto: t("itemModal.noPhoto"), noDescription: t("itemModal.noDescription") });
+  // Re-rendered rather than just re-translated: the embed's own hl param
+  // (Google's UI chrome) and the facade/button text both need the new
+  // language, and re-rendering from scratch is simpler than patching the
+  // iframe's src and every string in place individually. If the visitor
+  // already clicked "Show map", this does mean the facade reappears and
+  // needs a second click — an acceptable reset for the rare case of
+  // switching language mid-visit with the map already open.
+  renderMap(document.getElementById("visit-map-mount"), { address: site.address, lang: currentLanguage, strings: mapStrings() });
 
   // Re-render rather than just re-translate: the only thing visibly
   // different is which button is "active" (EN vs FI), simplest to just

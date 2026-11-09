@@ -68,7 +68,9 @@
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Aleksis Kiven katu 17",
-      "addressLocality": "Helsinki"
+      "postalCode": "00510",
+      "addressLocality": "Helsinki",
+      "addressCountry": "FI"
     },
     "geo": {
       "@type": "GeoCoordinates",
@@ -112,8 +114,6 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Leaflet (components/map.js) — free CartoDB tiles, no API key. -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="/style.css">
   <!-- Hero photo preloads — it's the LCP element, so the browser's preload
        scanner needs to find these before it would otherwise discover the
@@ -966,7 +966,9 @@
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Aleksis Kiven katu 17",
-        "addressLocality": "Helsinki"
+        "postalCode": "00510",
+        "addressLocality": "Helsinki",
+        "addressCountry": "FI"
       },
       "geo": {
         "@type": "GeoCoordinates",
@@ -1010,8 +1012,13 @@
       <span class="eyebrow" data-i18n="visit.eyebrow">Löydä meidät</span>
       <h2 data-i18n="visit.heading">Tule löytämään ovi</h2>
     </div>
-    <!-- Address/hours/contact live in the footer only, to avoid repeating
-         them twice on the page. This section is just the CTA moment. -->
+    <!-- Hours/email/phone still live in the footer only, to avoid
+         repeating those twice on the page. The address is the one
+         deliberate exception below: the map needs it right next to
+         itself (as text and as a link), so it's printed here too rather
+         than making a visitor cross-reference the footer — still read
+         from the same data/site.json field either place, never a second
+         hardcoded copy. -->
     <div class="visit-actions reveal">
       <!-- "Special Events or Inquiry" trigger (primary) + Reserve button
            (secondary), filled by script.js -->
@@ -1027,13 +1034,12 @@
       <a id="visit-phone-fallback" class="tel-link" href="#"></a>
     </p>
 
-    <!-- Filled by components/map.js. "Get Directions" sits directly under
-         the map card; filled/linked by script.js from site.json's address
-         so it stays in sync with the address printed everywhere else. -->
-    <div class="visit-map reveal">
-      <div id="visit-map-mount"></div>
-      <a id="visit-directions" class="btn btn-ghost" href="#" target="_blank" rel="noopener" data-i18n="visit.getDirections">Hae reittiohjeet</a>
-    </div>
+    <!-- Filled entirely by components/map.js: the facade/iframe card, the
+         cookie note, the Get Directions/Open in Google Maps buttons, and
+         the address line — one mount point rather than several separate
+         static elements, since the component owns the whole cluster (and
+         every URL in it) from site.json's address alone. -->
+    <div class="visit-map-wrap reveal" id="visit-map-mount"></div>
   </section>
 
   <!-- Filled by components/footer.js, which does container.innerHTML =
@@ -1047,7 +1053,7 @@
     <div class="container footer-grid">
       <div class="footer-col">
         <h4>Käynti</h4>
-        <span>Aleksis Kiven katu 17, Helsinki</span>
+        <span>Aleksis Kiven katu 17, 00510 Helsinki</span>
         <span>andres@klande.fi</span>
         <a class="tel-link" href="tel:+358413299494">+358 41 329 9494</a>
       </div>
@@ -1085,9 +1091,6 @@
        before (see README's "Item detail modal"). -->
   <div id="gallery-viewer-mount"></div>
 
-  <!-- Classic (non-module) script, so the global L it defines is ready by
-       the time the deferred module below runs. -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="/script.js"></script>
 </body>
 </html>

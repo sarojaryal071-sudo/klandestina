@@ -2,7 +2,7 @@
   "name": "Klandestina",
   "logo": "/images/logo/badge.png",
   "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",
-  "address": "Aleksis Kiven katu 17, Helsinki",
+  "address": "Aleksis Kiven katu 17, 00510 Helsinki",
   "coordinates": { "lat": 60.1903, "lng": 24.9535 },
   "email": "andres@klande.fi",
   "phone": { "display": "+358 41 329 9494", "link": "tel:+358413299494" },

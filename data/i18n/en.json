@@ -77,7 +77,14 @@
     "heading": "Come find the door",
     "getDirections": "Get Directions",
     "emailFallbackPrefix": "Or email us directly at",
-    "phoneFallbackPrefix": "Or call us at"
+    "phoneFallbackPrefix": "Or call us at",
+    "findTheDoor": "Find the door",
+    "marketHallNote": "Konepaja market hall",
+    "showMap": "Show map",
+    "openInGoogleMaps": "Open in Google Maps",
+    "tapToInteract": "Tap to interact",
+    "mapCookieNote": "Loading the map sets Google cookies.",
+    "mapTitlePrefix": "Map"
   },
   "eventModal": {
     "triggerLabel": "Special Events or Inquiry",

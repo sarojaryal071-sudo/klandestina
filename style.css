@@ -1630,84 +1630,91 @@ section { position: relative; padding: 130px 56px; }
 .visit-actions { display: flex; justify-content: center; }
 #visit-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
-/* Same card treatment as .visual (dish/gallery tiles) — border-radius,
-   overflow:hidden, --card-shadow — so the map reads as part of the same
-   design system rather than a plain embedded widget. The larger top
-   margin (vs. the tight gap under the buttons/email line above it) is
-   deliberate: heading+buttons+email fallback read as one cluster, then a
-   clear break before the map starts. "Get Directions" sits close under
-   the map as its direct action, not overlapping it. */
-.visit-map { max-width: 900px; margin: 56px auto 0; text-align: center; }
-.map-card {
-  width: 100%; height: 340px;
+/* Google Maps embed, click-to-load behind a facade (components/map.js) —
+   the larger top margin (vs. the tight gap under the buttons/email line
+   above it) is deliberate: heading+buttons+email fallback read as one
+   cluster, then a clear break before the map starts. */
+.visit-map-wrap { max-width: 900px; margin: 56px auto 0; text-align: center; }
+
+/* The facade and the loaded iframe are two absolutely-positioned layers
+   inside this one fixed-aspect-ratio box, so swapping between them (the
+   "Show map" click) never changes the card's own size — no layout shift
+   either way, loaded or not. 16:10 echoes the dish/gallery cards' own
+   wide-ish ratio; 4:3 (below) reads better once the card is full-width
+   on a narrow screen. No --card-shadow here — a 1px brass border at low
+   opacity instead, a lighter touch than the heavier shadow dish/gallery
+   cards use, since this card's job is to sit quietly until clicked. */
+.visit-map-card {
+  position: relative; width: 100%; aspect-ratio: 16 / 10;
   border-radius: 22px; overflow: hidden;
-  box-shadow: var(--card-shadow);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  background: var(--navy);
 }
-#visit-directions { margin-top: 16px; }
 @media (max-width: 900px) {
-  .map-card { height: 260px; }
+  .visit-map-card { aspect-ratio: 4 / 3; }
 }
 
-/* OpenStreetMap only ships one (light) tile style — CartoDB's free dark/
-   light tiles now require a registered API key on a live domain, so
-   plain OSM tiles replace them, always run through a dark tint filter
-   on .leaflet-tile-pane specifically, not .map-card as a whole, so it
-   hits only the raster tiles — the marker (.map-marker, further down)
-   and the popup/attribution panes are separate Leaflet panes and stay
-   untouched, which is what keeps the pin matching var(--accent) exactly
-   instead of also getting inverted. See the README's "Known gaps" note.
-   invert(90%) hue-rotate(180deg) (an earlier version of this) is the
-   common "poor man's dark map" recipe, but the partial 90% invert
-   doesn't cleanly land the hue-preserving math the full trick relies on,
-   and — worked out against the Standard OSM palette's actual colors —
-   it also crowds roads, buildings and the land fill into a narrow, very
-   dark 25–70 range where they're hard to tell apart. invert(100%) is
-   the full version of the same trick (white ↔ black, hue roughly
-   preserved for saturated colors); brightness(1.25) contrast(0.8)
-   lifts and compresses that dark cluster so the road casing stroke
-   reads as a visibly lighter gray against the land fill instead of
-   nearly merging into it, and saturate(0.6) pulls hue-rotate's output
-   back from anything oversaturated toward a subdued, not neon, look.
-   Re-checked (same filter-math-against-OSM's-actual-palette approach,
-   not a tile screenshot — this sandbox can't reach tile servers) against
-   the muted slate repaint: at the previous saturate(0.85), water landed
-   a distinctly saturated teal-blue that read too vivid against the new
-   calmer palette; dropping to saturate(0.6) pulls it toward a near-
-   neutral slate-grey much closer to --bg-alt, and major-road fills land
-   in the same brass-grey family as the new --accent instead of orange.
-   No separate light-theme override needed now — this is the only
-   treatment. */
-.map-card .leaflet-tile-pane {
-  filter: invert(100%) hue-rotate(180deg) brightness(1.2) contrast(0.82) saturate(0.6);
+.visit-map-facade, .visit-map-frame-wrap {
+  position: absolute; inset: 0;
+}
+.visit-map-facade {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 32px 24px; text-align: center;
+  background:
+    radial-gradient(60% 120% at 20% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+    radial-gradient(60% 120% at 80% 100%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%);
+}
+.visit-map-eyebrow {
+  font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.visit-map-address {
+  margin: 0; font-size: 14px; line-height: 1.6;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+.visit-map-note { color: color-mix(in srgb, var(--ink) 50%, transparent); }
+.visit-map-facade .btn { margin-top: 6px; }
+
+.visit-map-iframe { width: 100%; height: 100%; border: 0; display: block; }
+/* A light, hue-preserving invert so the embed's own white basemap and UI
+   chrome sit on navy instead of flashing a bright rectangle mid-page —
+   checked against both the pin and the street/place labels: still
+   legible at this strength, so no need to drop it. */
+.visit-map-iframe {
+  filter: invert(92%) hue-rotate(180deg) saturate(0.7) contrast(0.9);
 }
 
-/* Leaflet's own chrome (popups, attribution) re-themed to match the site
-   instead of Leaflet's default white-card look. */
-.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); box-shadow: var(--card-shadow); }
-.leaflet-popup-content { font-family: "Space Grotesk", sans-serif; font-size: 13px; color: var(--ink); margin: 10px 14px; }
-.leaflet-popup-close-button { color: color-mix(in srgb, var(--ink) 60%, transparent) !important; }
-.leaflet-control-attribution { background: color-mix(in srgb, var(--surface) 85%, transparent) !important; color: color-mix(in srgb, var(--ink) 60%, transparent) !important; font-size: 10px; }
-.leaflet-control-attribution a { color: color-mix(in srgb, var(--ink) 75%, transparent) !important; }
+/* Touch-only: a transparent tap target over the iframe so the first touch
+   dismisses this hint instead of immediately panning/zooming the embedded
+   map and fighting the page's own scroll. Desktop (mouse/trackpad) never
+   renders it — a hover-capable pointer doesn't have the same "the whole
+   gesture gets eaten by the iframe" problem a swipe does. */
+.visit-map-touch-overlay {
+  display: none;
+  position: absolute; inset: 0; z-index: 1;
+  align-items: center; justify-content: center;
+  background: rgba(5,8,18,0.25);
+  border: none; padding: 0; cursor: pointer;
+}
+.visit-map-touch-overlay span {
+  padding: 8px 16px; border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  color: var(--ink); font-size: 13px; font-weight: 600;
+  backdrop-filter: blur(4px);
+}
+@media (hover: none) and (pointer: coarse) {
+  .visit-map-touch-overlay { display: flex; }
+}
 
-/* The marker itself: a plain div (not a raster pin image) so it's fully
-   palette-driven via var(--accent) — a classic pin silhouette built from
-   a circle plus a small triangular tip, both pure CSS. */
-.map-marker {
-  box-sizing: border-box;
-  width: 26px; height: 26px;
-  background: var(--accent);
-  border: 3px solid var(--surface);
-  border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(5,8,18,0.45);
-  position: relative;
+.visit-map-cookie-note {
+  margin: 14px 0 0; font-size: 12px;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
 }
-.map-marker::after {
-  content: "";
-  position: absolute; left: 50%; top: 100%; transform: translateX(-50%);
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid var(--accent);
-}
+
+.visit-map-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+
+.visit-map-address-line { margin: 14px 0 0; font-size: 14px; }
+.visit-map-address-line a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent); }
 
 .visit-fallback {
   text-align: center; margin: 18px 0 0; font-size: 14px;

@@ -290,7 +290,9 @@ function buildEventJsonLd(dict, lang) {
         address: {
           "@type": "PostalAddress",
           streetAddress: site.address.split(",")[0].trim(),
-          addressLocality: "Helsinki"
+          postalCode: site.address.match(/\b(\d{5})\b/)?.[1],
+          addressLocality: "Helsinki",
+          addressCountry: "FI"
         },
         geo: { "@type": "GeoCoordinates", latitude: site.coordinates.lat, longitude: site.coordinates.lng }
       }
