@@ -340,18 +340,20 @@ section { position: relative; padding: 130px 56px; }
 }
 @media (max-width: 900px) { #brand-mark { display: none; } }
 
-/* Shared wordmark/logo image (components/logo.js), used inside #brand-mark,
-   .mobile-topbar-brand, .mobile-nav-brand, and .footer-logo — one base rule
-   plus a per-placement height so the same image reads as "topbar-sized" in
-   the nav and noticeably larger in the footer, without needing separate
-   image files per spot. If data/site.json has no `logo` set, or the file
-   404s/fails to decode, these containers instead hold the plain text mark
+/* Shared badge mark (components/logo.js) — the donkey centered on a cream
+   circle — used inside #brand-mark, .mobile-topbar-brand, .mobile-nav-brand,
+   and .footer-logo — one base rule plus a per-placement height so the same
+   image reads as "topbar-sized" in the nav and noticeably larger in the
+   footer, without needing separate image files per spot. If the badge files
+   404 or fail to decode, these containers instead hold the plain text mark
    they always rendered (components/logo.js's onerror fallback) — sized off
    each container's own font-size above/below, untouched by this block. */
-.brand-logo-img { display: block; width: auto; height: 26px; }
-#brand-mark .brand-logo-img { height: 38px; }
-.footer-logo .brand-logo-img { height: 56px; }
-.mobile-nav-brand .brand-logo-img { height: 46px; }
+.brand-link { display: inline-flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; }
+.brand-badge-img { display: block; width: auto; height: 32px; border-radius: 50%; }
+#brand-mark .brand-badge-img { height: 44px; }
+.footer-logo .brand-badge-img { height: 56px; }
+.mobile-nav-brand .brand-badge-img { height: 46px; }
+.brand-wordmark { color: var(--ink); }
 
 /* ---------- Utility bar: language switch ---------- */
 .utility-bar {
@@ -395,7 +397,7 @@ section { position: relative; padding: 130px 56px; }
   .mobile-topbar-brand {
     font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--ink);
   }
-  .mobile-topbar-brand .brand-logo-img { height: 34px; }
+  .mobile-topbar-brand .brand-badge-img { height: 34px; }
   .mobile-topbar-controls { display: flex; align-items: center; gap: 10px; }
 
   /* Reuses .lang-switch's text styling but drops the glass pill chrome,

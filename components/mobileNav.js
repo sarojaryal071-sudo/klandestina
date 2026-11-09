@@ -33,9 +33,10 @@ const CLOSE_MS = 200;
  * @param {HTMLElement} toggleContainer - mounted inside the mobile topbar
  * @param {HTMLElement} overlayContainer - mounted once, anywhere in the body
  * @param {Object} site - from data/site.json, for the shared brand mark
+ * @param {string} homeHref - "/" or "/fi/", see components/logo.js
  * @returns {{ close: (onDone?: () => void) => void, isOpen: () => boolean }}
  */
-export function renderMobileNav(toggleContainer, overlayContainer, site) {
+export function renderMobileNav(toggleContainer, overlayContainer, site, homeHref) {
   toggleContainer.innerHTML = `
     <button
       type="button" class="mobile-nav-toggle" aria-expanded="false" aria-controls="mobile-nav-overlay"
@@ -56,7 +57,7 @@ export function renderMobileNav(toggleContainer, overlayContainer, site) {
       <button
         type="button" class="mobile-nav-close" aria-label="Close menu" data-i18n-aria-label="mobileNav.closeLabel"
       >&times;</button>
-      <div class="mobile-nav-brand">${brandLogoHTML(site)}</div>
+      <div class="mobile-nav-brand">${brandLogoHTML(site, { homeHref })}</div>
       <nav class="mobile-nav-links">${linksHtml}</nav>
     </div>
   `;

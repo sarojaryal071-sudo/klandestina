@@ -81,15 +81,15 @@ async function init() {
 
   // Nav
   renderNav(document.getElementById("shortcut-nav"));
-  document.getElementById("brand-mark").innerHTML = brandLogoHTML(site);
-  document.getElementById("mobile-topbar-brand").innerHTML = brandLogoHTML(site);
+  document.getElementById("brand-mark").innerHTML = brandLogoHTML(site, { homeHref: homeHref(), withWordmark: true });
+  document.getElementById("mobile-topbar-brand").innerHTML = brandLogoHTML(site, { homeHref: homeHref() });
 
   // Language switcher — rendered twice (desktop utility-bar, mobile
   // topbar) since they sit in different fixed-position contexts;
   // setLanguage() below keeps both instances' active state in sync.
   renderLangSwitch(document.getElementById("lang-switch"), currentLanguage, setLanguage);
   renderLangSwitch(document.getElementById("mobile-lang-switch"), currentLanguage, setLanguage);
-  mobileNavHandle = renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"), site);
+  mobileNavHandle = renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"), site, homeHref());
 
   initMobileTopbarAutoHide();
 
@@ -173,7 +173,7 @@ async function init() {
   renderEvents();
 
   // Footer
-  renderFooter(document.getElementById("footer-mount"), site, buildHoursLines());
+  renderFooter(document.getElementById("footer-mount"), site, buildHoursLines(), homeHref());
 
   // Menu section's image column — a rotating ambient image set per
   // category, swapped by renderMenuCategory() below on every tab click
@@ -198,6 +198,12 @@ async function init() {
 function getLanguageFromPath() {
   const path = window.location.pathname;
   return path === "/fi" || path.startsWith("/fi/") ? "fi" : "en";
+}
+
+// The logo's home link follows whichever language page is currently being
+// viewed (see getLanguageFromPath() above), not always English.
+function homeHref() {
+  return currentLanguage === "fi" ? "/fi/" : "/";
 }
 
 // Each language is still its own real, separate, independently-indexable
@@ -240,6 +246,13 @@ function setLanguage(lang) {
   applyTranslations();
   updateHeadForLanguage(lang);
 
+  // The logo's home link is language-specific (see homeHref() above) —
+  // re-render it so it points at the page just switched to.
+  document.getElementById("brand-mark").innerHTML = brandLogoHTML(site, { homeHref: homeHref(), withWordmark: true });
+  document.getElementById("mobile-topbar-brand").innerHTML = brandLogoHTML(site, { homeHref: homeHref() });
+  const mobileNavBrand = document.querySelector(".mobile-nav-brand");
+  if (mobileNavBrand) mobileNavBrand.innerHTML = brandLogoHTML(site, { homeHref: homeHref() });
+
   // Re-render exactly the pieces whose actual CONTENT is per-language
   // (not just chrome already covered by data-i18n above) — each one
   // chosen to preserve whatever state the visitor had going:
@@ -269,7 +282,7 @@ function setLanguage(lang) {
     refreshGalleryMosaicLabels(document.getElementById("gallery-mosaic-mount"), resolvedGallery, galleryLabels);
     refreshGalleryOverlayLabels(resolvedGallery, galleryLabels);
   }
-  renderFooter(document.getElementById("footer-mount"), site, buildHoursLines());
+  renderFooter(document.getElementById("footer-mount"), site, buildHoursLines(), homeHref());
 
   // Re-render rather than just re-translate: the only thing visibly
   // different is which button is "active" (EN vs FI), simplest to just

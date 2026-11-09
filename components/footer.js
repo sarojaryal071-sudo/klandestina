@@ -30,8 +30,9 @@ const SOCIAL_ICONS = {
  *   language's day-name dict, which this component doesn't carry itself,
  *   per the same "components don't know about i18n" split dishCarousel.js's
  *   {prev, next} labels already follow).
+ * @param {string} homeHref - "/" or "/fi/", see components/logo.js
  */
-export function renderFooter(container, site, hoursLines) {
+export function renderFooter(container, site, hoursLines, homeHref) {
   const socialLinks = Object.entries(site.social || {})
     .map(([platform, url]) => {
       const icon = SOCIAL_ICONS[platform];
@@ -51,7 +52,7 @@ export function renderFooter(container, site, hoursLines) {
     <footer>
       <div class="container footer-grid">
         <div>
-          <div class="footer-logo">${brandLogoHTML(site)}</div>
+          <div class="footer-logo">${brandLogoHTML(site, { homeHref })}</div>
           <span data-i18n="footer.tagline">${site.tagline}</span>
           <div class="footer-social">${socialLinks}</div>
         </div>
