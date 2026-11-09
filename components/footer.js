@@ -24,8 +24,14 @@ const SOCIAL_ICONS = {
 /**
  * @param {HTMLElement} container
  * @param {Object} site  - from data/site.json
+ * @param {string[]} hoursLines - pre-formatted, already-translated hours lines
+ *   (components/hoursLogic.js's formatHoursLines() — resolving site.json's
+ *   structured hours.day/opens/closes into display text needs the active
+ *   language's day-name dict, which this component doesn't carry itself,
+ *   per the same "components don't know about i18n" split dishCarousel.js's
+ *   {prev, next} labels already follow).
  */
-export function renderFooter(container, site) {
+export function renderFooter(container, site, hoursLines) {
   const socialLinks = Object.entries(site.social || {})
     .map(([platform, url]) => {
       const icon = SOCIAL_ICONS[platform];
@@ -57,7 +63,7 @@ export function renderFooter(container, site) {
         </div>
         <div class="footer-col">
           <h4 data-i18n="footer.hoursLabel">Hours</h4>
-          ${site.hours.map((h) => `<span>${h}</span>`).join("")}
+          ${hoursLines.map((h) => `<span>${h}</span>`).join("")}
         </div>
       </div>
       <div class="container footer-bottom">

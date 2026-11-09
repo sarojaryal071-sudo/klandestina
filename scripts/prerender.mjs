@@ -50,6 +50,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { DISH_IMAGE_DIMS } from "../components/dishImageDims.js";
 import { resolveUpcomingEvents, helsinkiDateParts } from "../components/eventsLogic.js";
+import { formatHoursLines } from "../components/hoursLogic.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITE_URL = "https://klande.fi";
@@ -187,13 +188,15 @@ function buildMenuHtml(dict, lang) {
   return sections.join("\n");
 }
 
-// Address/hours/email/phone — all facts, not translated text, so only
-// the "Visit"/"Hours" column headings actually change between languages.
-// Reuses .footer-col/.container/.tel-link so it sits reasonably close to
-// the real footer's own look (components/footer.js) for the brief window
+// Address/email/phone are facts, not translated text; hours now carries
+// translated day abbreviations (Tue-Thu vs Ti-To) via hoursLogic.js's
+// formatHoursLines(), same as the live footer.js render. Reuses
+// .footer-col/.container/.tel-link so it sits reasonably close to the
+// real footer's own look (components/footer.js) for the brief window
 // before footer.js replaces it.
 function buildContactHtml(dict) {
-  const hoursHtml = site.hours.map((h) => `<span>${escapeHtml(h)}</span>`).join("\n          ");
+  const hoursLines = formatHoursLines(site.hours, { dayNames: t(dict, "hours.days"), closedWord: t(dict, "hours.closed") });
+  const hoursHtml = hoursLines.map((h) => `<span>${escapeHtml(h)}</span>`).join("\n          ");
   return `
     <div class="container footer-grid">
       <div class="footer-col">

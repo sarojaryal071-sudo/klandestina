@@ -33,6 +33,7 @@ import { renderMenuPhoto } from "./components/menuPhoto.js";
 import { brandLogoHTML } from "./components/logo.js";
 import { resolveUpcomingEvents } from "./components/eventsLogic.js";
 import { renderEventsSection } from "./components/eventsSection.js";
+import { formatHoursLines } from "./components/hoursLogic.js";
 
 const SUPPORTED_LANGS = ["en", "fi"];
 
@@ -172,7 +173,7 @@ async function init() {
   renderEvents();
 
   // Footer
-  renderFooter(document.getElementById("footer-mount"), site);
+  renderFooter(document.getElementById("footer-mount"), site, buildHoursLines());
 
   // Menu section's image column — a rotating ambient image set per
   // category, swapped by renderMenuCategory() below on every tab click
@@ -268,6 +269,7 @@ function setLanguage(lang) {
     refreshGalleryMosaicLabels(document.getElementById("gallery-mosaic-mount"), resolvedGallery, galleryLabels);
     refreshGalleryOverlayLabels(resolvedGallery, galleryLabels);
   }
+  renderFooter(document.getElementById("footer-mount"), site, buildHoursLines());
 
   // Re-render rather than just re-translate: the only thing visibly
   // different is which button is "active" (EN vs FI), simplest to just
@@ -432,6 +434,15 @@ function buildGalleryLabels() {
     ofTotalFn: (current, total) => t("gallery.photoOfTotal", { current, total }),
     altPhotoFn: (album, n) => t("gallery.altPhoto", { album, n }),
   };
+}
+
+// Resolves site.json's structured hours (day/opens/closes) into the
+// active language's display lines — see components/hoursLogic.js.
+function buildHoursLines() {
+  return formatHoursLines(site.hours, {
+    dayNames: i18n[currentLanguage].hours.days,
+    closedWord: t("hours.closed"),
+  });
 }
 
 // ---------- events ----------

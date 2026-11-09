@@ -4,6 +4,10 @@
     "description": "Klandestina is a Mexican cantina in Helsinki with no sign out front — tacos off live coals, mezcal poured heavy, at Aleksis Kiven katu 17."
   },
   "nav": { "story": "Story", "menu": "Menu", "events": "Events", "gallery": "Gallery", "visit": "Visit" },
+  "hours": {
+    "days": { "mon": "Mon", "tue": "Tue", "wed": "Wed", "thu": "Thu", "fri": "Fri", "sat": "Sat", "sun": "Sun" },
+    "closed": "Closed"
+  },
   "mobileNav": {
     "home": "Home",
     "visit": "Find Us",

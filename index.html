@@ -43,7 +43,13 @@
        rather than invented (site.json has none) — see README's "SEO"
        section. Update this block by hand whenever hours, address, or
        contact details in data/site.json change; nothing keeps the two
-       in sync automatically. -->
+       in sync automatically. Sunday has no entry at all (closed) — the
+       standard schema.org convention for a day with no hours, same as
+       Monday used to have none before it reopened for lunch. Friday's
+       "01:30" closes is read by consumers as the following calendar day
+       (schema.org's own documented behavior for a closes time earlier
+       than opens on the same spec), matching how it actually runs past
+       midnight into Saturday. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -66,15 +72,27 @@
     "openingHoursSpecification": [
       {
         "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Monday",
+        "opens": "11:00",
+        "closes": "14:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
         "dayOfWeek": ["Tuesday", "Wednesday", "Thursday"],
-        "opens": "17:00",
+        "opens": "11:00",
         "closes": "22:00"
       },
       {
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Friday", "Saturday"],
+        "dayOfWeek": "Friday",
+        "opens": "11:00",
+        "closes": "01:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
         "opens": "17:00",
-        "closes": "23:59"
+        "closes": "22:00"
       }
     ],
     "servesCuisine": "Mexican",
@@ -1029,9 +1047,11 @@
       </div>
       <div class="footer-col">
         <h4>Hours</h4>
-        <span>Tue–Thu 17:00–22:00</span>
-          <span>Fri–Sat 17:00–24:00</span>
-          <span>Closed Sun &amp; Mon</span>
+        <span>Mon 11:00–14:30</span>
+          <span>Tue–Thu 11:00–22:00</span>
+          <span>Fri 11:00–01:30</span>
+          <span>Sat 17:00–22:00</span>
+          <span>Sun Closed</span>
       </div>
     </div>
           <!-- PRERENDER:CONTACT:END -->
