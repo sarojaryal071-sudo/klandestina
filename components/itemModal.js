@@ -26,6 +26,15 @@ export function setItemModalStrings(strings) {
 // being dropped back onto <body>.
 let triggerEl = null;
 
+// Close plays a ~160ms exit animation (style.css's --closing class)
+// before the modal actually disappears — closeItemModal() defers the
+// real teardown (hiding it, unlocking scroll, returning focus) to the
+// end of that animation via this timer, tracked so a rapid re-open
+// (clicking a new dish before the previous close finished) can cancel a
+// stale teardown instead of racing it.
+let closeTimer = null;
+const CLOSE_MS = 160;
+
 // Scroll lock: instead of overflow:hidden on body alone (which iOS Safari
 // happily ignores for touch-scrolling the page behind a fixed overlay),
 // body is pinned with position:fixed at its negative current scroll
@@ -112,8 +121,23 @@ export function renderItemModal(container) {
 
   const modal = container.querySelector("#item-modal");
 
+  // Backdrop click closes, but only when BOTH the press and the release
+  // land directly on the backdrop itself — not just the release. A plain
+  // `click` listener checking only event.target would also fire for a
+  // swipe/drag that starts inside the card (e.g. scrolling its
+  // description) and ends up outside the card's box on release, since a
+  // native click still targets whatever's under the pointer at the end
+  // of the gesture regardless of where it started.
+  let pressedBackdrop = false;
+  modal.addEventListener("pointerdown", (event) => {
+    pressedBackdrop = event.target === modal;
+  });
   modal.addEventListener("click", (event) => {
-    if (event.target === modal || event.target.closest("[data-close-modal]")) closeItemModal();
+    if (event.target.closest("[data-close-modal]")) {
+      closeItemModal();
+    } else if (event.target === modal && pressedBackdrop) {
+      closeItemModal();
+    }
   });
 
   document.addEventListener("keydown", (event) => {
@@ -137,6 +161,17 @@ export function openItemModal(item, openedFrom) {
   const modal = document.getElementById("item-modal");
   if (!modal) return;
 
+  // A new dish clicked while the previous one was still mid-close-
+  // animation (modal.hidden is still false during that window) — cancel
+  // the stale teardown rather than letting it fire later and undo state
+  // (unlock scroll, return focus to the OLD trigger) this fresh open is
+  // about to set up.
+  if (closeTimer) {
+    clearTimeout(closeTimer);
+    closeTimer = null;
+  }
+  modal.classList.remove("item-modal-overlay--closing");
+
   triggerEl = openedFrom || null;
 
   modal.querySelector("#item-modal-title").textContent = item.name;
@@ -159,8 +194,15 @@ export function openItemModal(item, openedFrom) {
   const images = item.images && item.images.length ? item.images : item.image ? [item.image] : [];
   renderGallery(modal, images, item.name);
 
+  // Already open (a new dish clicked while this one, or a mid-close one,
+  // was showing) — the scroll lock from that still-active session is
+  // already in place; re-locking here would re-read window.scrollY while
+  // the page is already pinned via position:fixed (always 0 in that
+  // state) and clobber the real saved offset closeItemModal() needs to
+  // restore later.
+  const alreadyOpen = !modal.hidden;
   modal.hidden = false;
-  lockBodyScroll();
+  if (!alreadyOpen) lockBodyScroll();
 
   // Move focus into the dialog — its own close button, the one control
   // guaranteed to exist regardless of whether this item has a photo
@@ -229,10 +271,19 @@ function renderGallery(modal, images, itemName) {
 
 export function closeItemModal() {
   const modal = document.getElementById("item-modal");
-  if (!modal) return;
-  modal.hidden = true;
-  unlockBodyScroll();
+  if (!modal || modal.hidden || closeTimer) return;
 
-  if (triggerEl && document.body.contains(triggerEl)) triggerEl.focus();
-  triggerEl = null;
+  // Plays the exit animation (style.css) first — modal.hidden only flips
+  // once it's actually finished, so the card is still there to animate
+  // rather than vanishing instantly out from under it.
+  modal.classList.add("item-modal-overlay--closing");
+  closeTimer = window.setTimeout(() => {
+    modal.hidden = true;
+    modal.classList.remove("item-modal-overlay--closing");
+    closeTimer = null;
+    unlockBodyScroll();
+
+    if (triggerEl && document.body.contains(triggerEl)) triggerEl.focus();
+    triggerEl = null;
+  }, CLOSE_MS);
 }

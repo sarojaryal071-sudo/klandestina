@@ -1749,28 +1749,76 @@ section { position: relative; padding: 130px 56px; }
 
 /* ---------- Item detail modal (menu rows + dish cards) ---------- */
 /* Reuses .modal-overlay/.modal-card/.modal-close as-is (same backdrop,
-   corner radius, card-shadow as the Special Event modal) — only what's
-   different about this one gets its own rules: a photo bleeding to the
-   card's own edges at the top (so .modal-card's usual 36px/32px padding
+   corner radius language, border as the Special Event modal) — only
+   what's different about this one gets its own rules: a photo bleeding
+   to the card's own top edge (so .modal-card's usual 36px/32px padding
    is zeroed out here and reapplied just to the text body below it), and
-   a fade/scale-in entrance since this one opens far more often per visit
-   (every menu row/dish card, not just one CTA) and benefits more from
-   feeling snappy/alive rather than an instant hard cut. Sized as a
-   genuinely large centered card (640px, vs. the Special Event modal's
-   460px form) since it's meant to be a proper "look at this dish" moment,
-   not a compact popup; full-screen below 720px, see the media query. */
-/* overflow-y:auto (not plain "hidden") still clips the photo to the
-   card's rounded corners exactly the same way, but also lets content
-   taller than max-height scroll instead of being silently cut off.
-   overscroll-behavior:contain stops that scroll from "chaining" into the
-   page behind once it hits the top/bottom — without it, a visitor who
-   scrolls to the end of a long description keeps scrolling the page
-   underneath the modal on the very next tick of the same gesture. */
-.item-modal-card { max-width: 640px; padding: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
-.item-modal-overlay:not([hidden]) .item-modal-card { animation: itemModalCardIn 0.28s cubic-bezier(0.2,0.8,0.2,1) both; }
-.item-modal-overlay:not([hidden]) { animation: itemModalOverlayIn 0.2s ease both; }
-@keyframes itemModalCardIn { from { opacity: 0; transform: scale(0.94) translateY(14px); } to { opacity: 1; transform: none; } }
+   its own "lifted pop-up card" treatment (see the animation/shadow block
+   below) since this one opens far more often per visit (every menu row/
+   dish card, not just one CTA) and benefits more from feeling snappy/
+   alive than an instant hard cut. A centered card at every width now,
+   never full-screen — 560px max-width on desktop, a 16px side margin on
+   mobile (the media query at the bottom), both with their own
+   scroll-inside-the-card behavior (overflow-y:auto, not plain "hidden",
+   still clips the photo to the card's rounded corners exactly the same
+   way, but also lets content taller than max-height scroll instead of
+   being silently cut off; overscroll-behavior:contain stops that scroll
+   from "chaining" into the page behind once it hits the top/bottom). */
+.item-modal-card {
+  max-width: 560px; padding: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+  border-radius: 20px;
+  /* Two-layer "lifted off the page" shadow — a tight, close contact
+     shadow (grounds the card right at its own edge) plus a larger, much
+     softer blurred one offset further down (the actual "floating above
+     the backdrop" read) — rather than .modal-card's single shared
+     --card-shadow, which reads flatter at this card's smaller/more
+     frequently-opened "pop-up" size. The inherited 10%-opacity border
+     (.modal-card, above) already serves as the subtle highlight edge. */
+  box-shadow:
+    0 2px 5px -2px rgba(5,8,18,0.4),
+    0 32px 56px -20px rgba(5,8,18,0.65);
+}
+
+/* Opening/closing — see script.js's openItemModal()/closeItemModal() for
+   the --closing class and its matching exit delay. Deliberately
+   transform/opacity only (nothing that forces layout) so it stays smooth
+   on a low-end phone. The default keyframes below are the
+   reduced-motion-safe version: no scale/tilt, a plain fade, same
+   durations — "prefers-reduced-motion: reduce" never needs its own
+   separate rules precisely because the default already IS that version;
+   @media (prefers-reduced-motion: no-preference) below is what layers
+   the actual scale/translateY/rotateX pop-up motion on top, the same
+   "write the safe default, then enhance" split .gallery-tile-img and
+   .reveal elsewhere in this file already use. */
+.item-modal-overlay:not([hidden]) { animation: itemModalOverlayIn 0.24s ease both; }
+.item-modal-overlay:not([hidden]) .item-modal-card { animation: itemModalCardIn 0.24s ease both; }
+.item-modal-overlay--closing { animation: itemModalOverlayOut 0.16s ease-in both; }
+.item-modal-overlay--closing .item-modal-card { animation: itemModalCardOut 0.16s ease-in both; }
 @keyframes itemModalOverlayIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes itemModalOverlayOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes itemModalCardIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes itemModalCardOut { from { opacity: 1; } to { opacity: 0; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* perspective on the backdrop, not the card itself, is what gives the
+     card's own rotateX below actual 3D depth instead of a flat skew. */
+  .item-modal-overlay { perspective: 800px; }
+
+  /* A tiny overshoot (cubic-bezier's second control point > 1) on the
+     way in only — closing stays a plain ease-in, since an overshoot on
+     the way OUT would read as the card bouncing back in rather than
+     leaving. */
+  .item-modal-overlay:not([hidden]) .item-modal-card { animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  @keyframes itemModalCardIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.94) rotateX(6deg); }
+    to { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+  }
+  @keyframes itemModalCardOut {
+    from { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+    to { opacity: 0; transform: translateY(10px) scale(0.97) rotateX(3deg); }
+  }
+}
 
 .item-modal-photo { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface); }
 .item-modal-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -1828,9 +1876,13 @@ section { position: relative; padding: 130px 56px; }
    than relying on DOM order never changing again. Also its own
    contrast-safe treatment rather than inheriting the base .modal-close's
    (tuned to sit on var(--surface), not a photo) — same top/right position
-   as the base rule, only the visual treatment and stacking differ. */
+   as the base rule, only the visual treatment and stacking differ.
+   44x44 (vs. the base .modal-close's 32x32) to clear WCAG 2.5.5's
+   minimum tap target — this one needs to work reliably over a photo on
+   a phone, not just a form on desktop. */
 .item-modal-close {
   z-index: 5;
+  top: 12px; right: 12px; width: 44px; height: 44px;
   background: color-mix(in srgb, var(--bg) 55%, transparent); border: none; color: var(--ink);
   backdrop-filter: blur(2px);
 }
@@ -1844,12 +1896,19 @@ section { position: relative; padding: 130px 56px; }
 #item-modal-price .menu-item-price { margin-top: 20px; font-size: 28px; }
 #item-modal-price .menu-item-price--wine { margin-top: 20px; }
 
-/* Full-screen rather than a smaller floating card once the viewport's too
-   narrow for a large centered card to read comfortably. */
+/* Still a centered pop-up card below 720px, not full-screen — just a
+   tighter 16px side margin (vs. the base .modal-overlay's 24px) and a
+   shorter max-height so it comfortably clears mobile browser chrome.
+   86vh is the fallback for a browser that doesn't know svh yet; 86svh
+   (small viewport height — the viewport once any address bar/toolbar
+   that CAN be visible IS, the safe floor rather than the dynamic value
+   that shifts under the visitor as they scroll) overrides it where
+   supported, so the card never ends up cut off under a bar even in the
+   worst case. Taller content scrolls inside the card either way, same
+   as desktop — see the overflow-y:auto note above. */
 @media (max-width: 720px) {
-  .item-modal-overlay { padding: 0; }
-  .item-modal-card { max-width: 100%; width: 100%; height: 100%; max-height: 100%; border-radius: 0; }
-  .item-modal-photo:not(.item-modal-photo--empty) { aspect-ratio: 4 / 3; }
+  .item-modal-overlay { padding: 16px; }
+  .item-modal-card { max-height: 86vh; max-height: 86svh; }
 }
 
 /* ---------- Footer ---------- */
