@@ -1635,20 +1635,21 @@ section { position: relative; padding: 130px 56px; }
 .visit-actions { display: flex; justify-content: center; }
 #visit-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
-/* Google Maps embed, click-to-load behind a facade (components/map.js) —
-   the larger top margin (vs. the tight gap under the buttons/email line
-   above it) is deliberate: heading+buttons+email fallback read as one
-   cluster, then a clear break before the map starts. */
+/* Google Maps embed (components/map.js) — the larger top margin (vs. the
+   tight gap under the buttons/email line above it) is deliberate:
+   heading+buttons+email fallback read as one cluster, then a clear break
+   before the map starts. */
 .visit-map-wrap { max-width: 900px; margin: 56px auto 0; text-align: center; }
 
-/* The facade and the loaded iframe are two absolutely-positioned layers
-   inside this one fixed-aspect-ratio box, so swapping between them (the
-   "Show map" click) never changes the card's own size — no layout shift
-   either way, loaded or not. 16:10 echoes the dish/gallery cards' own
-   wide-ish ratio; 4:3 (below) reads better once the card is full-width
-   on a narrow screen. No --card-shadow here — a 1px brass border at low
-   opacity instead, a lighter touch than the heavier shadow dish/gallery
-   cards use, since this card's job is to sit quietly until clicked. */
+/* Fixed aspect ratio (16:10 desktop, 4:3 below 900px, echoing the dish/
+   gallery cards' own wide-ish ratio) so the card never shifts surrounding
+   layout, loaded or not — the iframe loads directly into it (no
+   click-to-load facade), with loading="lazy" still deferring the actual
+   fetch until the card scrolls near. Before that fetch resolves, this
+   background shows through as a dark placeholder rather than a blank/
+   white flash. No --card-shadow here — a 1px brass border at low opacity
+   instead, a lighter touch than the heavier shadow dish/gallery cards
+   use. */
 .visit-map-card {
   position: relative; width: 100%; aspect-ratio: 16 / 10;
   border-radius: 22px; overflow: hidden;
@@ -1659,27 +1660,6 @@ section { position: relative; padding: 130px 56px; }
   .visit-map-card { aspect-ratio: 4 / 3; }
 }
 
-.visit-map-facade, .visit-map-frame-wrap {
-  position: absolute; inset: 0;
-}
-.visit-map-facade {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-  padding: 32px 24px; text-align: center;
-  background:
-    radial-gradient(60% 120% at 20% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
-    radial-gradient(60% 120% at 80% 100%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%);
-}
-.visit-map-eyebrow {
-  font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: 0.04em;
-  color: var(--ink);
-}
-.visit-map-address {
-  margin: 0; font-size: 14px; line-height: 1.6;
-  color: color-mix(in srgb, var(--ink) 70%, transparent);
-}
-.visit-map-note { color: color-mix(in srgb, var(--ink) 50%, transparent); }
-.visit-map-facade .btn { margin-top: 6px; }
-
 .visit-map-iframe { width: 100%; height: 100%; border: 0; display: block; }
 /* A light, hue-preserving invert so the embed's own white basemap and UI
    chrome sit on navy instead of flashing a bright rectangle mid-page —
@@ -1689,37 +1669,16 @@ section { position: relative; padding: 130px 56px; }
   filter: invert(92%) hue-rotate(180deg) saturate(0.7) contrast(0.9);
 }
 
-/* Touch-only: a transparent tap target over the iframe so the first touch
-   dismisses this hint instead of immediately panning/zooming the embedded
-   map and fighting the page's own scroll. Desktop (mouse/trackpad) never
-   renders it — a hover-capable pointer doesn't have the same "the whole
-   gesture gets eaten by the iframe" problem a swipe does. */
-.visit-map-touch-overlay {
-  display: none;
-  position: absolute; inset: 0; z-index: 1;
-  align-items: center; justify-content: center;
-  background: rgba(5,8,18,0.25);
-  border: none; padding: 0; cursor: pointer;
-}
-.visit-map-touch-overlay span {
-  padding: 8px 16px; border-radius: 999px;
-  background: color-mix(in srgb, var(--bg) 70%, transparent);
-  color: var(--ink); font-size: 13px; font-weight: 600;
-  backdrop-filter: blur(4px);
-}
-@media (hover: none) and (pointer: coarse) {
-  .visit-map-touch-overlay { display: flex; }
-}
+.visit-map-actions { display: flex; justify-content: center; margin-top: 20px; }
 
-.visit-map-cookie-note {
-  margin: 14px 0 0; font-size: 12px;
-  color: color-mix(in srgb, var(--ink) 45%, transparent);
+/* The address's only appearance near the map — plain text, not a link
+   (the "Get Directions" button above is the map's one actionable link),
+   with the market-hall note as a dimmer second line. */
+.visit-map-address-line {
+  margin: 14px 0 0; font-size: 14px; line-height: 1.6;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
 }
-
-.visit-map-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-
-.visit-map-address-line { margin: 14px 0 0; font-size: 14px; }
-.visit-map-address-line a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.visit-map-note { color: color-mix(in srgb, var(--ink) 50%, transparent); }
 
 .visit-fallback {
   text-align: center; margin: 18px 0 0; font-size: 14px;

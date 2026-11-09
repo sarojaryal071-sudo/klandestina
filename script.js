@@ -201,13 +201,8 @@ function homeHref() {
 // itemModal.js follow) — this bundles the translated strings it needs.
 function mapStrings() {
   return {
-    findTheDoor: t("visit.findTheDoor"),
     marketHallNote: t("visit.marketHallNote"),
-    showMap: t("visit.showMap"),
     getDirections: t("visit.getDirections"),
-    openInGoogleMaps: t("visit.openInGoogleMaps"),
-    tapToInteract: t("visit.tapToInteract"),
-    mapCookieNote: t("visit.mapCookieNote"),
     mapTitlePrefix: t("visit.mapTitlePrefix")
   };
 }

@@ -78,12 +78,7 @@
     "getDirections": "Hae reittiohjeet",
     "emailFallbackPrefix": "Tai lähetä sähköpostia suoraan osoitteeseen",
     "phoneFallbackPrefix": "Tai soita meille numeroon",
-    "findTheDoor": "Löydä ovi",
     "marketHallNote": "Konepajan Kauppahalli",
-    "showMap": "Näytä kartta",
-    "openInGoogleMaps": "Avaa Google Mapsissa",
-    "tapToInteract": "Napauta käyttääksesi karttaa",
-    "mapCookieNote": "Kartan lataaminen asettaa Googlen evästeitä.",
     "mapTitlePrefix": "Kartta"
   },
   "eventModal": {
