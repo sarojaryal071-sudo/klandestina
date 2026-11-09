@@ -825,6 +825,15 @@ section { position: relative; padding: 130px 56px; }
    image" on mobile. */
 .story-layout { display: flex; flex-direction: column; gap: 48px; align-items: center; }
 .story-text { width: 100%; }
+/* .section-head's shared 60px bottom margin (style.css, ~line 214) is sized
+   for what every other section puts under it — a grid, carousel, or
+   mosaic that wants real breathing room before it. Story is the only
+   section where a plain paragraph follows immediately, where that same
+   60px read as an oversized, unintentional-looking gap; this scopes it
+   down to a mobile-appropriate ~20px. The @media (min-width: 901px) block
+   below already sets its own 32px for the two-column desktop layout, so
+   this rule only ever applies below that breakpoint. */
+.story-text .section-head { margin-bottom: 20px; }
 .story-body { max-width: 680px; margin: 0 auto; text-align: center; }
 .story-body p { color: color-mix(in srgb, var(--ink) 70%, transparent); font-size: 17px; margin: 0 0 20px; }
 .story-quote {
