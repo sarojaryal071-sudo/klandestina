@@ -65,6 +65,7 @@ export function renderFooter(container, site, hoursLines, homeHref) {
         <div class="footer-col">
           <h4 data-i18n="footer.hoursLabel">Hours</h4>
           ${hoursLines.map((h) => `<span>${h}</span>`).join("")}
+          <span class="footer-kitchen-note" data-i18n="footer.kitchenNote"></span>
         </div>
       </div>
       <div class="container footer-bottom">

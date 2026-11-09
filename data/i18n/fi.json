@@ -68,7 +68,7 @@
     "eyebrow": "Tarina",
     "heading": "Eläköön La Klandestina",
     "body1": "Tervetuloa Klandestinaan, arjen meksikolaiseen suosikkiravintolaasi! Tavoitteenamme on upottaa sinut täyteen Meksiko-kokemukseen jokaisen tarjoamamme annoksen kautta. Klandestinassa intohimomme ruokaa ja palvelua kohtaan on vertaansa vailla. Haluamme, että tulet, viihdyt ja palaat yhä uudelleen.",
-    "body2": "Toimittuamme Harju Kalliossa kaksi ja puoli vuotta, kohtasimme pandemia-ruletin haasteet ja kaikki sen mukanaan tuomat vaikeudet. Näistä vastoinkäymisistä huolimatta meillä oli onni saada uskollinen asiakaskunta ja monia ystäviä, jotka kävivät luonamme, mikä antoi meille motivaation jatkaa. Haluamme sinun tietävän, että teemme tämän sinua varten – olemme yhä pelissä mukana tukesi ansiosta. Ilman sinua mikään tästä ei olisi mahdollista. Olemme innoissamme paluustamme ja odotamme innolla vanhojen asiakkaidemme ja ystäviemme paluuta.",
+    "body2": "Toimittuamme Harju Kalliossa kaksi ja puoli vuotta, kohtasimme pandemia-ruletin haasteet ja kaikki sen mukanaan tuomat vaikeudet. Näistä vastoinkäymisistä huolimatta meillä oli onni saada uskollinen asiakaskunta ja monia ystäviä, jotka kävivät luonamme, mikä antoi meille motivaation jatkaa. Haluamme sinun tietävän, että teemme tämän sinua varten. Olemme yhä pelissä mukana tukesi ansiosta. Ilman sinua mikään tästä ei olisi mahdollista. Olemme innoissamme paluustamme ja odotamme innolla vanhojen asiakkaidemme ja ystäviemme paluuta.",
     "body3": "La Cantina Klandestina on kunnianosoituksemme sille tyypillisen meksikolaiselle tunteelle, ettei tarvitse noudattaa jokaista sääntöä orjallisesti, vaan tehdä asiat omalla tavallaan.",
     "quoteText": "”Olemme laillisia kapinallisia, jotka rakastavat ruokaa ja ovat ylpeitä ystävällisestä asiakaspalvelustaan.”"
   },
@@ -112,6 +112,7 @@
     "tagline": "Cantina ilman kylttiä. Aleksis Kiven katu 17, Helsinki.",
     "visitLabel": "Käynti",
     "hoursLabel": "Aukioloajat",
+    "kitchenNote": "Keittiö sulkeutuu klo 21.30 (ti-la)",
     "rights": "Kaikki oikeudet pidätetään.",
     "social": {
       "instagram": "Instagram",

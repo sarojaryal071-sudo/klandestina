@@ -3,7 +3,7 @@
 // script.js (browser) and scripts/prerender.mjs (Node), same split as
 // eventsLogic.js. Each entry is { day: "mon".."sun", opens: "HH:MM",
 // closes: "HH:MM" } or { day, closed: true }. closes reading "earlier"
-// than opens (e.g. Friday opens "11:00", closes "01:30") means that
+// than opens (e.g. Friday opens "11:00", closes "01:00") means that
 // day's hours run past midnight into the next calendar day — same
 // convention eventsLogic.js already uses for events.
 

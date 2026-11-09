@@ -208,6 +208,7 @@ function buildContactHtml(dict) {
       <div class="footer-col">
         <h4>${escapeHtml(t(dict, "footer.hoursLabel") || "Hours")}</h4>
         ${hoursHtml}
+        <span class="footer-kitchen-note">${escapeHtml(t(dict, "footer.kitchenNote") || "")}</span>
       </div>
     </div>`;
 }

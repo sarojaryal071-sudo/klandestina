@@ -386,7 +386,10 @@ section { position: relative; padding: 130px 56px; }
     display: flex; align-items: center; justify-content: space-between;
     position: fixed; top: 0; left: 0; right: 0; z-index: 60;
     padding: 16px 20px;
-    background: var(--glass);
+    /* Near-solid navy rather than --glass's 65% — over a light/cream
+       section, --glass let enough of that background bleed through to
+       read as a dull grey instead of the site's own navy. */
+    background: color-mix(in srgb, var(--navy) 95%, transparent);
     border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
     backdrop-filter: blur(16px);
     box-shadow: 0 16px 40px -16px rgba(5,8,18,0.7);
