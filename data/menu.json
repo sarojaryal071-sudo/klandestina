@@ -40,7 +40,7 @@
       "image": "frijoles-con-veneno.jpg"
     },
     {
-      "name": "Pork in Chili Ancho",
+      "name": "Killers Chilaquiles",
       "price": "€15",
       "allergens": ["M", "G"],
       "description": {
@@ -380,7 +380,8 @@
         "en": "Tortilla chips beans, cheese, salsa verde, salad, queso fresco",
         "fi": "Tortillalastuja, papuja, juustoa, salsa verdea, salaattia, queso frescoa"
       },
-      "price": "€5"
+      "price": "€5",
+      "image": "pork-in-chili-ancho.jpg"
     }
   ],
 
