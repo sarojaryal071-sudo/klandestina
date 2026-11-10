@@ -132,7 +132,7 @@ async function init() {
 
   renderMap(document.getElementById("visit-map-mount"), { address: site.address, lang: currentLanguage, strings: mapStrings() });
 
-  renderEventModal(document.getElementById("event-modal-mount"), { email: site.email });
+  renderEventModal(document.getElementById("event-modal-mount"), { email: site.email, phone: site.phone, getStrings: eventModalStrings });
   renderItemModal(document.getElementById("item-modal-mount"));
   setItemModalStrings({ noPhoto: t("itemModal.noPhoto"), noDescription: t("itemModal.noDescription") });
 
@@ -204,6 +204,45 @@ function mapStrings() {
     marketHallNote: t("visit.marketHallNote"),
     getDirections: t("visit.getDirections"),
     mapTitlePrefix: t("visit.mapTitlePrefix")
+  };
+}
+
+// components/eventModal.js doesn't know about i18n itself (same split as
+// above) — called fresh on every submit/copy, not captured once, so a
+// message drafted (or a panel shown) after a language switch is always in
+// the current language.
+function eventModalStrings() {
+  return {
+    eventTypeLabel: t("eventModal.eventTypeLabel"),
+    eventTypeLabels: {
+      Birthday: t("eventModal.eventTypeBirthday"),
+      "Private Party": t("eventModal.eventTypePrivateParty"),
+      "Corporate Event": t("eventModal.eventTypeCorporate"),
+      Anniversary: t("eventModal.eventTypeAnniversary"),
+      Other: t("eventModal.eventTypeOther")
+    },
+    dateLabel: t("eventModal.dateLabel"),
+    guestsLabel: t("eventModal.guestsLabel"),
+    detailsLabel: t("eventModal.detailsLabel"),
+    subjectPrefix: t("eventModal.subjectPrefix"),
+    messageGreeting: t("eventModal.messageGreeting"),
+    messageClosing: t("eventModal.messageClosing"),
+    confirmHeading: t("eventModal.confirmHeading"),
+    confirmIntro: t("eventModal.confirmIntro"),
+    confirmHeadingTouch: t("eventModal.confirmHeadingTouch"),
+    confirmIntroTouch: t("eventModal.confirmIntroTouch"),
+    previewToLabel: t("eventModal.previewToLabel"),
+    previewSubjectLabel: t("eventModal.previewSubjectLabel"),
+    copyButton: t("eventModal.copyButton"),
+    copyButtonDone: t("eventModal.copyButtonDone"),
+    copyAnnounce: t("eventModal.copyAnnounce"),
+    copyFallbackAnnounce: t("eventModal.copyFallbackAnnounce"),
+    step2Intro: t("eventModal.step2Intro"),
+    openInGmail: t("eventModal.openInGmail"),
+    openInOutlook: t("eventModal.openInOutlook"),
+    openInEmailApp: t("eventModal.openInEmailApp"),
+    directContactPrefix: t("eventModal.directContactPrefix"),
+    backToForm: t("eventModal.backToForm")
   };
 }
 
