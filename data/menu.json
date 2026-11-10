@@ -323,7 +323,8 @@
         "en": "Beans, either Fries or Corn chips, mozzarella cheese, salsa verde, filling of your choice, mixed salad, sour cream, fresh cheese, marinated onions, coriander, radishes. 1) Choose sides: Corn Chips / French Fries 2) Choose filling: Cauliflower Power / Chicken Pastor / Ancho Pork",
         "fi": "Papuja, joko ranskalaisia tai maissilastuja, mozzarellajuustoa, salsa verdea, valitsemasi täyte, sekasalaattia, smetanaa, tuorejuustoa, marinoitua sipulia, korianteria, retiisejä. 1) Valitse lisuke: maissilastut / ranskalaiset 2) Valitse täyte: Cauliflower Power / kana pastor / ancho-possu"
       },
-      "price": "€17"
+      "price": "€17",
+      "image": "pork-in-chili-ancho.jpg"
     }
   ],
 
@@ -380,8 +381,7 @@
         "en": "Tortilla chips beans, cheese, salsa verde, salad, queso fresco",
         "fi": "Tortillalastuja, papuja, juustoa, salsa verdea, salaattia, queso frescoa"
       },
-      "price": "€5",
-      "image": "pork-in-chili-ancho.jpg"
+      "price": "€5"
     }
   ],
 
