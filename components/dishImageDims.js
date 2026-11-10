@@ -12,8 +12,11 @@ export const DISH_IMAGE_DIMS = {
   "kuha-ceviche.jpg": { w: 1000, h: 655 },
   "mexican-tuna-poke.jpg": { w: 1000, h: 562 },
   "pork-in-chili-ancho.jpg": { w: 1000, h: 550 },
+  "pork-in-chili-ancho-lunch.jpg": { w: 1284, h: 711 },
   "quesabirria-2.jpg": { w: 1000, h: 567 },
   "quesabirria.jpg": { w: 1000, h: 550 },
+  "sea-bass-in-mango-salsa.jpg": { w: 1284, h: 717 },
+  "tofu-in-salsa-roja.jpg": { w: 1284, h: 713 },
   "tommys-margarita.jpg": { w: 883, h: 706 }
 };
 

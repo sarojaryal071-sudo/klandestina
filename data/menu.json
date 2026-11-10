@@ -59,6 +59,33 @@
       },
       "image": "quesabirria.jpg",
       "images": ["quesabirria.jpg", "quesabirria-2.jpg"]
+    },
+    {
+      "name": "Tofu in Salsa Roja",
+      "price": "€14.90",
+      "description": {
+        "en": "Tofu marinated in our special spices, chickpea salsa, cauliflower, red salsa, vegan sour crème, vegan cheese.",
+        "fi": "Erikoismausteillamme marinoitua tofua, kikhernesalsaa, kukkakaalia, punaista salsaa, vegaanista smetanaa, vegaanijuustoa."
+      },
+      "image": "tofu-in-salsa-roja.jpg"
+    },
+    {
+      "name": "Sea Bass in Mango Salsa",
+      "price": "€14.90",
+      "description": {
+        "en": "Crispy fried fish, creamy green salsa, mango pico de gallo, coriander, cherry tomatoes.",
+        "fi": "Rapeaksi paistettua kalaa, kermaista vihreää salsaa, mango-pico de galloa, korianteria, kirsikkatomaatteja."
+      },
+      "image": "sea-bass-in-mango-salsa.jpg"
+    },
+    {
+      "name": "Pork in Chili Ancho Sauce",
+      "price": "€14.90",
+      "description": {
+        "en": "Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions.",
+        "fi": "Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia."
+      },
+      "image": "pork-in-chili-ancho-lunch.jpg"
     }
   ],
 
@@ -116,7 +143,8 @@
       "description": {
         "en": "Crispy fried fish, creamy green salsa, mango pico de gallo, coriander, cherry tomatoes.",
         "fi": "Rapeaksi paistettua kalaa, kermaista vihreää salsaa, mango-pico de galloa, korianteria, kirsikkatomaatteja."
-      }
+      },
+      "image": "sea-bass-in-mango-salsa.jpg"
     },
     {
       "name": "Chicken Mole",
@@ -134,7 +162,8 @@
       "description": {
         "en": "Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions.",
         "fi": "Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia."
-      }
+      },
+      "image": "pork-in-chili-ancho-lunch.jpg"
     },
     {
       "name": "Tofu in Salsa Roja",
@@ -143,7 +172,8 @@
       "description": {
         "en": "Tofu marinated in our special spices, chickpea salsa, cauliflower, red salsa, vegan sour crème, vegan cheese.",
         "fi": "Erikoismausteillamme marinoitua tofua, kikhernesalsaa, kukkakaalia, punaista salsaa, vegaanista smetanaa, vegaanijuustoa."
-      }
+      },
+      "image": "tofu-in-salsa-roja.jpg"
     }
   ],
 

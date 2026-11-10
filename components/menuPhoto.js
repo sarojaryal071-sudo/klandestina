@@ -5,8 +5,9 @@
 // (.soft-fade-img — see style.css) so the two asymmetric sections read as
 // one system, just on opposite sides.
 //
-// There's no dedicated photography per category yet, so each set below
-// reuses existing images/dishes/ photos as filler — loosely on-theme, not
+// lunch now has real per-dish photography (three of its five items); every
+// other category still has no dedicated photography, so those sets reuse
+// existing images/dishes/ photos as filler — loosely on-theme, not
 // claiming to depict a specific dish in that category (see README's
 // "Known gaps"). Categories with no photo that would look right at all
 // (Desserts — none of the existing photos are dessert-appropriate, and
@@ -17,7 +18,7 @@
 import { DISH_IMAGE_DIMS } from "./dishImageDims.js";
 
 const CATEGORY_IMAGES = {
-  lunch: ["pork-in-chili-ancho.jpg", "frijoles-con-veneno.jpg"],
+  lunch: ["tofu-in-salsa-roja.jpg", "sea-bass-in-mango-salsa.jpg", "pork-in-chili-ancho-lunch.jpg"],
   starters: ["mexican-tuna-poke.jpg", "kuha-ceviche.jpg"],
   tacos: ["quesabirria.jpg", "quesabirria-2.jpg", "pork-in-chili-ancho.jpg"],
   chilaquiles: ["frijoles-con-veneno.jpg"],
