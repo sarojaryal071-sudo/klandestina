@@ -80,6 +80,10 @@
       "label": "Chilaquiles"
     },
     {
+      "id": "sides",
+      "label": "Sides"
+    },
+    {
       "id": "desserts",
       "label": "Desserts"
     },
@@ -286,20 +290,95 @@
       "name": "Klandestina AMAZING Bowl",
       "allergens": [],
       "description": {
-        "en": "Beans, either fries or corn chips, mozzarella cheese, salsa verde, filling of your choice, mixed salad, sour cream, fresh cheese, marinated onions, coriander, radishes. Choose sides: Corn Chips / French Fries. Choose filling: Cauliflower Power / Chicken Pastor / Ancho Pork.",
-        "fi": "Papuja, valintasi mukaan joko ranskalaisia tai maissilastuja, mozzarellajuustoa, salsa verdea, valitsemasi täyte, sekasalaattia, smetanaa, tuorejuustoa, marinoitua sipulia, korianteria, retiisejä. Valitse lisuke: maissilastut / ranskalaiset. Valitse täyte: Cauliflower Power / kana pastor / ancho-possu."
+        "en": "Beans, either Fries or Corn chips, mozzarella cheese, salsa verde, filling of your choice, mixed salad, sour cream, fresh cheese, marinated onions, coriander, radishes. 1) Choose sides: Corn Chips / French Fries 2) Choose filling: Cauliflower Power / Chicken Pastor / Ancho Pork",
+        "fi": "Papuja, joko ranskalaisia tai maissilastuja, mozzarellajuustoa, salsa verdea, valitsemasi täyte, sekasalaattia, smetanaa, tuorejuustoa, marinoitua sipulia, korianteria, retiisejä. 1) Valitse lisuke: maissilastut / ranskalaiset 2) Valitse täyte: Cauliflower Power / kana pastor / ancho-possu"
       },
       "price": "€17"
     }
   ],
 
-  "desserts": [
+  "sides": [
     {
-      "name": "Churros with Chocolate Sauce",
-      "allergens": [],
+      "name": "Avocado Salad",
+      "allergens": ["M", "G", "VEGAN"],
+      "description": {
+        "en": "Salad Mix, cherry tomato, avocado, house dressing",
+        "fi": "Sekasalaattia, kirsikkatomaattia, avokadoa, talon kastiketta"
+      },
+      "price": "€5"
+    },
+    {
+      "name": "Corn Ribs",
+      "allergens": ["M", "G"],
+      "description": {
+        "en": "Chili mayo, cream, chili powder, fresh cheese",
+        "fi": "Chili-majoneesia, kermaa, chilijauhetta, tuorejuustoa"
+      },
+      "price": "€5"
+    },
+    {
+      "name": "Guac",
+      "allergens": ["M", "G", "VEGAN"],
       "description": {
         "en": "",
         "fi": ""
+      },
+      "price": "€5"
+    },
+    {
+      "name": "Potato Fries",
+      "allergens": ["M", "G", "VEGAN"],
+      "description": {
+        "en": "Small / Large",
+        "fi": "Pieni / Iso"
+      },
+      "price": "€5 / €7"
+    },
+    {
+      "name": "Charro Beans Soup",
+      "allergens": ["M", "G"],
+      "description": {
+        "en": "Black bean, chickpeas, sausage, chorizo, onion paprika, tomato",
+        "fi": "Mustaa papua, kikherneitä, makkaraa, chorizoa, sipulipaprikaa, tomaattia"
+      },
+      "price": "€5"
+    },
+    {
+      "name": "Killers",
+      "allergens": [],
+      "description": {
+        "en": "Tortilla chips beans, cheese, salsa verde, salad, queso fresco",
+        "fi": "Tortillalastuja, papuja, juustoa, salsa verdea, salaattia, queso frescoa"
+      },
+      "price": "€5"
+    }
+  ],
+
+  "desserts": [
+    {
+      "name": "Churros",
+      "allergens": [],
+      "description": {
+        "en": "Served with salsa chocolate",
+        "fi": "Tarjoillaan suklaakastikkeen kanssa"
+      },
+      "price": "€5"
+    },
+    {
+      "name": "Churros / Ice Cream",
+      "allergens": [],
+      "description": {
+        "en": "Served with two balls of ice cream",
+        "fi": "Tarjoillaan kahden jäätelöpallon kanssa"
+      },
+      "price": "€8"
+    },
+    {
+      "name": "Ice Cream",
+      "allergens": [],
+      "description": {
+        "en": "Chocolate / Pistachio-white chocolate / Lemon sorbet / Spicy lemon sorbet",
+        "fi": "Suklaa / Pistaasi-valkosuklaa / Sitruunasorbetti / Tulinen sitruunasorbetti"
       },
       "price": "€5"
     }
@@ -397,8 +476,8 @@
       "name": "Tommy's Margarita",
       "allergens": [],
       "description": {
-        "en": "Agave nectar, lime, Briottet Grapefruit Liqueur, Mundo Tequila or Almave Blanco Non-Alcoholic Blue Agave Spirit. With Mezcal: +2€.",
-        "fi": "Agavesiirappia, limeä, Briottet-greippilikööriä, Mundo-tequilaa tai Almave Blanco -alkoholitonta agavetislettä. Mezcalilla: +2€."
+        "en": "Agave nectar, lime, Mundo Tequila",
+        "fi": "Agavesiirappia, limeä, Mundo-tequilaa"
       },
       "price": "€13",
       "image": "tommys-margarita.jpg"
@@ -407,8 +486,8 @@
       "name": "Spicy Ananas Margarita",
       "allergens": [],
       "description": {
-        "en": "Briottet Pineapple Liqueur, Mundo Tequila, Botanera Hot Sauce, lime. With Mezcal: +2€.",
-        "fi": "Briottet-ananaslikööriä, Mundo-tequilaa, Botanera-chilikastiketta, limeä. Mezcalilla: +2€."
+        "en": "Mundo Tequila infused with burnt pineapple and chilli's lime, agave syrup",
+        "fi": "Mundo-tequilaa, johon on uutettu poltettua ananasta ja chili-limeä, agavesiirappia"
       },
       "price": "€13"
     },
@@ -429,6 +508,78 @@
         "fi": "Takamaka Rum Blancia, kolaa, limeä"
       },
       "price": "€10"
+    },
+    {
+      "name": "Hibi Paloma",
+      "allergens": [],
+      "description": {
+        "en": "Bruxo Mezcal infused with hibiscus, sweet vermouth, black currant cordial, squirt (Mexican pomegranate soda)",
+        "fi": "Bruxo-mezcalia, johon on uutettu hibiskusta, makeaa vermuttia, mustaherukkatiivistettä, squirtia (meksikolainen granaattiomenasooda)"
+      },
+      "price": "€13"
+    },
+    {
+      "name": "Espresso Martinez",
+      "allergens": [],
+      "description": {
+        "en": "Tonka bean infused vodka, coffee liqueur, espresso",
+        "fi": "Tonkapavulla maustettua vodkaa, kahvilikööriä, espressoa"
+      },
+      "price": "€13"
+    },
+    {
+      "name": "Carajillo",
+      "allergens": [],
+      "description": {
+        "en": "Liqueur 43, espresso",
+        "fi": "Liqueur 43:a, espressoa"
+      },
+      "price": "€12"
+    },
+    {
+      "name": "Green Thumb",
+      "allergens": [],
+      "description": {
+        "en": "Mundo Tequila, ancho reyes, herb and chilli cordial",
+        "fi": "Mundo-tequilaa, ancho reyesia, yrtti-chilitiivistettä"
+      },
+      "price": "€13"
+    },
+    {
+      "name": "Oaxaca Old Fashion",
+      "allergens": [],
+      "description": {
+        "en": "Burnt corn syrup, brown butter washed Mundo Tequila",
+        "fi": "Poltettua maissisiirappia, ruskealla voilla huuhdeltua Mundo-tequilaa"
+      },
+      "price": "€13"
+    },
+    {
+      "name": "Pepinito",
+      "allergens": [],
+      "description": {
+        "en": "Briottet Pineapple Liqueur, cucumber",
+        "fi": "Briottet-ananaslikööriä, kurkkua"
+      },
+      "price": "€13"
+    },
+    {
+      "name": "Megroni",
+      "allergens": [],
+      "description": {
+        "en": "Mezcal Brujo, sweet vermouth, bitter",
+        "fi": "Mezcal Brujoa, makeaa vermuttia, bitteriä"
+      },
+      "price": "€13"
+    },
+    {
+      "name": "Daiquiri",
+      "allergens": [],
+      "description": {
+        "en": "Habana Club, lime, sugar",
+        "fi": "Habana Clubia, limeä, sokeria"
+      },
+      "price": "€13"
     }
   ],
 
