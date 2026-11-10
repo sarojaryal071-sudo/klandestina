@@ -7,13 +7,12 @@
 //
 // lunch now has real per-dish photography (three of its five items); every
 // other category still has no dedicated photography, so those sets reuse
-// existing images/dishes/ photos as filler — loosely on-theme, not
-// claiming to depict a specific dish in that category (see README's
-// "Known gaps"). Categories with no photo that would look right at all
-// (Desserts — none of the existing photos are dessert-appropriate, and
-// showing a savory dish there would actively mislead rather than just
-// look generic) fall back to the same radial-glow ambient treatment
-// .section-ambient uses elsewhere, instead of a wrong-looking photo.
+// existing images/dishes/ photos as filler — loosely on-theme (or, for
+// Sides/Desserts, not on-theme at all yet — just a placeholder until
+// real photos exist for those) rather than claiming to depict a specific
+// dish in that category. A category left out of this table entirely
+// falls back to the same radial-glow ambient treatment .section-ambient
+// uses elsewhere, instead of a blank gap.
 
 import { DISH_IMAGE_DIMS } from "./dishImageDims.js";
 
@@ -22,7 +21,11 @@ const CATEGORY_IMAGES = {
   starters: ["mexican-tuna-poke.jpg", "kuha-ceviche.jpg"],
   tacos: ["quesabirria.jpg", "quesabirria-2.jpg", "pork-in-chili-ancho.jpg"],
   chilaquiles: ["frijoles-con-veneno.jpg"],
-  desserts: [],
+  sides: ["kuha-ceviche.jpg", "mexican-tuna-poke.jpg"],
+  // Filler only (no dessert-appropriate photo exists yet) — reused from
+  // other categories same as the rest of this table, swap for real
+  // dessert photography when it's shot.
+  desserts: ["tommys-margarita.jpg", "quesabirria.jpg"],
   drinks: ["tommys-margarita.jpg"]
 };
 
