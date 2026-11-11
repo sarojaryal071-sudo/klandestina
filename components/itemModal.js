@@ -35,6 +35,19 @@ let activePhotos = [];
 let activeIndex = 0;
 let itemName = "";
 
+// Auto-advance for a 2+ photo gallery — restarted (not just left running)
+// on every manual nav too, so clicking an arrow/dot doesn't get
+// immediately undone by a tick that was already most of the way through.
+let autoplayTimer = null;
+const AUTOPLAY_MS = 4000;
+
+function scheduleAutoplay(modal) {
+  clearInterval(autoplayTimer);
+  autoplayTimer = null;
+  if (activePhotos.length < 2 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  autoplayTimer = setInterval(() => goToPhoto(modal, activeIndex + 1), AUTOPLAY_MS);
+}
+
 // Close plays a ~160ms exit animation (style.css's --closing class)
 // before the modal actually disappears — closeItemModal() defers the
 // real teardown (hiding it, unlocking scroll, returning focus) to the
@@ -223,6 +236,7 @@ function renderActivePhoto(modal) {
 function goToPhoto(modal, index) {
   activeIndex = (index + activePhotos.length) % activePhotos.length;
   renderActivePhoto(modal);
+  scheduleAutoplay(modal);
 }
 
 /**
@@ -312,15 +326,21 @@ function renderGallery(modal, images, name) {
       <img class="item-modal-photo-mark" src="/images/logo/badge.png" alt="" aria-hidden="true">
       <span class="item-modal-photo-empty-text">${fallbackStrings.noPhoto}</span>`;
     captionEl.hidden = true;
+    clearInterval(autoplayTimer);
+    autoplayTimer = null;
     return;
   }
 
   renderActivePhoto(modal);
+  scheduleAutoplay(modal);
 }
 
 export function closeItemModal() {
   const modal = document.getElementById("item-modal");
   if (!modal || modal.hidden || closeTimer) return;
+
+  clearInterval(autoplayTimer);
+  autoplayTimer = null;
 
   // Plays the exit animation (style.css) first — modal.hidden only flips
   // once it's actually finished, so the card is still there to animate
