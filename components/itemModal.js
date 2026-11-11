@@ -26,6 +26,15 @@ export function setItemModalStrings(strings) {
 // being dropped back onto <body>.
 let triggerEl = null;
 
+// The current dish's photo set + which one is showing — module-level (not
+// local to renderGallery) so the swipe listeners below can be attached
+// ONCE in renderItemModal() rather than re-attached every openItemModal()
+// call, which would otherwise stack up a new pair of listeners on the
+// same persistent #item-modal-photo node every time a dish is opened.
+let activePhotos = [];
+let activeIndex = 0;
+let itemName = "";
+
 // Close plays a ~160ms exit animation (style.css's --closing class)
 // before the modal actually disappears — closeItemModal() defers the
 // real teardown (hiding it, unlocking scroll, returning focus) to the
@@ -106,7 +115,7 @@ export function renderItemModal(container) {
           data-i18n-aria-label="itemModal.closeLabel" data-close-modal
         >&times;</button>
         <div class="item-modal-photo" id="item-modal-photo"></div>
-        <div class="item-modal-thumbs" id="item-modal-thumbs" hidden></div>
+        <p class="item-modal-photo-caption" id="item-modal-photo-caption" hidden></p>
         <div class="item-modal-body">
           <div class="item-modal-top">
             <h3 id="item-modal-title"></h3>
@@ -144,6 +153,76 @@ export function renderItemModal(container) {
     if (event.key === "Escape" && !modal.hidden) closeItemModal();
   });
   document.addEventListener("keydown", trapFocus);
+
+  // Swipe to the prev/next photo — attached once here (not per-dish in
+  // renderGallery) since #item-modal-photo is the same persistent node
+  // across every openItemModal() call; only its innerHTML gets replaced.
+  const photoWrap = modal.querySelector("#item-modal-photo");
+  let swipeStartX = null;
+  photoWrap.addEventListener("pointerdown", (event) => {
+    if (activePhotos.length < 2) return;
+    swipeStartX = event.clientX;
+  });
+  photoWrap.addEventListener("pointerup", (event) => {
+    if (swipeStartX == null) return;
+    const delta = event.clientX - swipeStartX;
+    swipeStartX = null;
+    if (Math.abs(delta) > 40) goToPhoto(modal, activeIndex + (delta > 0 ? -1 : 1));
+  });
+  photoWrap.addEventListener("pointercancel", () => {
+    swipeStartX = null;
+  });
+}
+
+// Renders whichever photo activeIndex currently points at, plus the
+// arrows/dots (only when there's more than one photo) and the caption
+// line underneath — called on first open and again on every prev/next/
+// dot/swipe interaction, never rebuilding anything else in the modal.
+function renderActivePhoto(modal) {
+  const photoWrap = modal.querySelector("#item-modal-photo");
+  const captionEl = modal.querySelector("#item-modal-photo-caption");
+  const { file, caption } = activePhotos[activeIndex];
+  const multi = activePhotos.length > 1;
+
+  photoWrap.className = "item-modal-photo";
+  photoWrap.innerHTML = `
+    <img
+      src="/images/dishes/${file}" alt="${itemName}" loading="lazy"${dishImageSizeAttrs(file)}
+      onerror="this.parentElement.classList.add('item-modal-photo--empty'); this.remove();"
+    >
+    ${
+      multi
+        ? `
+      <button type="button" class="item-modal-photo-arrow item-modal-photo-arrow--prev" aria-label="Previous photo" data-nav="-1">&lsaquo;</button>
+      <button type="button" class="item-modal-photo-arrow item-modal-photo-arrow--next" aria-label="Next photo" data-nav="1">&rsaquo;</button>
+      <div class="item-modal-photo-dots">
+        ${activePhotos
+          .map(
+            (_, i) =>
+              `<button type="button" class="item-modal-photo-dot${i === activeIndex ? " item-modal-photo-dot--active" : ""}" data-index="${i}" aria-label="Photo ${i + 1}"></button>`
+          )
+          .join("")}
+      </div>`
+        : ""
+    }
+  `;
+
+  if (multi) {
+    photoWrap.querySelectorAll("[data-nav]").forEach((btn) => {
+      btn.addEventListener("click", () => goToPhoto(modal, activeIndex + Number(btn.dataset.nav)));
+    });
+    photoWrap.querySelectorAll(".item-modal-photo-dot").forEach((dot) => {
+      dot.addEventListener("click", () => goToPhoto(modal, Number(dot.dataset.index)));
+    });
+  }
+
+  captionEl.textContent = caption || "";
+  captionEl.hidden = !caption;
+}
+
+function goToPhoto(modal, index) {
+  activeIndex = (index + activePhotos.length) % activePhotos.length;
+  renderActivePhoto(modal);
 }
 
 /**
@@ -210,63 +289,33 @@ export function openItemModal(item, openedFrom) {
   modal.querySelector(".item-modal-close").focus();
 }
 
-// A large primary photo, plus — only when the item actually has more than
-// one — a small tappable thumbnail strip underneath it to browse the rest
-// (a signature dish like Quesabirria has both quesabirria.jpg and
-// quesabirria-2.jpg via its "images" array in data/menu.json; most items
-// still just have a single "image" and never show a strip at all). No
-// matching photo at all falls back to a small stylized accent-glow strip
-// instead of a broken-image icon.
-function renderGallery(modal, images, itemName) {
+// A large primary photo; items with 2+ photos get left/right arrows, dot
+// indicators, and swipe support (see renderActivePhoto/goToPhoto above —
+// the swipe listeners themselves live in renderItemModal, attached once).
+// A single photo shows with no arrows/dots at all. No matching photo at
+// all falls back to a small stylized accent-glow strip instead of a
+// broken-image icon. Each photo entry is either a plain filename string or
+// { file, caption } — script.js resolves any caption to the active
+// language's plain string before this ever runs, same split every other
+// component follows for i18n.
+function renderGallery(modal, images, name) {
   const photoWrap = modal.querySelector("#item-modal-photo");
-  const thumbsWrap = modal.querySelector("#item-modal-thumbs");
+  const captionEl = modal.querySelector("#item-modal-photo-caption");
 
-  if (images.length === 0) {
+  activePhotos = images.map((entry) => (typeof entry === "string" ? { file: entry, caption: null } : entry));
+  activeIndex = 0;
+  itemName = name;
+
+  if (activePhotos.length === 0) {
     photoWrap.className = "item-modal-photo item-modal-photo--empty";
     photoWrap.innerHTML = `
       <img class="item-modal-photo-mark" src="/images/logo/badge.png" alt="" aria-hidden="true">
       <span class="item-modal-photo-empty-text">${fallbackStrings.noPhoto}</span>`;
-    thumbsWrap.hidden = true;
-    thumbsWrap.innerHTML = "";
+    captionEl.hidden = true;
     return;
   }
 
-  photoWrap.className = "item-modal-photo";
-  const setPrimary = (file) => {
-    photoWrap.innerHTML = `
-      <img
-        src="/images/dishes/${file}" alt="${itemName}" loading="lazy"${dishImageSizeAttrs(file)}
-        onerror="this.parentElement.classList.add('item-modal-photo--empty'); this.remove();"
-      >`;
-  };
-  setPrimary(images[0]);
-
-  if (images.length > 1) {
-    thumbsWrap.hidden = false;
-    thumbsWrap.innerHTML = images
-      .map(
-        (file, i) => `
-          <button
-            type="button" class="item-modal-thumb${i === 0 ? " item-modal-thumb--active" : ""}"
-            data-file="${file}" aria-label="Photo ${i + 1}"
-          >
-            <img src="/images/dishes/${file}" alt="${itemName} — photo ${i + 1}" loading="lazy"${dishImageSizeAttrs(file)}>
-          </button>`
-      )
-      .join("");
-
-    thumbsWrap.querySelectorAll(".item-modal-thumb").forEach((thumbBtn) => {
-      thumbBtn.addEventListener("click", () => {
-        thumbsWrap.querySelectorAll(".item-modal-thumb").forEach((el) => el.classList.remove("item-modal-thumb--active"));
-        thumbBtn.classList.add("item-modal-thumb--active");
-        photoWrap.className = "item-modal-photo";
-        setPrimary(thumbBtn.dataset.file);
-      });
-    });
-  } else {
-    thumbsWrap.hidden = true;
-    thumbsWrap.innerHTML = "";
-  }
+  renderActivePhoto(modal);
 }
 
 export function closeItemModal() {

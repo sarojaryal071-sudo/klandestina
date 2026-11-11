@@ -564,6 +564,15 @@ function pickLang(field) {
   return field;
 }
 
+// menu.json's optional per-item "images" array holds either plain filename
+// strings or { file, caption: {en, fi} } objects — resolves any caption to
+// the active language's plain string before itemModal.js ever sees it
+// (components don't know about i18n themselves, same split pickLang itself
+// exists for).
+function resolveImages(images) {
+  return (images || []).map((entry) => (typeof entry === "string" ? entry : { file: entry.file, caption: pickLang(entry.caption) }));
+}
+
 // Single pass over every element tagged data-i18n="some.path" (textContent),
 // data-i18n-placeholder="some.path" (the placeholder attribute, for form
 // inputs), data-i18n-aria-label="some.path" (the aria-label attribute,
@@ -643,7 +652,7 @@ function forgetStaleTheme() {
 // ---------- language-dependent rendering ----------
 
 function renderSignatureDishes(startOffset = 0) {
-  const dishes = menu.signatureDishes.map((dish) => ({ ...dish, description: pickLang(dish.description) }));
+  const dishes = menu.signatureDishes.map((dish) => ({ ...dish, description: pickLang(dish.description), images: resolveImages(dish.images) }));
   dishCarouselHandle = renderDishCarousel(
     document.getElementById("dish-grid"),
     dishes,
@@ -718,7 +727,7 @@ function renderMenuCategory(categoryId) {
     appendGroupNote(menuList, groupId);
 
     items.forEach((item) => {
-      menuList.appendChild(renderMenuItem({ ...item, description: pickLang(item.description) }));
+      menuList.appendChild(renderMenuItem({ ...item, description: pickLang(item.description), images: resolveImages(item.images) }));
     });
   });
 

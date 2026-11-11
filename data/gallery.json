@@ -1,6 +1,40 @@
 {
   "albums": [
     {
+      "slug": "03-the-room",
+      "title": {
+        "en": "The Room",
+        "fi": "Tila"
+      },
+      "count": 4,
+      "photos": [
+        {
+          "src": "/images/gallery/03-the-room/gallery-room-1.jpg",
+          "thumb": "/images/gallery-thumbs/03-the-room/gallery-room-1.jpg",
+          "w": 1153,
+          "h": 1694
+        },
+        {
+          "src": "/images/gallery/03-the-room/gallery-room-2.jpg",
+          "thumb": "/images/gallery-thumbs/03-the-room/gallery-room-2.jpg",
+          "w": 1284,
+          "h": 954
+        },
+        {
+          "src": "/images/gallery/03-the-room/gallery-room-3.jpg",
+          "thumb": "/images/gallery-thumbs/03-the-room/gallery-room-3.jpg",
+          "w": 1284,
+          "h": 958
+        },
+        {
+          "src": "/images/gallery/03-the-room/gallery-room-4.jpg",
+          "thumb": "/images/gallery-thumbs/03-the-room/gallery-room-4.jpg",
+          "w": 1284,
+          "h": 1704
+        }
+      ]
+    },
+    {
       "slug": "04-food-and-drinks",
       "title": {
         "en": "Food & Drinks",
@@ -53,5 +87,5 @@
       ]
     }
   ],
-  "total": 7
+  "total": 11
 }

@@ -27,7 +27,8 @@
         "en": "Agave nectar, lime, Briottet Grapefruit Liqueur, Mundo Tequila or Almave Blanco Non-Alcoholic Blue Agave Spirit. With Mezcal: +2€.",
         "fi": "Agavesiirappia, limeä, Briottet-greippilikööriä, Mundo-tequilaa tai Almave Blanco -alkoholitonta agavetislettä. Mezcalilla: +2€."
       },
-      "image": "tommys-margarita.jpg"
+      "image": "tommys-margarita.jpg",
+      "images": ["tommys-margarita.jpg", "tommys-margarita-2.jpg"]
     },
     {
       "name": "Frijoles con Veneno",
@@ -37,7 +38,11 @@
         "en": "Refried beans with cheese and chorizo, served with homemade tortilla chips (vegan option available)",
         "fi": "Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera (vegaaninen vaihtoehto saatavilla)"
       },
-      "image": "frijoles-con-veneno.jpg"
+      "image": "frijoles-con-veneno.jpg",
+      "images": [
+        "frijoles-con-veneno.jpg",
+        { "file": "frijoles-con-veneno-vegan-2.jpg", "caption": { "en": "Vegan version", "fi": "Vegaaninen versio" } }
+      ]
     },
     {
       "name": "Killers Chilaquiles",
@@ -47,7 +52,8 @@
         "en": "Slow cooked pork, dried ancho chili sauce, coriander, marinated red onions",
         "fi": "Hitaasti kypsennettyä possua, kuivatusta anchochilistä valmistettua kastiketta, korianteria, marinoitua punasipulia"
       },
-      "image": "pork-in-chili-ancho.jpg"
+      "image": "pork-in-chili-ancho.jpg",
+      "images": ["pork-in-chili-ancho.jpg", "killers-chilaquiles-2.jpg"]
     },
     {
       "name": "Quesabirria",
@@ -58,7 +64,7 @@
         "fi": "Hitaasti kypsennettyä naudanlihaa, juustoa, valkokaalia, marinoitua sipulia, korianteria, retiisiä + birria-lientä"
       },
       "image": "quesabirria.jpg",
-      "images": ["quesabirria.jpg", "quesabirria-2.jpg"]
+      "images": ["quesabirria.jpg", "quesabirria-2.jpg", "quesabirria-3.jpg"]
     },
     {
       "name": "Tofu in Salsa Roja",
@@ -134,7 +140,8 @@
       "description": {
         "en": "Finnish beef and Spanish chorizo. Minced beef stew, tomato sauce, chorizo, potatoes, carrots, spices.",
         "fi": "Suomalaista naudanlihaa ja espanjalaista chorizoa. Jauhelihamuhennos, tomaattikastike, chorizo, perunat, porkkanat, mausteet."
-      }
+      },
+      "image": "picadillo-with-chorizo.jpg"
     },
     {
       "name": "Sea Bass in Mango Salsa",
@@ -224,7 +231,11 @@
         "fi": "Uudelleen paistettuja papuja juuston ja chorizon kanssa, tarjoillaan kotitekoisten tortillalastujen kera (vegaaninen vaihtoehto saatavilla)"
       },
       "price": "€7",
-      "image": "frijoles-con-veneno.jpg"
+      "image": "frijoles-con-veneno.jpg",
+      "images": [
+        "frijoles-con-veneno.jpg",
+        { "file": "frijoles-con-veneno-vegan-2.jpg", "caption": { "en": "Vegan version", "fi": "Vegaaninen versio" } }
+      ]
     }
   ],
 
@@ -511,7 +522,8 @@
         "fi": "Agavesiirappia, limeä, Mundo-tequilaa"
       },
       "price": "€13",
-      "image": "tommys-margarita.jpg"
+      "image": "tommys-margarita.jpg",
+      "images": ["tommys-margarita.jpg", "tommys-margarita-2.jpg"]
     },
     {
       "name": "Spicy Ananas Margarita",
@@ -556,7 +568,9 @@
         "en": "Tonka bean infused vodka, coffee liqueur, espresso",
         "fi": "Tonkapavulla maustettua vodkaa, kahvilikööriä, espressoa"
       },
-      "price": "€13"
+      "price": "€13",
+      "image": "espresso-martinez-1.jpg",
+      "images": ["espresso-martinez-1.jpg", "espresso-martinez-2.jpg", "espresso-martinez-3.jpg"]
     },
     {
       "name": "Carajillo",

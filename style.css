@@ -1924,21 +1924,42 @@ section { position: relative; padding: 130px 56px; }
   font-size: 14px; text-align: center; line-height: 1.5;
 }
 
-/* A small tappable strip under the primary photo, only shown when an item
-   has more than one photo (data/menu.json's "images" array — e.g.
-   Quesabirria's two shots) — a lightweight product-gallery pattern rather
-   than a full swipeable carousel, since it's a rare case (most items have
-   at most one photo) that doesn't need more machinery than "click a
-   thumbnail, the primary image swaps." */
-.item-modal-thumbs { display: flex; gap: 8px; padding: 10px 16px 0; background: var(--surface); }
-.item-modal-thumb {
-  position: relative; flex: 0 0 56px; aspect-ratio: 1; border-radius: 8px; overflow: hidden;
-  padding: 0; border: 2px solid transparent; cursor: pointer; background: none;
-  opacity: 0.55; transition: opacity 0.15s ease, border-color 0.15s ease;
+/* Multi-photo nav — only rendered at all when an item has 2+ photos (see
+   itemModal.js's renderActivePhoto). Arrows sit over the photo itself, at
+   a lower z-index than .item-modal-close (below) so the close button
+   always wins the corner; dots sit centered along the bottom edge. Swipe
+   (Pointer Events, not these buttons) is wired in renderItemModal(). */
+.item-modal-photo-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 4;
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--bg) 55%, transparent); border: none;
+  color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer;
+  backdrop-filter: blur(2px);
+  transition: color 0.18s ease, background 0.18s ease;
 }
-.item-modal-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.item-modal-thumb:hover { opacity: 0.85; }
-.item-modal-thumb--active { opacity: 1; border-color: var(--accent); }
+.item-modal-photo-arrow:hover { color: var(--accent); background: color-mix(in srgb, var(--bg) 70%, transparent); }
+.item-modal-photo-arrow--prev { left: 10px; }
+.item-modal-photo-arrow--next { right: 10px; }
+
+.item-modal-photo-dots {
+  position: absolute; left: 0; right: 0; bottom: 10px; z-index: 4;
+  display: flex; justify-content: center; gap: 6px;
+}
+.item-modal-photo-dot {
+  width: 8px; height: 8px; padding: 0; border-radius: 50%; border: none; cursor: pointer;
+  background: color-mix(in srgb, #f6f1e7 55%, transparent);
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+.item-modal-photo-dot:hover { background: color-mix(in srgb, #f6f1e7 80%, transparent); }
+.item-modal-photo-dot--active { background: var(--accent); transform: scale(1.2); }
+
+.item-modal-photo-caption {
+  margin: 0; padding: 10px 16px 0;
+  background: var(--surface);
+  font-size: 13px; font-style: italic;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
 
 /* z-index matters here: .item-modal-photo is itself position:relative
    (a positioned element) and comes AFTER this button in the DOM — among
