@@ -1,7 +1,7 @@
 {
   "seo": {
-    "title": "Klandestina – Mexican cantina in Helsinki",
-    "description": "Klandestina is a Mexican cantina in Helsinki with no sign out front — tacos off live coals, mezcal poured heavy, at Aleksis Kiven katu 17."
+    "title": "Klandestina – Mexican Restaurant & Cantina in Konepaja, Helsinki",
+    "description": "Mexican restaurant in Konepaja Market Hall, Helsinki. Tacos, quesabirria, chilaquiles and cocktails, weekly events and Friday karaoke. Reserve seats online."
   },
   "nav": { "story": "Story", "menu": "Menu", "events": "Events", "gallery": "Gallery", "visit": "Visit" },
   "hours": {
@@ -17,6 +17,7 @@
   "hero": {
     "eyebrow": "Klandestina Cantina · Helsinki",
     "heading": "Find the door.",
+    "subline": "Mexican restaurant in Konepaja Market Hall, Helsinki.",
     "subtext": "Tacos off live coals, mezcal poured heavy, and a room that doesn't announce itself.",
     "reserve": "Reserve a Table",
     "seeMenu": "See the Menu",

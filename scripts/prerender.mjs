@@ -463,6 +463,19 @@ function buildPage(lang) {
   return html;
 }
 
+// Every <loc>/<lastmod> pair in sitemap.xml gets today's date on every
+// run — a plain regex replace (not a real XML parser) is enough since
+// this file is entirely hand-structured and only ever has the one
+// <lastmod> shape, same "plain pattern match" approach the rest of this
+// script already uses for index.html.
+function updateSitemapLastmod() {
+  const sitemapPath = path.join(ROOT, "sitemap.xml");
+  const today = new Date().toISOString().slice(0, 10);
+  const xml = readFileSync(sitemapPath, "utf8").replace(/<lastmod>[^<]*<\/lastmod>/g, `<lastmod>${today}</lastmod>`);
+  writeFileSync(sitemapPath, xml);
+  console.log(`[prerender] wrote sitemap.xml lastmod ${today}`);
+}
+
 function run() {
   const enHtml = buildPage("en");
   writeFileSync(path.join(ROOT, "index.html"), enHtml);
@@ -475,6 +488,8 @@ function run() {
   mkdirSync(path.join(ROOT, "fi"), { recursive: true });
   writeFileSync(path.join(ROOT, "fi/index.html"), fiHtml);
   console.log("[prerender] wrote fi/index.html");
+
+  updateSitemapLastmod();
 }
 
 run();

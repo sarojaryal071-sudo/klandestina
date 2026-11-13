@@ -1,7 +1,7 @@
 {
   "seo": {
-    "title": "Klandestina – meksikolainen cantina Helsingissä",
-    "description": "Klandestina on meksikolainen cantina Helsingissä ilman kylttiä – tacoja hiilloksesta, mezcalia reilulla kädellä, osoitteessa Aleksis Kiven katu 17."
+    "title": "Klandestina – Meksikolainen ravintola ja cantina Konepajalla, Helsingissä",
+    "description": "Meksikolainen ravintola Konepajan Kauppahallissa, Helsingissä. Tacoja, quesabirriaa, chilaquiles ja cocktaileja, viikoittaisia tapahtumia ja perjantaikaraokea. Varaa paikat verkossa."
   },
   "nav": { "story": "Tarina", "menu": "Ruokalista", "events": "Tapahtumat", "gallery": "Galleria", "visit": "Käynti" },
   "hours": {
@@ -17,6 +17,7 @@
   "hero": {
     "eyebrow": "Klandestina Cantina · Helsinki",
     "heading": "Löydä ovi.",
+    "subline": "Meksikolainen ravintola Konepajan Kauppahallissa, Helsingissä.",
     "subtext": "Tacoja suoraan hiilloksesta, mezcalia reilulla kädellä ja tila, joka ei mainosta itseään.",
     "reserve": "Varaa pöytä",
     "seeMenu": "Katso ruokalista",
