@@ -150,18 +150,32 @@ function prefersReducedMotion() {
 
 function setFilter(filter) {
   if (filter === activeFilter) return;
-  activeFilter = filter;
   const overlay = document.getElementById("gallery-overlay");
-
-  overlay.querySelectorAll(".gallery-pill").forEach((pill) => {
-    pill.classList.toggle("gallery-pill--active", pill.dataset.album === filter);
-  });
-
   const grid = overlay.querySelector("#gallery-masonry");
-  grid.querySelectorAll(".gallery-tile").forEach((tile) => {
-    const show = filter === "all" || tile.dataset.album === filter;
-    tile.classList.toggle("gallery-tile--filtered-out", !show);
-  });
+  const scroller = overlay.querySelector(".gallery-overlay-scroll");
+
+  const swap = () => {
+    activeFilter = filter;
+    overlay.querySelectorAll(".gallery-pill").forEach((pill) => {
+      pill.classList.toggle("gallery-pill--active", pill.dataset.album === filter);
+    });
+    grid.querySelectorAll(".gallery-tile").forEach((tile) => {
+      const show = filter === "all" || tile.dataset.album === filter;
+      tile.classList.toggle("gallery-tile--filtered-out", !show);
+    });
+    if (scroller) scroller.scrollTop = 0;
+  };
+
+  if (prefersReducedMotion()) {
+    swap();
+    return;
+  }
+
+  grid.classList.add("gallery-masonry--swapping");
+  window.setTimeout(() => {
+    swap();
+    requestAnimationFrame(() => grid.classList.remove("gallery-masonry--swapping"));
+  }, 120);
 }
 
 function visiblePhotoEntries() {

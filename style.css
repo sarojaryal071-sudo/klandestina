@@ -1454,6 +1454,7 @@ section { position: relative; padding: 130px 56px; }
   column-count: 2; column-gap: 12px;
   padding: 20px 16px 60px;
   max-width: 1400px; margin: 0 auto;
+  opacity: 1;
 }
 .gallery-tile {
   display: block; width: 100%; margin: 0 0 12px; padding: 0; border: none;
@@ -1485,15 +1486,17 @@ section { position: relative; padding: 130px 56px; }
     filter: grayscale(0) blur(0) brightness(1);
     transform: scale(1);
   }
+  /* Filtering by album: the grid itself fades (faster out than in —
+     galleryOverlay.js adds/removes --swapping around the tile swap),
+     so the column re-flow from filtered-out tiles leaving layout
+     happens while hidden rather than visibly jumping. */
+  .gallery-masonry { transition: opacity 200ms ease; }
+  .gallery-masonry--swapping { opacity: 0; transition-duration: 120ms; }
 }
-/* Filtering by album: a quick fade rather than an instant cut, and
-   pointer-events:none so a tile mid-fade-out can't still be clicked.
-   Deliberately opacity-only, not display:none — removing a tile from
-   layout entirely would also kill the transition (nothing to animate
-   between "there" and "gone" in the same frame), so the brief overlap
-   where a filtered-out tile still occupies its column is the tradeoff
-   for the fade actually being visible. */
-.gallery-tile--filtered-out { opacity: 0; pointer-events: none; }
+/* Filtering by album: fully removed from layout (not just faded) so the
+   remaining tiles' columns re-flow and balance instead of leaving gaps
+   where a hidden tile still held its spot. */
+.gallery-tile--filtered-out { display: none; }
 
 @media (hover: hover) {
   .gallery-tile:hover {
