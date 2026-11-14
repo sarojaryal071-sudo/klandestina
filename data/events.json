@@ -23,5 +23,18 @@
       "fi": "Halloween-ilta Klandestinassa. Tule naamioituneena."
     },
     "tag": { "en": "Halloween", "fi": "Halloween" }
+  },
+  {
+    "id": "second-hand-market-2026-11-15",
+    "type": "oneoff",
+    "date": "2026-11-15",
+    "startTime": "11:00",
+    "endTime": "15:00",
+    "title": { "en": "Second Hand Market", "fi": "Second Hand -markkinat" },
+    "description": {
+      "en": "Flea market at Klandestina in collaboration with Kallio Second Hand.",
+      "fi": "Kirpputori Klandestinassa yhteistyössä Kallio Second Handin kanssa."
+    },
+    "tag": { "en": "Flea market", "fi": "Kirpputori" }
   }
 ]
