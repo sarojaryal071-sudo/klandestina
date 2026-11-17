@@ -16,14 +16,13 @@
   },
   "hero": {
     "eyebrow": "Klandestina Cantina · Helsinki",
-    "heading": "Find the door.",
-    "subline": "Mexican restaurant in Konepaja Market Hall, Helsinki.",
-    "subtext": "Tacos off live coals, mezcal poured heavy, and a room that doesn't announce itself.",
+    "heading": "Welcome to Klandestina",
+    "subline": "Mexican restaurant in Konepaja Market Hall, Helsinki. Tacos, cocktails and good company.",
     "reserve": "Reserve a Table",
     "seeMenu": "See the Menu",
     "imageAlt": "Klandestina's neon sign above the open kitchen window"
   },
-  "dishes": { "eyebrow": "Off the Grill", "heading": "Regulars order these twice" },
+  "dishes": { "eyebrow": "Favourites", "heading": "Guest favourites" },
   "menu": {
     "eyebrow": "Full Menu",
     "heading": "Kitchen & Bar",
@@ -76,7 +75,7 @@
   },
   "visit": {
     "eyebrow": "Find Us",
-    "heading": "Come find the door",
+    "heading": "Come on in",
     "getDirections": "Get Directions",
     "emailFallbackPrefix": "Or email us directly at",
     "phoneFallbackPrefix": "Or call us at",
