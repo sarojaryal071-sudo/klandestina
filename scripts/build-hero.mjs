@@ -52,30 +52,32 @@ const QUALITY = { avif: 72, webp: 74, jpg: 75 };
 const VARIANTS = {
   desktop: { file: "hero-desktop-source.png", widths: [1280, 1920, 2560] },
   // Extracted from hero-mobile-source.png (940x1672) before resizing —
-  // see this file's own top comment for why. The box: left 121, top 560,
-  // 556 wide, 1112 tall. Chosen so (a) the sign's own top edge (measured
-  // ~row 619 in the source) keeps a little headroom rather than being
-  // flush with the crop edge, (b) the crop's bottom edge lands exactly
-  // on the source's own bottom edge (560+1112=1672) so none of the
-  // counter/floor space below the window — the only real content
-  // available for the "fade to solid" zone — goes to waste, and (c) the
-  // crop's own aspect ratio (556:1112 = 1:2, close to a typical phone's
-  // own ~0.46-0.56) means a browser's object-fit:cover at render time
-  // only trims the sides a little rather than remapping the vertical
-  // proportions again. Net effect: the sign/window band — ~37-82% of
-  // the UNCROPPED source's height — lands at roughly 2-64% of THIS
-  // crop's height, i.e. comfortably inside the upper portion the mobile
-  // layout asks for, with its own bottom edge landing close to where
-  // the CSS overlay's own fade-to-solid gradient starts (~62% from top /
-  // 38% from bottom) — confirmed by rendering the crop and reading back
-  // actual pixel positions, not just by this arithmetic alone.
+  // see this file's own top comment for why. The box: left 121, top 400,
+  // 556 wide, 1272 tall. Earlier versions of this crop started at top
+  // 560, putting the sign's own glow (measured by scanning the cropped
+  // file for its brightest row — row 23 of that crop, i.e. source row
+  // 583) only ~2% of the way down the crop. Since object-fit:cover on
+  // the mobile hero never needs to crop vertically at any real phone
+  // aspect ratio (this crop is narrower than every target viewport, so
+  // cover always scales to match container height exactly and only
+  // trims the sides) — that ~2% landed only a few CSS px below the
+  // image's own top edge, squarely behind the fixed mobile topbar
+  // overlaying it, cutting the sign's first couple of letters off
+  // on screen even though they were technically still in the image.
+  // top 400 pushes the sign down to ~14% of the (now taller) crop's own
+  // height instead — comfortably clear of the topbar at every supported
+  // viewport height (600px floor up) — while keeping the crop's bottom
+  // edge flush with the source's own bottom edge (400+1272=1672), same
+  // as before, so none of the counter/floor space below the window goes
+  // to waste. The new aspect ratio (556:1272 ≈ 0.437) is if anything a
+  // closer match to a typical tall phone screen than the old 1:2.
   // 375 is an extra smaller tier added on top of the task's requested
   // 720/1080/1440 (see widthsToGenerate below) — the crop's own 556px
   // native width means none of those three requested widths actually
   // fit, so without a smaller tier mobile would ship exactly one size;
   // 375 gives low-DPR phones a lighter option instead of only the full
   // 556px variant.
-  mobile: { file: "hero-mobile-source.png", widths: [375, 720, 1080, 1440], crop: { left: 121, top: 560, width: 556, height: 1112 } }
+  mobile: { file: "hero-mobile-source.png", widths: [375, 720, 1080, 1440], crop: { left: 121, top: 400, width: 556, height: 1272 } }
 };
 
 function widthsToGenerate(requested, nativeWidth) {
