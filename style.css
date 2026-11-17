@@ -229,6 +229,13 @@ section { position: relative; padding: 130px 56px; }
 }
 
 @media (max-width: 900px) {
+  /* The fixed ambient glow repaints on every scroll frame otherwise
+     (it's position:fixed, so it has to be redrawn as the real content
+     scrolls past it) — promoting it to its own compositor layer keeps
+     that repaint off the same layer as the scrolling hero photo/text,
+     part of the mobile scroll-jerk fix (see .hero-media above). */
+  body::before { will-change: transform; transform: translateZ(0); }
+
   /* Desktop's 130px top padding was carrying straight over to mobile, so
      jumping to a section via the hamburger nav (below) landed with a
      disproportionately large gap above the heading — most noticeable on
@@ -388,10 +395,16 @@ section { position: relative; padding: 130px 56px; }
     padding: 16px 20px;
     /* Near-solid navy rather than --glass's 65% — over a light/cream
        section, --glass let enough of that background bleed through to
-       read as a dull grey instead of the site's own navy. */
-    background: color-mix(in srgb, var(--navy) 95%, transparent);
+       read as a dull grey instead of the site's own navy. 92% (down
+       from a first pass at 95%) plus a lighter 8px blur (down from
+       16px) — backdrop-filter is re-sampled every scroll frame since
+       the bar is fixed, and a smaller blur radius is cheaper to
+       recompute; the slightly more opaque background covers for the
+       softer blur so the bar still reads as solid over content behind
+       it. */
+    background: color-mix(in srgb, var(--navy) 92%, transparent);
     border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(8px);
     box-shadow: 0 16px 40px -16px rgba(5,8,18,0.7);
     transition: transform 0.3s ease;
   }
@@ -577,8 +590,16 @@ section { position: relative; padding: 130px 56px; }
   display: flex; align-items: center; justify-content: flex-start;
   text-align: left;
   padding: 140px 56px 100px;
+  contain: paint;
 }
-.hero-media { position: absolute; inset: 0; z-index: 0; }
+/* translateZ(0) promotes the photo to its own compositor layer so it
+   doesn't get redrawn into the same layer as the fixed, blurred bars
+   above it on every scroll frame (the mobile scroll-jerk this was
+   fixed for: the photo visibly lagging a frame behind the hero text
+   on iOS Chrome/Safari). backface-visibility:hidden is the standard
+   pair with translateZ(0) for forcing that layer promotion reliably
+   on WebKit. */
+.hero-media { position: absolute; inset: 0; z-index: 0; transform: translateZ(0); backface-visibility: hidden; }
 .hero-media picture { display: block; width: 100%; height: 100%; }
 .hero-img {
   width: 100%; height: 100%; object-fit: cover;
@@ -610,14 +631,14 @@ section { position: relative; padding: 130px 56px; }
   background:
     linear-gradient(
       to right,
-      color-mix(in srgb, var(--navy) 55%, transparent) 0%,
-      color-mix(in srgb, var(--navy) 55%, transparent) 30%,
-      transparent 50%
+      color-mix(in srgb, var(--navy) 65%, transparent) 0%,
+      color-mix(in srgb, var(--navy) 65%, transparent) 30%,
+      transparent 52%
     ),
     color-mix(in srgb, var(--navy) 25%, transparent);
 }
 .hero-inner { position: relative; z-index: 2; width: min(44vw, 520px); }
-.hero .eyebrow { display: block; margin-bottom: 20px; font-size: 11px; font-weight: 500; }
+.hero .eyebrow { display: block; margin-bottom: 20px; font-size: 11px; font-weight: 600; text-shadow: 0 1px 10px rgba(5, 8, 18, 0.85); }
 .hero h1 { font-size: clamp(64px, 13vw, 148px); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 20px; }
 .hero p { color: color-mix(in srgb, var(--ink) 65%, transparent); font-size: 18px; max-width: 460px; margin: 0 0 40px; }
 .hero-actions { display: flex; gap: 16px; justify-content: flex-start; flex-wrap: wrap; }
@@ -653,20 +674,16 @@ section { position: relative; padding: 130px 56px; }
       /* Short fade behind the fixed topbar — not behind any text, since
          the text block lives at the bottom on this layout now. */
       linear-gradient(to bottom, color-mix(in srgb, var(--navy) 50%, transparent) 0%, transparent 15%),
-      /* Fades the photo into solid --bg starting ~38% from the bottom
-         (62% from top) — verified against the cropped mobile photo's
-         own pixels (see build-hero.mjs) to land just below the sign/
-         window band, not over it. Front-loaded (most of the opacity
-         gained by 78%, not a straight ramp to 100%) rather than a plain
-         linear fade: measured by rendering real text at its actual
-         position and sampling the pixels behind it, a straight fade
-         left a bright metal-counter reflection showing through right
-         where the eyebrow sits (~71% from top, just past the gradient's
-         own start point) at only ~3.8:1 contrast — under the 4.5:1 AA
-         floor. This curve gets there faster while keeping the same
-         start point (so it still clears the sign/window) and still
-         reaching fully solid by the very bottom. */
-      linear-gradient(to bottom, transparent 0%, transparent 62%, color-mix(in srgb, var(--bg) 80%, transparent) 78%, var(--bg) 100%);
+      /* Fades the photo into solid --bg starting at 50% from the top
+         (a metal-counter reflection right where the eyebrow sits used
+         to show through a later/straighter fade, measured at only
+         ~3.8:1 — under the 4.5:1 AA floor) — 70% navy by 58%, 88% by
+         66%, fully solid by 80%, so the whole eyebrow/headline/subline
+         block sits on at least 80% navy. Verified against the actual
+         rendered screenshot (brightest pixel behind each line,
+         composited against its real text color): eyebrow 4.59:1,
+         headline 10.78:1, subline 6.21:1 at 390px. */
+      linear-gradient(to bottom, transparent 0%, transparent 50%, color-mix(in srgb, var(--navy) 70%, transparent) 58%, color-mix(in srgb, var(--navy) 88%, transparent) 66%, var(--bg) 80%);
   }
   /* position:absolute + inset:0, not height:100% — see this same rule's
      own comment further up in git history / README's "Story and Menu

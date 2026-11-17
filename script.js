@@ -614,6 +614,11 @@ function initMobileTopbarAutoHide() {
 
   const SCROLL_THRESHOLD = 8;
   let lastScrollY = window.scrollY;
+  // Read once, not per scroll event — topbar.offsetHeight inside the
+  // handler forced a synchronous layout recalculation on every scroll
+  // frame (the topbar's own height never changes), which is exactly the
+  // kind of main-thread work that causes visible jank while scrolling.
+  const topbarHeight = topbar.offsetHeight;
 
   window.addEventListener(
     "scroll",
@@ -628,7 +633,7 @@ function initMobileTopbarAutoHide() {
       if (Math.abs(delta) < SCROLL_THRESHOLD) return;
 
       const scrollingDown = delta > 0;
-      topbar.classList.toggle("topbar--hidden", scrollingDown && currentScrollY > topbar.offsetHeight);
+      topbar.classList.toggle("topbar--hidden", scrollingDown && currentScrollY > topbarHeight);
       lastScrollY = currentScrollY;
     },
     { passive: true }
