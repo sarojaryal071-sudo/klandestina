@@ -1702,6 +1702,25 @@ section { position: relative; padding: 130px 56px; }
 .visit-actions { display: flex; justify-content: center; }
 #visit-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
+/* Google reviews row (components/googleReviews.js) — sits between the
+   email/phone fallback lines and the map card; left empty (no margin of
+   its own below it) when rendered, so the map's own 56px top margin
+   below is what actually separates it from the map card, same collapsed-
+   margin approach the rest of this section already relies on. Renders
+   nothing at all if site.json has neither URL, so this block takes up no
+   space in that case — no special-casing needed here for that. */
+.visit-google { margin: 28px 0 0; text-align: center; }
+.visit-google-lead {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 0 0 16px; font-size: 14px; color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+.visit-google-star { color: var(--accent); flex: 0 0 auto; }
+/* Same flex-wrap-to-stack pattern as #visit-buttons above (wraps to
+   stacked full-width buttons once two side by side would overflow —
+   verified down to 320px) — not merged into that selector since the two
+   live in unrelated markup, just the same three declarations again. */
+.visit-google-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
 /* Google Maps embed (components/map.js) — the larger top margin (vs. the
    tight gap under the buttons/email line above it) is deliberate:
    heading+buttons+email fallback read as one cluster, then a clear break

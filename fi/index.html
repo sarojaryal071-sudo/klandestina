@@ -1354,6 +1354,12 @@
       <a id="visit-phone-fallback" class="tel-link" href="#"></a>
     </p>
 
+    <!-- Filled by components/googleReviews.js from site.json's
+         googleReviewsUrl/googleWriteReviewUrl — renders nothing if both
+         are empty. No review text/ratings are ever shown, just links out
+         to Google. -->
+    <div class="visit-google reveal" id="visit-google-mount"></div>
+
     <!-- Filled entirely by components/map.js: the facade/iframe card, the
          cookie note, the Get Directions/Open in Google Maps buttons, and
          the address line — one mount point rather than several separate
@@ -1376,6 +1382,7 @@
         <span>Aleksis Kiven katu 17, 00510 Helsinki</span>
         <span>andres@klande.fi</span>
         <a class="tel-link" href="tel:+358413299494">+358 41 329 9494</a>
+        <a href="https://www.google.com/maps/place/?q=place_id:ChIJZRo1z1MJkkYRynBfRa2nwZ0" target="_blank" rel="noopener noreferrer">Google-arvostelut</a>
       </div>
       <div class="footer-col">
         <h4>Aukioloajat</h4>

@@ -61,6 +61,11 @@ export function renderFooter(container, site, hoursLines, homeHref) {
           <span>${site.address}</span>
           <span>${site.email}</span>
           <a class="tel-link" href="${site.phone.link}">${site.phone.display}</a>
+          ${
+            site.googleReviewsUrl
+              ? `<a href="${site.googleReviewsUrl}" target="_blank" rel="noopener noreferrer" data-i18n="footer.googleReviews">Google reviews</a>`
+              : ""
+          }
         </div>
         <div class="footer-col">
           <h4 data-i18n="footer.hoursLabel">Hours</h4>

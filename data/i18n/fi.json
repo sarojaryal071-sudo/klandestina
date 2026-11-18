@@ -84,7 +84,10 @@
     "emailFallbackPrefix": "Tai lähetä sähköpostia suoraan osoitteeseen",
     "phoneFallbackPrefix": "Tai soita meille numeroon",
     "marketHallNote": "Konepajan Kauppahalli",
-    "mapTitlePrefix": "Kartta"
+    "mapTitlePrefix": "Kartta",
+    "googleLead": "Vieraiden rakastama Konepajalla",
+    "googleReadReviews": "Lue Google-arvostelut",
+    "googleWriteReview": "Kirjoita arvostelu"
   },
   "eventModal": {
     "triggerLabel": "Erikoistilaisuudet ja tiedustelut",
@@ -136,6 +139,7 @@
     "tagline": "Cantina ilman kylttiä. Aleksis Kiven katu 17, Helsinki.",
     "visitLabel": "Käynti",
     "hoursLabel": "Aukioloajat",
+    "googleReviews": "Google-arvostelut",
     "kitchenNote": "Keittiö sulkeutuu klo 21.30 (ti-la)",
     "rights": "Kaikki oikeudet pidätetään.",
     "social": {

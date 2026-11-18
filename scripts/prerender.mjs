@@ -215,6 +215,11 @@ function buildContactHtml(dict) {
         <span>${escapeHtml(site.address)}</span>
         <span>${escapeHtml(site.email)}</span>
         <a class="tel-link" href="${escapeHtml(site.phone.link)}">${escapeHtml(site.phone.display)}</a>
+        ${
+          site.googleReviewsUrl
+            ? `<a href="${escapeHtml(site.googleReviewsUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t(dict, "footer.googleReviews") || "Google reviews")}</a>`
+            : ""
+        }
       </div>
       <div class="footer-col">
         <h4>${escapeHtml(t(dict, "footer.hoursLabel") || "Hours")}</h4>

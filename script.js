@@ -29,6 +29,7 @@ import { renderItemModal, setItemModalStrings } from "./components/itemModal.js"
 import { renderFab } from "./components/fab.js";
 import { renderMobileNav } from "./components/mobileNav.js";
 import { renderMap } from "./components/map.js";
+import { renderGoogleReviews } from "./components/googleReviews.js";
 import { renderMenuPhoto } from "./components/menuPhoto.js";
 import { brandLogoHTML } from "./components/logo.js";
 import { resolveUpcomingEvents } from "./components/eventsLogic.js";
@@ -136,6 +137,7 @@ async function init() {
   phoneFallback.textContent = site.phone.display;
 
   renderMap(document.getElementById("visit-map-mount"), { address: site.address, lang: currentLanguage, strings: mapStrings() });
+  renderGoogleReviews(document.getElementById("visit-google-mount"), googleReviewsOpts());
 
   renderEventModal(document.getElementById("event-modal-mount"), { email: site.email, phone: site.phone, getStrings: eventModalStrings });
   renderItemModal(document.getElementById("item-modal-mount"));
@@ -212,6 +214,20 @@ function mapStrings() {
     marketHallNote: t("visit.marketHallNote"),
     getDirections: t("visit.getDirections"),
     mapTitlePrefix: t("visit.mapTitlePrefix")
+  };
+}
+
+// components/googleReviews.js doesn't know about i18n itself either (same
+// split as mapStrings() above) — bundles its two URLs (empty string, not
+// undefined, if site.json doesn't have one, so the component's own
+// `!reviewsUrl` check works the same either way) with the translated copy.
+function googleReviewsOpts() {
+  return {
+    reviewsUrl: site.googleReviewsUrl || "",
+    writeReviewUrl: site.googleWriteReviewUrl || "",
+    lead: t("visit.googleLead"),
+    readLabel: t("visit.googleReadReviews"),
+    writeLabel: t("visit.googleWriteReview"),
   };
 }
 
@@ -341,6 +357,7 @@ function setLanguage(lang) {
   // needs a second click — an acceptable reset for the rare case of
   // switching language mid-visit with the map already open.
   renderMap(document.getElementById("visit-map-mount"), { address: site.address, lang: currentLanguage, strings: mapStrings() });
+  renderGoogleReviews(document.getElementById("visit-google-mount"), googleReviewsOpts());
 
   // Re-render rather than just re-translate: the only thing visibly
   // different is which button is "active" (EN vs FI), simplest to just

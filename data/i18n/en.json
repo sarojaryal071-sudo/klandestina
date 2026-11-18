@@ -84,7 +84,10 @@
     "emailFallbackPrefix": "Or email us directly at",
     "phoneFallbackPrefix": "Or call us at",
     "marketHallNote": "Konepaja market hall",
-    "mapTitlePrefix": "Map"
+    "mapTitlePrefix": "Map",
+    "googleLead": "Loved by guests in Konepaja",
+    "googleReadReviews": "Read our Google reviews",
+    "googleWriteReview": "Leave a review"
   },
   "eventModal": {
     "triggerLabel": "Special Events or Inquiry",
@@ -136,6 +139,7 @@
     "tagline": "A cantina with no sign. Aleksis Kiven katu 17, Helsinki.",
     "visitLabel": "Visit",
     "hoursLabel": "Hours",
+    "googleReviews": "Google reviews",
     "kitchenNote": "Kitchen closes 21:30 (Tue-Sat)",
     "rights": "All rights reserved.",
     "social": {
