@@ -58,6 +58,10 @@
     "photoOfTotal": "Kuva {current} / {total}",
     "altPhoto": "{album} — kuva {n}"
   },
+  "faq": {
+    "eyebrow": "FAQ",
+    "heading": "Hyvä tietää"
+  },
   "events": {
     "eyebrow": "Tapahtumat",
     "heading": "Tulevat tapahtumat",

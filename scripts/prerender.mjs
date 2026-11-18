@@ -51,6 +51,7 @@ import path from "node:path";
 import { DISH_IMAGE_DIMS } from "../components/dishImageDims.js";
 import { resolveUpcomingEvents, helsinkiDateParts } from "../components/eventsLogic.js";
 import { formatHoursLines } from "../components/hoursLogic.js";
+import { resolveFaqAnswer } from "../components/faqLogic.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITE_URL = "https://klande.fi";
@@ -72,6 +73,16 @@ try {
 // text differs, never the underlying set, same split as the menu/contact
 // blocks above.
 const upcomingEvents = resolveUpcomingEvents(rawEvents);
+
+// Missing data/faq.json is the same "valid, not an error" state as
+// events.json above — the FAQ list just renders empty rather than
+// failing the whole build.
+let faq = [];
+try {
+  faq = JSON.parse(readFileSync(path.join(ROOT, "data/faq.json"), "utf8"));
+} catch (e) {
+  if (e.code !== "ENOENT") throw e;
+}
 
 const i18n = {
   en: JSON.parse(readFileSync(path.join(ROOT, "data/i18n/en.json"), "utf8")),
@@ -308,6 +319,59 @@ function buildEventJsonLd(dict, lang) {
   return `<script type="application/ld+json">\n${JSON.stringify(events, null, 2)}\n  </script>`;
 }
 
+// Mirrors components/faqSection.js's own renderItem() markup exactly —
+// answerHtml already has its {{hours}}/{{phone}}/{{email}} placeholders
+// resolved (resolveFaqAnswer(), shared with script.js) against the same
+// data/site.json the footer reads, so the static and live-rendered
+// versions (and the footer) can never disagree. The question/answer
+// text itself comes straight from data/faq.json, already safe HTML
+// (plain prose plus the odd <br>), same "trusted, not visitor input"
+// treatment the rest of this file's own data files get — not escaped,
+// same as event titles/descriptions above.
+function buildFaqHtml(dict, lang) {
+  return faq
+    .map((item) => {
+      const question = pickLang(item.question, lang);
+      const answerHtml = resolveFaqAnswer(pickLang(item.answer, lang), site, dict);
+      return `
+      <details class="faq-item">
+        <summary class="faq-summary">
+          <span class="faq-question">${question}</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-answer"><p>${answerHtml}</p></div>
+      </details>`;
+    })
+    .join("\n");
+}
+
+// schema.org FAQPage — one Question/Answer pair per data/faq.json entry,
+// identical wording to the visible accordion (same resolveFaqAnswer()
+// call), with the <br> formatting markers.mjs's own hours line reuses
+// (not meaningful to a schema.org text field) turned into plain spaces.
+function stripHtmlForJsonLd(html) {
+  return html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, "").trim();
+}
+
+function buildFaqJsonLd(dict, lang) {
+  if (faq.length === 0) return "";
+
+  const json = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: pickLang(item.question, lang),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: stripHtmlForJsonLd(resolveFaqAnswer(pickLang(item.answer, lang), site, dict))
+      }
+    }))
+  };
+
+  return `<script type="application/ld+json">\n${JSON.stringify(json, null, 2)}\n  </script>`;
+}
+
 // Replaces everything between a pair of marker comments that must already
 // exist in the html exactly once each — throws rather than silently
 // no-op'ing if either marker is missing, so a renamed/removed marker
@@ -453,6 +517,13 @@ function buildPage(lang) {
     buildEventJsonLd(dict, lang)
   );
   html = setSectionHidden(html, "events", upcomingEvents.length === 0);
+  html = spliceBetweenMarkers(html, "<!-- PRERENDER:FAQ:START -->", "<!-- PRERENDER:FAQ:END -->", buildFaqHtml(dict, lang));
+  html = spliceBetweenMarkers(
+    html,
+    "<!-- PRERENDER:FAQ_JSONLD:START -->",
+    "<!-- PRERENDER:FAQ_JSONLD:END -->",
+    buildFaqJsonLd(dict, lang)
+  );
 
   if (lang === "fi") {
     html = translateStaticText(html, dict);

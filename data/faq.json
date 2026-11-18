@@ -1,0 +1,56 @@
+[
+  {
+    "id": "location",
+    "question": { "en": "Where is Klandestina?", "fi": "Missä Klandestina on?" },
+    "answer": {
+      "en": "Klandestina is a Mexican restaurant in Konepaja Market Hall, Aleksis Kiven katu 17, 00510 Helsinki.",
+      "fi": "Klandestina on meksikolainen ravintola Konepajan Kauppahallissa osoitteessa Aleksis Kiven katu 17, 00510 Helsinki."
+    }
+  },
+  {
+    "id": "hours",
+    "question": { "en": "What are your opening hours?", "fi": "Milloin olette auki?" },
+    "answer": {
+      "en": "{{hours}}<br>Closed on Sundays. The kitchen closes at 21:30 (Tue–Sat).",
+      "fi": "{{hours}}<br>Sunnuntaisin suljettu. Keittiö sulkeutuu klo 21.30 (ti–la)."
+    }
+  },
+  {
+    "id": "reservations",
+    "question": { "en": "Can I book a table?", "fi": "Voinko varata pöydän?" },
+    "answer": {
+      "en": "Yes, you can reserve online with the Reserve a Table button. You can also call us at {{phone}} or email {{email}} to book or ask anything else.",
+      "fi": "Kyllä, pöydän voi varata verkossa Varaa pöytä -napista. Varaukset ja muut kysymykset voi hoitaa myös soittamalla numeroon {{phone}} tai sähköpostilla osoitteeseen {{email}}."
+    }
+  },
+  {
+    "id": "dietary",
+    "question": {
+      "en": "Do you have vegan and gluten-free options?",
+      "fi": "Onko teillä vegaanisia ja gluteenittomia vaihtoehtoja?"
+    },
+    "answer": {
+      "en": "Yes. Vegan, gluten-free and lactose-free dishes are marked on the menu. If a dish isn't marked but you'd like it that way, just ask our staff. Please tell us about any allergies.",
+      "fi": "On. Vegaaniset, gluteenittomat ja laktoosittomat annokset on merkitty ruokalistalle. Jos annos ei ole merkitty mutta toivot sitä sellaisena, kysy rohkeasti henkilökunnalta. Kerro myös mahdollisista allergioistasi."
+    }
+  },
+  {
+    "id": "events",
+    "question": { "en": "Do you have events?", "fi": "Onko teillä tapahtumia?" },
+    "answer": {
+      "en": "Yes, every week. Friday is karaoke night with free entry. See What's on for the next events.",
+      "fi": "On, joka viikko. Perjantaisin on karaokeilta ja vapaa pääsy. Katso tulevat tapahtumat kohdasta Mitä on tulossa."
+    }
+  },
+  {
+    "id": "drinks",
+    "question": {
+      "en": "Do you serve cocktails, tequila and mezcal?",
+      "fi": "Tarjoatteko cocktaileja, tequilaa ja mezcalia?"
+    },
+    "answer": {
+      "en": "Yes. See the Drinks section of the menu for our cocktails, and ask us about our selection of tequila and mezcal.",
+      "fi": "Kyllä. Cocktailit löytyvät ruokalistan juomaosiosta, ja meiltä saa myös tequila- ja mezcal-valikoiman. Kysy henkilökunnalta."
+    }
+  }
+]

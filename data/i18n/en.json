@@ -58,6 +58,10 @@
     "photoOfTotal": "Photo {current} of {total}",
     "altPhoto": "{album} — photo {n}"
   },
+  "faq": {
+    "eyebrow": "FAQ",
+    "heading": "Good to know"
+  },
   "events": {
     "eyebrow": "Events",
     "heading": "What's on",

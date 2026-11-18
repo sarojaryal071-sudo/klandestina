@@ -1354,6 +1354,41 @@ section { position: relative; padding: 130px 56px; }
   .event-image { flex-basis: 100%; width: 100%; height: 160px; order: 10; }
 }
 
+/* ---------- FAQ ---------- */
+/* Same centered-list width as .menu-list (740px) — a row-per-question
+   accordion reads better a bit narrower than the full .container. */
+.faq-list { max-width: 740px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-item:first-child { border-top: 1px solid var(--line); }
+/* list-style/::marker reset — a custom +/- icon replaces the native
+   disclosure triangle, same "we draw our own stroke icons" choice
+   footer.js's own comment explains for the social icons. min-height 48px
+   is a touch-target floor, not a content height (short one-line
+   questions still hit it via padding, not by stretching their own text). */
+.faq-summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: 48px; padding: 12px 2px;
+  cursor: pointer; list-style: none;
+  font-weight: 600; font-size: 17px; color: var(--ink);
+  transition: color 0.18s ease;
+}
+.faq-summary::-webkit-details-marker { display: none; }
+.faq-summary:hover { color: var(--accent); }
+.faq-summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Plain two-bar CSS icon (no SVG asset) — the vertical bar rotates 90deg
+   onto the horizontal one when the <details> is open, "+" becoming "−"
+   without swapping markup or icons. */
+.faq-icon { position: relative; width: 16px; height: 16px; flex: 0 0 auto; }
+.faq-icon::before, .faq-icon::after {
+  content: ""; position: absolute; top: 50%; left: 50%; background: var(--accent);
+  transform: translate(-50%, -50%);
+}
+.faq-icon::before { width: 14px; height: 2px; }
+.faq-icon::after { width: 2px; height: 14px; transition: transform 0.2s ease; }
+.faq-item[open] .faq-icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+.faq-answer { padding: 0 2px 22px; max-width: 680px; }
+.faq-answer p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--muted); }
+
 /* ---------- Gallery: crossfading mosaic ---------- */
 /* One big tile (spans both rows) + two smaller tiles stacked beside it —
    a 1.4fr/1fr column split, not an even 50/50, so the big tile actually
