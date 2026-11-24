@@ -323,7 +323,6 @@ function renderGallery(modal, images, name) {
   if (activePhotos.length === 0) {
     photoWrap.className = "item-modal-photo item-modal-photo--empty";
     photoWrap.innerHTML = `
-      <img class="item-modal-photo-mark" src="/images/logo/badge.png" alt="" aria-hidden="true">
       <span class="item-modal-photo-empty-text">${fallbackStrings.noPhoto}</span>`;
     captionEl.hidden = true;
     clearInterval(autoplayTimer);

@@ -87,15 +87,15 @@ async function init() {
 
   // Nav
   renderNav(document.getElementById("shortcut-nav"));
-  document.getElementById("brand-mark").innerHTML = brandLogoHTML(site, { homeHref: homeHref(), withWordmark: true });
-  document.getElementById("mobile-topbar-brand").innerHTML = brandLogoHTML(site, { homeHref: homeHref() });
+  document.getElementById("brand-mark").innerHTML = brandLogoHTML({ homeHref: homeHref() });
+  document.getElementById("mobile-topbar-brand").innerHTML = brandLogoHTML({ homeHref: homeHref() });
 
   // Language switcher — rendered twice (desktop utility-bar, mobile
   // topbar) since they sit in different fixed-position contexts;
   // setLanguage() below keeps both instances' active state in sync.
   renderLangSwitch(document.getElementById("lang-switch"), currentLanguage, setLanguage);
   renderLangSwitch(document.getElementById("mobile-lang-switch"), currentLanguage, setLanguage);
-  mobileNavHandle = renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"), site, homeHref());
+  mobileNavHandle = renderMobileNav(document.getElementById("mobile-nav-toggle"), document.getElementById("mobile-nav-overlay-mount"), homeHref());
 
   initMobileTopbarAutoHide();
 
@@ -312,10 +312,10 @@ function setLanguage(lang) {
 
   // The logo's home link is language-specific (see homeHref() above) —
   // re-render it so it points at the page just switched to.
-  document.getElementById("brand-mark").innerHTML = brandLogoHTML(site, { homeHref: homeHref(), withWordmark: true });
-  document.getElementById("mobile-topbar-brand").innerHTML = brandLogoHTML(site, { homeHref: homeHref() });
+  document.getElementById("brand-mark").innerHTML = brandLogoHTML({ homeHref: homeHref() });
+  document.getElementById("mobile-topbar-brand").innerHTML = brandLogoHTML({ homeHref: homeHref() });
   const mobileNavBrand = document.querySelector(".mobile-nav-brand");
-  if (mobileNavBrand) mobileNavBrand.innerHTML = brandLogoHTML(site, { homeHref: homeHref() });
+  if (mobileNavBrand) mobileNavBrand.innerHTML = brandLogoHTML({ homeHref: homeHref() });
 
   // Re-render exactly the pieces whose actual CONTENT is per-language
   // (not just chrome already covered by data-i18n above) — each one

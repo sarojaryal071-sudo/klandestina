@@ -52,7 +52,7 @@ export function renderFooter(container, site, hoursLines, homeHref) {
     <footer>
       <div class="container footer-grid">
         <div>
-          <div class="footer-logo">${brandLogoHTML(site, { homeHref })}</div>
+          <div class="footer-logo">${brandLogoHTML({ homeHref })}</div>
           <span data-i18n="footer.tagline">${site.tagline}</span>
           <div class="footer-social">${socialLinks}</div>
         </div>
